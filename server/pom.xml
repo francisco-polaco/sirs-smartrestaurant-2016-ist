@@ -107,7 +107,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>pt.tecnico.myDrive.presentation.MdShell</mainClass> <!-- Main Class -->
+                    <mainClass>pt.tecnico.ulisboa.smartrestaurant.server.Application</mainClass> <!-- Main Class -->
                     <killAfter>-1</killAfter>
                 </configuration>
             </plugin>
