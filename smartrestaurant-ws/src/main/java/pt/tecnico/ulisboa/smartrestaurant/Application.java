@@ -1,6 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant;
 
-import pt.tecnico.ulisboa.smartrestaurant.domain.ServerImpl;
+import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImpl;
 
 import javax.xml.ws.Endpoint;
 
@@ -19,7 +19,7 @@ public class Application {
 
         Endpoint endpoint = null;
         try {
-            endpoint = Endpoint.create(new ServerImpl());
+            endpoint = Endpoint.create(new OrderServerImpl());
 
             // publish endpoint
             System.out.printf("Starting %s%n", url);

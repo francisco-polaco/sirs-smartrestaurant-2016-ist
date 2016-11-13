@@ -1,0 +1,67 @@
+package pt.tecnico.ulisboa.smartrestaurant.domain;
+
+class SmartRestaurantManager;
+
+class Product{
+    String name;
+    String description;
+    float price;
+}
+
+class User{
+    String username;
+    bytearray password;
+    String firstName;
+    String lastName;
+    int nif;
+}
+
+class Session{
+    Long token;
+    DateTime loginTime;
+    Integer table;
+}
+
+relation SmartRestaurantManagerHasUser{
+
+    SmartRestaurantManager playsRole smartRestaurantManager{
+		multiplicity 0..1;
+    }
+
+    User playsRole user {
+        multiplicity *;
+    }
+
+}
+
+relation SmartRestaurantManagerHasProduct{
+
+    SmartRestaurantManager playsRole smartRestaurantManager{
+		multiplicity 0..1;
+    }
+
+    Product playsRole product{
+        multiplicity *;
+    }
+
+}
+
+relation UserHasProduct{
+    User playsRole user {
+        multiplicity *;
+    }
+
+    Product playsRole product{
+        multiplicity 0..*;
+    }
+}
+
+relation UserHasSession{
+    User playsRole user {
+        multiplicity *;
+    }
+
+    Session playsRole session{
+        multiplicity 0..1;
+    }
+}

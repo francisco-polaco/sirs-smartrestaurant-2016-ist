@@ -1,9 +1,18 @@
 package pt.tecnico.ulisboa.smartrestaurant.cli;
 
-import pt.tecnico.ulisboa.smartrestaurant.domain.Server;
-import pt.tecnico.ulisboa.smartrestaurant.domain.ServerImplService;
 
+import com.sun.xml.internal.ws.developer.JAXWSProperties;
+import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServer;
+import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImplService;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
 import javax.xml.ws.BindingProvider;
+import java.io.FileInputStream;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
@@ -31,17 +40,33 @@ public class Application {
         }
 
         System.out.println("Creating stub ...");
-        ServerImplService service = new ServerImplService();
-        Server port = service.getServerImplPort();
+        OrderServerImplService service = new OrderServerImplService();
+        OrderServer port = service.getOrderServerImplPort();
 
         System.out.println("Setting endpoint address ...");
         BindingProvider bindingProvider = (BindingProvider) port;
         Map<String, Object> requestContext = bindingProvider.getRequestContext();
         requestContext.put(ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
+        //requestContext.put(JAXWSProperties.SSL_SOCKET_FACTORY, batata().getServerSocketFactory());
 
         System.out.println("Remote call ...");
         String result = port.ping("Ping!");
         System.out.println(result);
         System.in.read();
     }
+
+   /* public static SSLContext batata() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+        SSLContext sc = SSLContext.getInstance("SSLv3");
+
+        KeyManagerFactory kmf =
+                KeyManagerFactory.getInstance( KeyManagerFactory.getDefaultAlgorithm() );
+
+        KeyStore ks = KeyStore.getInstance( KeyStore.getDefaultType() );
+        ks.load(new FileInputStream( certPath ), certPasswd.toCharArray() );
+
+        kmf.init( ks, certPasswd.toCharArray() );
+
+        sc.init( kmf.getKeyManagers(), null, null );
+        return sc;
+    }*/
 }
