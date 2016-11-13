@@ -1,4 +1,4 @@
-package pt.tecnico.ulisboa.smartrestaurant.server;
+package pt.tecnico.ulisboa.smartrestaurant;
 
 import org.junit.After;
 import org.junit.Before;

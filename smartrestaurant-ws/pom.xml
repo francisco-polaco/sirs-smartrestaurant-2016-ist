@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pt.tecnico.ulisboa.smartrestaurant</groupId>
-    <artifactId>server</artifactId>
+    <groupId>pt.tecnico.ulisboa</groupId>
+    <artifactId>smartrestaurant-ws</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>SmartRestaurant-Server</name>
+    <name>${project.artifactId}</name>
 
 
     <developers>
@@ -57,9 +57,9 @@
 
 
         <ws.url>http://localhost:8080/smartrestaurant-ws/endpoint</ws.url>
-        <wsdl.directory>src/main/resources</wsdl.directory>
-        <wsdl.filename>broker.2_1.wsdl</wsdl.filename>
-        <mainclass>pt.tecnico.ulisboa.smartrestaurant.server.Application</mainclass>
+        <!--<wsdl.directory>src/main/resources</wsdl.directory>
+        <wsdl.filename>broker.2_1.wsdl</wsdl.filename>-->
+        <mainclass>pt.tecnico.ulisboa.smartrestaurant.Application</mainclass>
 
 
 </properties>
@@ -132,7 +132,7 @@
                     </arguments>
                     <killAfter>-1</killAfter>
                 </configuration>
-                <plugin>
+                <!--<plugin>
                     <groupId>org.jvnet.jax-ws-commons</groupId>
                     <artifactId>jaxws-maven-plugin</artifactId>
                     <version>2.3</version>
@@ -144,7 +144,7 @@
                         </execution>
                     </executions>
                     <configuration>
-                        <!-- https://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html -->
+                        &lt;!&ndash; https://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html &ndash;&gt;
                         <wsdlDirectory>${wsdl.directory}</wsdlDirectory>
                         <wsdlFiles>
                             <wsdlFile>${wsdl.filename}</wsdlFile>
@@ -157,31 +157,31 @@
                             <version>2.2.10</version>
                         </dependency>
                     </dependencies>
-                </plugin>
+                </plugin>-->
 
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>appassembler-maven-plugin</artifactId>
-                    <version>1.10</version>
-                    <executions>
-                        <execution>
-                            <phase>install</phase>
-                            <goals>
-                                <goal>assemble</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <programs>
-                            <program>
-                                <mainClass>${mainclass}</mainClass>
-                                <id>${project.artifactId}</id>
-                            </program>
-                        </programs>
-                    </configuration>
-                </plugin>
+
             </plugin>
-
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.10</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>assemble</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <programs>
+                        <program>
+                            <mainClass>${mainclass}</mainClass>
+                            <id>${project.artifactId}</id>
+                        </program>
+                    </programs>
+                </configuration>
+            </plugin>
             <!-- Plugin dml2yuml -->
             <!--<plugin>
                 <groupId>pt.tecnico.plugin</groupId>
