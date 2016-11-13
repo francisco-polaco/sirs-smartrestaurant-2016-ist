@@ -8,7 +8,13 @@ import javax.jws.WebService;
 @WebService(endpointInterface = "pt.tecnico.ulisboa.smartrestaurant.ws.WaiterServer")
 public class WaiterServerImpl implements WaiterServer {
     @Override
-    public void requestDelivered(long requestId) {
+    public String ping(String msg) {
+        System.out.println("Waiter " + msg);
+        return "Pong!";
+    }
+
+    @Override
+    public void orderDelivered(long orderId) {
 
     }
 }

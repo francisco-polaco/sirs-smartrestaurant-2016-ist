@@ -10,7 +10,7 @@ import java.util.List;
 public class OrderServerImpl implements OrderServer {
     @Override
     public String ping(String msg) {
-        System.out.println(msg);
+        System.out.println("Customer " +msg);
         return "Pong!";
     }
 

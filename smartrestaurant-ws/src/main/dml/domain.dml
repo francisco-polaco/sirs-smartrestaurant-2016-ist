@@ -22,6 +22,11 @@ class Session{
     Integer table;
 }
 
+class Order{
+    long id;
+    boolean state;
+}
+
 relation SmartRestaurantManagerHasUser{
 
     SmartRestaurantManager playsRole smartRestaurantManager{
@@ -46,15 +51,26 @@ relation SmartRestaurantManagerHasProduct{
 
 }
 
-relation UserHasProduct{
+relation UserHasOrder{
     User playsRole user {
         multiplicity *;
     }
 
-    Product playsRole product{
+    Order playsRole order{
+        multiplicity 0..1;
+    }
+}
+
+relation OrderHasProduct{
+    Product playsRole product {
+        multiplicity 0..*;
+    }
+
+    Order playsRole order{
         multiplicity 0..*;
     }
 }
+
 
 relation UserHasSession{
     User playsRole user {
@@ -64,4 +80,13 @@ relation UserHasSession{
     Session playsRole session{
         multiplicity 0..1;
     }
+}
+
+relation DomainRootHasSmartRestaurantManager {
+  .pt.ist.fenixframework.DomainRoot playsRole rootFenix {
+    multiplicity 0..1;
+  }
+  SmartRestaurantManager playsRole smartRestaurantManager  {
+    multiplicity 0..1;
+  }
 }

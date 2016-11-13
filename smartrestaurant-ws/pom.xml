@@ -60,7 +60,9 @@
         <version.org.jdom.jdom>2.0.5</version.org.jdom.jdom>
 
 
-        <ws.url>http://localhost:8080/smartrestaurant-ws/endpoint</ws.url>
+        <ws.urlO>http://localhost:8080/smartrestaurant-ws/endpoint</ws.urlO>
+        <ws.urlW>http://localhost:8081/smartrestaurant-ws/endpoint</ws.urlW>
+        <ws.urlK>http://localhost:8082/smartrestaurant-ws/endpoint</ws.urlK>
         <!--<wsdl.directory>src/main/resources</wsdl.directory>
         <wsdl.filename>broker.2_1.wsdl</wsdl.filename>-->
         <mainclass>pt.tecnico.ulisboa.smartrestaurant.Application</mainclass>
@@ -132,7 +134,9 @@
                 <configuration>
                     <mainClass>${mainclass}</mainClass> <!-- Main Class -->
                     <arguments>
-                        <argument>${ws.url}</argument>
+                        <argument>${ws.urlO}</argument>
+                        <argument>${ws.urlW}</argument>
+                        <argument>${ws.urlK}</argument>
                     </arguments>
                     <killAfter>-1</killAfter>
                 </configuration>
