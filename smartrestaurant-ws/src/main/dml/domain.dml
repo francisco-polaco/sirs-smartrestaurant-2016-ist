@@ -24,7 +24,7 @@ class Session{
 
 class Order{
     long id;
-    boolean state;
+    int state;
 }
 
 relation SmartRestaurantManagerHasUser{
@@ -53,7 +53,7 @@ relation SmartRestaurantManagerHasProduct{
 
 relation UserHasOrder{
     User playsRole user {
-        multiplicity *;
+        multiplicity 0..1;
     }
 
     Order playsRole order{

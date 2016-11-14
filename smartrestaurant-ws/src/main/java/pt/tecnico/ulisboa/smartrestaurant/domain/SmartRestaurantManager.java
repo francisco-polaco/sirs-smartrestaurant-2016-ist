@@ -2,15 +2,15 @@ package pt.tecnico.ulisboa.smartrestaurant.domain;
 
 import org.joda.time.DateTime;
 import pt.ist.fenixframework.FenixFramework;
-import pt.tecnico.ulisboa.smartrestaurant.exception.ProductDoesntExistException;
-import pt.tecnico.ulisboa.smartrestaurant.exception.UserLoginAlreadyExistsException;
-import pt.tecnico.ulisboa.smartrestaurant.exception.UserLoginDoesntExistException;
+import pt.tecnico.ulisboa.smartrestaurant.exception.*;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class SmartRestaurantManager extends SmartRestaurantManager_Base {
@@ -42,14 +42,14 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         return new SmartRestaurantManager();
     }
 
-
+    // Package methods to ensure that "they" only access Facade.
+    // Who's "they" you may ask, the Illuminati ofc
     void registerNewUser(String username, byte[] hashedPassword, String firstName, String lastName, int nif)
-            throws UserLoginAlreadyExistsException{
+            throws UserAlreadyExistsException {
         System.out.println(username + " is being registered.");
 
-        if(getUserByUsername(username) == null)
-            super.addUser(new User(username, hashedPassword, firstName, lastName, nif, this));
-        else throw new UserLoginAlreadyExistsException();
+        canICreateAnUser(username);
+        super.addUser(new User(username, hashedPassword, firstName, lastName, nif, this));
     }
 
     byte[] login(String username, byte[] hashedPassword, int tableNo) throws NoSuchAlgorithmException {
@@ -57,15 +57,23 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
         User user;
         byte[] hashToken;
-        if((user = getUserByUsername(username)) == null) throw new UserLoginDoesntExistException();
-        else {
-            hashToken = generateToken();
-            Session s = new Session(hashToken, tableNo);
-            s.setUser(user);
-            user.setSession(s);
-            System.out.println(username + " is logged in.");
-            return hashToken;
-        }
+        user = getUserByUsername(username);
+        checkAndLogoutUser(user);
+        if(Arrays.equals(user.getPassword(), hashedPassword)) {
+            if (user.getSession() != null) {
+                System.out.println(username + " is logged in.");
+                return user.getSession().getSessionId();
+            } else {
+                System.out.println(username + " session timed out, creating a new session.");
+                hashToken = generateToken();
+                Session s = new Session(hashToken, tableNo);
+                s.setUser(user);
+                user.setSession(s);
+                System.out.println(username + " is logged in.");
+                return hashToken;
+            }
+        }else
+            throw new AccessDeniedException();
     }
 
     void addRequestToOrder(byte[] sessionId, String productName){
@@ -76,6 +84,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
             if(u.getOrder() == null){ // if there is not an active order
                 Order order = new Order(generateOrderId());
                 order.addProduct(product);
+                order.setUser(u);
                 u.setOrder(order);
             }else
                 u.getOrder().addProduct(product);
@@ -83,11 +92,60 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         }
     }
 
+    List<Product> requestMyOrdersProducts(byte[] sessionId){
+        User u = getUserBySessionId(sessionId);
+        List<Product> productList = new ArrayList<>();
+        if(u.getOrder() != null) {
+            for (Product p : u.getOrder().getProductSet()) {
+                productList.add(p);
+            }
+        }
+        return productList;
+    }
+
+    void orderProducts(byte[] sessionId, byte[] hashedPassword){
+        User u = getUserBySessionId(sessionId);
+        checkAndLogoutUser(u);
+        if(u.getSession() != null){
+            if(Arrays.equals(u.getPassword(), hashedPassword)){
+                // Para alem do session id, a password esta correta. Logo, devera ser o utilizador
+                System.out.println(u.getUsername() + " is ordering his order.");
+                Order toRequest = u.getOrder();
+                toRequest.setState(1); // set state meaning that the request is at the kitchen
+                // send order to kitchen
+            }else{
+
+                throw new AccessDeniedException();
+            }
+        }else
+            throw new SessionExpiredException(u.getUsername());
+    }
+
+    void setOrderReadyToDeliver(long orderId){
+        for(User u : getUserSet()){
+            if(u.getOrder() != null && u.getOrder().getId() == orderId){
+                u.getOrder().setState(2);
+                break;
+            }else
+                throw new OrderDoesntExistException();
+        }
+    }
+
+    // Private methods
+    private void canICreateAnUser(String username){
+        try{
+            getUserByUsername(username);
+        }catch (UserDoesntExistException e){
+            return;
+        }
+        throw new UserAlreadyExistsException();
+    }
+
     private User getUserByUsername(String username){
         for(User u : getUserSet()){
             if(u.getUsername().equals(username)) return u;
         }
-        return null;
+        throw new UserDoesntExistException();
     }
 
     private User getUserBySessionId(byte[] sessionId){
@@ -95,9 +153,8 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
             checkAndLogoutUser(u);
             if(u.getSession() != null && Arrays.equals(u.getSession().getSessionId(), sessionId)) return u;
         }
-        return null;
+        throw new UserWithSessionIdDoenstExistException();
     }
-
 
     private Product getProductByName(String name){
         for(Product p : getProductSet()){
@@ -108,7 +165,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     private byte[] generateToken() throws NoSuchAlgorithmException {
         boolean notFound = true;
-        long token = 0;
+        long token;
         byte[] tokenHash = null;
         while(notFound) {
             // Integers can be negative, so to assure unicity for tests we only consider the positive ones

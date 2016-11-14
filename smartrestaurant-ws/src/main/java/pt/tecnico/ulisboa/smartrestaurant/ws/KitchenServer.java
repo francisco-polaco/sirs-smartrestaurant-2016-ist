@@ -9,5 +9,5 @@ import javax.jws.WebService;
 public interface KitchenServer {
     String ping(String msg);
 
-    void orderReady(long orderId);
+    void setOrderReadyToDeliver(long orderId);
 }

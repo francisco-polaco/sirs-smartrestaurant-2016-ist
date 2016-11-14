@@ -10,14 +10,14 @@ import java.util.List;
 public interface OrderServer {
     String ping(String msg);
 
-    byte[] login(String username, byte[] passwordSha2Hash);
+    byte[] login(String username, byte[] passwordSha2Hash, int tableNo);
 
-    List<String> requestAllProducts();
+//    List<ProductProxy> requestAllProducts();
 
-    List<String> requestMyOrdersProducts(byte[] sessionId);
+    List<ProductProxy> requestMyOrdersProducts(byte[] sessionId);
 
     void addProductToOrder(byte[] sessionId, String productName);
 
-    void orderProducts(byte[] sessionId);
+    void orderProducts(byte[] sessionId, byte[] passwordSha2Hash);
 
 }

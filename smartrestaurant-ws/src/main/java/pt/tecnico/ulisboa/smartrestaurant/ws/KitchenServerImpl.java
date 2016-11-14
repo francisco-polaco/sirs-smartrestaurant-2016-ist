@@ -1,5 +1,7 @@
 package pt.tecnico.ulisboa.smartrestaurant.ws;
 
+import pt.tecnico.ulisboa.smartrestaurant.domain.DomainFacade;
+
 import javax.jws.WebService;
 
 /**
@@ -15,7 +17,7 @@ public class KitchenServerImpl implements KitchenServer {
     }
 
     @Override
-    public void orderReady(long orderId) {
-
+    public void setOrderReadyToDeliver(long orderId) {
+        DomainFacade.getInstance().setOrderReadyToDeliver(orderId);
     }
 }

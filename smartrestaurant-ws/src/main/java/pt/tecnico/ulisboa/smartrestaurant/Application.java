@@ -4,6 +4,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.ulisboa.smartrestaurant.domain.DomainFacade;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImpl;
 import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImpl;
+import pt.tecnico.ulisboa.smartrestaurant.ws.ProductProxy;
 import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterServerImpl;
 
 import javax.xml.ws.Endpoint;
@@ -11,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by franc on 13/11/2016.
@@ -68,9 +70,15 @@ public class Application {
     private static void interaction() throws NoSuchAlgorithmException {
         //Thread.sleep(2000);
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hash = digest.digest("batata".getBytes(StandardCharsets.UTF_8));
-       // DomainFacade.getInstance().registerNewUser("francisco", hash, "Francisco", "Santos", 100);
-        byte[] sessionId = DomainFacade.getInstance().login("francisco", hash, 1);
+        byte[] password = digest.digest("batata".getBytes(StandardCharsets.UTF_8));
+        String username = "francisco";
+        // DomainFacade.getInstance().registerNewUser(username, password, "Francisco", "Santos", 100);
+        byte[] sessionId = DomainFacade.getInstance().login(username, password, 1);
         DomainFacade.getInstance().addProductToOrder(sessionId, "Bife da Vazia");
+        List<ProductProxy> productProxies = DomainFacade.getInstance().requestMyOrdersProducts(sessionId);
+        for(ProductProxy p : productProxies){
+            System.out.println(p);
+        }
+        DomainFacade.getInstance().orderProducts(sessionId, password);
     }
 }

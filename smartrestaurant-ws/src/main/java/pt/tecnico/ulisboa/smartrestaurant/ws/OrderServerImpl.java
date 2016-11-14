@@ -1,6 +1,10 @@
 package pt.tecnico.ulisboa.smartrestaurant.ws;
 
+import pt.tecnico.ulisboa.smartrestaurant.domain.DomainFacade;
+import pt.tecnico.ulisboa.smartrestaurant.exception.InsecureServerExceptionException;
+
 import javax.jws.WebService;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -15,29 +19,34 @@ public class OrderServerImpl implements OrderServer {
     }
 
     @Override
-    public byte[] login(String username, byte[] passwordSha2Hash) {
+    public byte[] login(String username, byte[] passwordSha2Hash, int tableNo) {
 
-        return passwordSha2Hash;
+        try {
+            return DomainFacade.getInstance().login(username, passwordSha2Hash, tableNo);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            throw new InsecureServerExceptionException();
+        }
     }
 
-    @Override
-    public List<String> requestAllProducts() {
+    /*@Override
+    public List<ProductProxy> requestAllProducts() {
         return null;
-    }
+    }*/
 
     @Override
-    public List<String> requestMyOrdersProducts(byte[] sessionId) {
-        return null;
+    public List<ProductProxy> requestMyOrdersProducts(byte[] sessionId) {
+        return DomainFacade.getInstance().requestMyOrdersProducts(sessionId);
     }
 
     @Override
     public void addProductToOrder(byte[] sessionId, String productName) {
-
+        DomainFacade.getInstance().addProductToOrder(sessionId, productName);
     }
 
     @Override
-    public void orderProducts(byte[] sessionId) {
-
+    public void orderProducts(byte[] sessionId, byte[] passwordSha2Hash) {
+        DomainFacade.getInstance().orderProducts(sessionId, passwordSha2Hash);
     }
 
 }
