@@ -6,10 +6,23 @@ public class Product extends Product_Base {
         super();
     }
 
-    Product(String productName, String productDescription, double price){
+    Product(String productName, String productDescription, double price, SmartRestaurantManager smartRestaurantManager){
         setName(productName);
         setDescription(productDescription);
         setPrice(price);
+        setSmartRestaurantManager(smartRestaurantManager);
+    }
+
+    void remove() {
+        removeObject();
+        deleteDomainObject();
+    }
+
+
+    void removeObject(){
+        setName(null);
+        setDescription(null);
+        setSmartRestaurantManager(null);
     }
     
 }

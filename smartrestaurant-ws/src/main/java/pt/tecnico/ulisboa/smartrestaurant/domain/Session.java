@@ -13,5 +13,18 @@ public class Session extends Session_Base {
         super.setTable(tableNo);
         super.setLoginTime(new DateTime());
     }
+
+    void remove() {
+        removeObject();
+        deleteDomainObject();
+    }
+
+
+    void removeObject(){
+        setSessionId(null);
+        setLoginTime(null);
+        setUser(null);
+        setTable(null);
+    }
     
 }

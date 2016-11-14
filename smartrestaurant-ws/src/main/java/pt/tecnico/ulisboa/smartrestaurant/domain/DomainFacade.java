@@ -52,4 +52,14 @@ public class DomainFacade {
     public void setOrderReadyToDeliver(long orderId){
         SmartRestaurantManager.getInstance().setOrderReadyToDeliver(orderId);
     }
+
+    @Atomic
+    public void setOrderToDelivered(long orderId){
+        SmartRestaurantManager.getInstance().setOrderToDelivered(orderId);
+    }
+
+    @Atomic
+    public void setOrderToPayed(long orderToPayed){
+        SmartRestaurantManager.getInstance().setOrderToPayed(orderToPayed);
+    }
 }

@@ -19,16 +19,13 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     private SmartRestaurantManager() {
         FenixFramework.getDomainRoot().setSmartRestaurantManager(this);
-        /*super.setFilesystem(new FileSystem(this));
-        currentSession = new Session(generateToken(), getFilesystem().getGuest(),
-                getFilesystem().getGuest().getHomeDirectory(),this);
-        addSession(currentSession);*/
-        addProduct(new Product("Bife da Vazia", "Um soculento bife da Vazia que o irá fazer chorar por mais.", 12.99));
-        addProduct(new Product("Bacalhau à Lagareiro", "Experimente o que mais de Português nós temos, este bacalhau irá dar-lhe a volta à cabeça", 10.99));
-        addProduct(new Product("Cozido à Portuguesa", "O nome diz tudo!", 20.59));
-        addProduct(new Product("Francesinha", "Prove um prato típico do Norte do País, carago!", 7.56)); //TODO change this
-        addProduct(new Product("Sopa de Peixe", "Porque a sopa faz bem a todos!", 7.56));
-        addProduct(new Product("Leite Creme", "Experimente este belo leite creme queimado na hora!", 7.56));
+        addProduct(new Product("Bife da Vazia", "Um soculento bife da Vazia que o irá fazer chorar por mais.", 12.99, this));
+        addProduct(new Product("Bacalhau à Lagareiro", "Experimente o que mais de Português " +
+                "nós temos, este bacalhau irá dar-lhe a volta à cabeça", 10.99, this));
+        addProduct(new Product("Cozido à Portuguesa", "O nome diz tudo!", 20.59, this));
+        addProduct(new Product("Francesinha", "Prove um prato típico do Norte do País, carago!", 7.56, this)); //TODO change this
+        addProduct(new Product("Sopa de Peixe", "Porque a sopa faz bem a todos!", 7.56, this));
+        addProduct(new Product("Leite Creme", "Experimente este belo leite creme queimado na hora!", 7.56, this));
 
     }
 
@@ -82,7 +79,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         else {
             User u = getUserBySessionId(sessionId);
             if(u.getOrder() == null){ // if there is not an active order
-                Order order = new Order(generateOrderId());
+                Order order = new Order(generateOrderId(), u);
                 order.addProduct(product);
                 order.setUser(u);
                 u.setOrder(order);
@@ -122,11 +119,20 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     }
 
     void setOrderReadyToDeliver(long orderId){
-        for(User u : getUserSet()){
-            if(u.getOrder() != null && u.getOrder().getId() == orderId){
-                u.getOrder().setState(2);
+        setOrderToState(orderId, 2);
+    }
+
+    void setOrderToDelivered(long orderId){
+        setOrderToState(orderId, 3);
+    }
+
+    void setOrderToPayed(long orderId){
+        for (User u : getUserSet()) {
+            if (u.getOrder() != null && u.getOrder().getId() == orderId) {
+                u.getOrder().remove();
+                u.setOrder(null);
                 break;
-            }else
+            } else
                 throw new OrderDoesntExistException();
         }
     }
@@ -207,8 +213,20 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     }
 
     private void checkAndLogoutUser(User u) {
-        if(new DateTime().getMillis() - u.getSession().getLoginTime().getMillis() > TIMEOUT_SESSION_TIME)
+        if(new DateTime().getMillis() - u.getSession().getLoginTime().getMillis() > TIMEOUT_SESSION_TIME) {
+            u.getSession().remove();
             u.setSession(null);
+        }
+    }
+
+    private void setOrderToState(long orderId, int state) {
+        for (User u : getUserSet()) {
+            if (u.getOrder() != null && u.getOrder().getId() == orderId) {
+                u.getOrder().setState(state);
+                break;
+            } else
+                throw new OrderDoesntExistException();
+        }
     }
 
 }

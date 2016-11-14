@@ -10,5 +10,5 @@ public interface WaiterServer {
 
     String ping(String msg);
 
-    void orderDelivered(long orderId);
+    void setOrderToDelivered(long orderId);
 }

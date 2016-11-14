@@ -9,14 +9,16 @@ public class Order extends Order_Base {
         1   -   Order requested to the kitchen
         2   -   Order cooked
         3   -   Order delivered
+    Deleted -   Order payed
     */
     public Order() {
         super();
     }
 
-    Order(long id) {
+    Order(long id, User user) {
         setId(id);
         setState(0);
+        setUser(user);
     }
 
     @Override
@@ -24,4 +26,15 @@ public class Order extends Order_Base {
         if(getState() == 0) super.addProduct(product);
         else throw new OrderAlreadyRequestedException();
     }
+
+    void remove() {
+        removeObject();
+        deleteDomainObject();
+    }
+
+
+    void removeObject(){
+        setUser(null);
+    }
+
 }

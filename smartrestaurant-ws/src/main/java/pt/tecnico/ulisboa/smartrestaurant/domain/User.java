@@ -16,7 +16,21 @@ public class User extends User_Base {
         super.setSmartRestaurantManager(manager);
     }
 
+    void remove() {
+        removeObject();
+        deleteDomainObject();
+    }
 
+
+    void removeObject(){
+        setUsername(null);
+        setOrder(null);
+        setSession(null);
+        setFirstName(null);
+        setLastName(null);
+        setSmartRestaurantManager(null);
+        setPassword(null);
+    }
 
 
 }
