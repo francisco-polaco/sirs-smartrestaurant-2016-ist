@@ -5,7 +5,7 @@ class SmartRestaurantManager;
 class Product{
     String name;
     String description;
-    float price;
+    double price;
 }
 
 class User{
@@ -17,7 +17,7 @@ class User{
 }
 
 class Session{
-    Long token;
+    bytearray sessionId;
     DateTime loginTime;
     Integer table;
 }
@@ -74,7 +74,7 @@ relation OrderHasProduct{
 
 relation UserHasSession{
     User playsRole user {
-        multiplicity *;
+        multiplicity 0..1;
     }
 
     Session playsRole session{

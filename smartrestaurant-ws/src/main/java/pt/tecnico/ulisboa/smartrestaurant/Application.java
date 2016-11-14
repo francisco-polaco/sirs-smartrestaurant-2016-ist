@@ -1,10 +1,15 @@
 package pt.tecnico.ulisboa.smartrestaurant;
 
+import pt.ist.fenixframework.FenixFramework;
+import pt.tecnico.ulisboa.smartrestaurant.domain.DomainFacade;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImpl;
 import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImpl;
 import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterServerImpl;
 
 import javax.xml.ws.Endpoint;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 /**
@@ -32,6 +37,9 @@ public class Application {
                 System.out.printf("Starting %s%n", urls[i]);
                 endpoints.get(i).publish(urls[i]);
             }
+
+            interaction();
+
             // wait
             System.out.println("Awaiting connections");
             System.out.println("Press enter to shutdown");
@@ -53,6 +61,16 @@ public class Application {
             } catch (Exception e) {
                 System.out.printf("Caught exception when stopping: %s%n", e);
             }
+            FenixFramework.shutdown();
         }
+    }
+
+    private static void interaction() throws NoSuchAlgorithmException {
+        //Thread.sleep(2000);
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest("batata".getBytes(StandardCharsets.UTF_8));
+       // DomainFacade.getInstance().registerNewUser("francisco", hash, "Francisco", "Santos", 100);
+        byte[] sessionId = DomainFacade.getInstance().login("francisco", hash, 1);
+        DomainFacade.getInstance().addProductToOrder(sessionId, "Bife da Vazia");
     }
 }

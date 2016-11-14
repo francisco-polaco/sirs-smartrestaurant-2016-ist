@@ -21,17 +21,17 @@ public class OrderServerImpl implements OrderServer {
     }
 
     @Override
-    public List<Product> requestAllProducts() {
+    public List<String> requestAllProducts() {
         return null;
     }
 
     @Override
-    public List<Product> requestMyOrdersProducts(byte[] sessionId) {
+    public List<String> requestMyOrdersProducts(byte[] sessionId) {
         return null;
     }
 
     @Override
-    public void addProductToOrder(byte[] sessionId, Product product) {
+    public void addProductToOrder(byte[] sessionId, String productName) {
 
     }
 

@@ -12,11 +12,11 @@ public interface OrderServer {
 
     byte[] login(String username, byte[] passwordSha2Hash);
 
-    List<Product> requestAllProducts();
+    List<String> requestAllProducts();
 
-    List<Product> requestMyOrdersProducts(byte[] sessionId);
+    List<String> requestMyOrdersProducts(byte[] sessionId);
 
-    void addProductToOrder(byte[] sessionId, Product product);
+    void addProductToOrder(byte[] sessionId, String productName);
 
     void orderProducts(byte[] sessionId);
 
