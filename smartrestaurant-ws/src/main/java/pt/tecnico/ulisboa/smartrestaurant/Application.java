@@ -2,6 +2,7 @@ package pt.tecnico.ulisboa.smartrestaurant;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.ulisboa.smartrestaurant.domain.DomainFacade;
+import pt.tecnico.ulisboa.smartrestaurant.exception.UserAlreadyExistsException;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImpl;
 import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImpl;
 import pt.tecnico.ulisboa.smartrestaurant.ws.ProductProxy;
@@ -72,7 +73,9 @@ public class Application {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] password = digest.digest("batata".getBytes(StandardCharsets.UTF_8));
         String username = "francisco";
-        DomainFacade.getInstance().registerNewUser(username, password, "Francisco", "Santos", 100);
+        try {
+            DomainFacade.getInstance().registerNewUser(username, password, "Francisco", "Santos", 100);
+        }catch (UserAlreadyExistsException e){}
         byte[] sessionId = DomainFacade.getInstance().login(username, password, 1);
         DomainFacade.getInstance().addProductToOrder(sessionId, "Bife da Vazia");
         List<ProductProxy> productProxies = DomainFacade.getInstance().requestMyOrdersProducts(sessionId);
