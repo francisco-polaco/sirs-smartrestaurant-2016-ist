@@ -35,6 +35,9 @@ public class Order extends Order_Base {
 
     void removeObject(){
         setUser(null);
+        for(Product p : getProductSet()){
+            removeProduct(p);
+        }
     }
 
 }

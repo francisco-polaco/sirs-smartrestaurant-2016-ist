@@ -86,5 +86,6 @@ public class Application {
             System.out.println(p);
         }
         DomainFacade.getInstance().orderProducts(sessionId, password);
+        DomainFacade.getInstance().confirmPayment(sessionId, password, "ola");
     }
 }

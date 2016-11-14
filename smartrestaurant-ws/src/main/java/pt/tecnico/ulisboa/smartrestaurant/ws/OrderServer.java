@@ -20,4 +20,6 @@ public interface OrderServer {
 
     void orderProducts(byte[] sessionId, byte[] passwordSha2Hash);
 
+    void confirmPayment(byte[] sessionId, byte[] passwordSha2Hash, String paypalReference);
+
 }

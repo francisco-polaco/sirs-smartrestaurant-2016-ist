@@ -59,7 +59,7 @@ public class DomainFacade {
     }
 
     @Atomic
-    public void setOrderToPayed(long orderToPayed){
-        SmartRestaurantManager.getInstance().setOrderToPayed(orderToPayed);
+    public void confirmPayment(byte[] sessionId, byte[] hashedPassword, String paypalReference){
+        SmartRestaurantManager.getInstance().confirmPayment(sessionId, hashedPassword, paypalReference);
     }
 }

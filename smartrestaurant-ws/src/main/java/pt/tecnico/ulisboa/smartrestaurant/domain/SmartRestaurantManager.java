@@ -51,11 +51,12 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     byte[] login(String username, byte[] hashedPassword, int tableNo) throws NoSuchAlgorithmException {
         System.out.println(username + " is logging in...");
-
         User user;
         byte[] hashToken;
         user = getUserByUsername(username);
-        checkAndLogoutUser(user);
+        try {
+            checkSessionTimeoutAndLogoutUser(user);
+        }catch (SessionExpiredException e){}
         if(Arrays.equals(user.getPassword(), hashedPassword)) {
             if (user.getSession() != null) {
                 System.out.println(username + " is logged in.");
@@ -102,20 +103,15 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     void orderProducts(byte[] sessionId, byte[] hashedPassword){
         User u = getUserBySessionId(sessionId);
-        checkAndLogoutUser(u);
+        checkSessionTimeoutAndLogoutUser(u);
         if(u.getSession() != null){
-            if(Arrays.equals(u.getPassword(), hashedPassword)){
-                // Para alem do session id, a password esta correta. Logo, devera ser o utilizador
-                System.out.println(u.getUsername() + " is ordering his order.");
-                Order toRequest = u.getOrder();
-                toRequest.setState(1); // set state meaning that the request is at the kitchen
-                // send order to kitchen
-            }else{
-
-                throw new AccessDeniedException();
-            }
-        }else
-            throw new SessionExpiredException(u.getUsername());
+            passwordChecker(u, hashedPassword);
+            // Para alem do session id, a password esta correta. Logo, devera ser o utilizador
+            System.out.println(u.getUsername() + " is ordering his order.");
+            Order toRequest = u.getOrder();
+            toRequest.setState(1); // set state meaning that the request is at the kitchen
+            // FIXME send order to kitchen
+        }
     }
 
     void setOrderReadyToDeliver(long orderId){
@@ -126,14 +122,14 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         setOrderToState(orderId, 3);
     }
 
-    void setOrderToPayed(long orderId){
-        for (User u : getUserSet()) {
-            if (u.getOrder() != null && u.getOrder().getId() == orderId) {
-                u.getOrder().remove();
-                u.setOrder(null);
-                break;
-            } else
-                throw new OrderDoesntExistException();
+    void confirmPayment(byte[] sessionId, byte[] hashedPassword, String paypalReference){
+        User u = getUserBySessionId(sessionId);
+        checkSessionTimeoutAndLogoutUser(u);
+        if(u.getSession() != null){
+            passwordChecker(u, hashedPassword);
+            checkPaypalPayment(paypalReference);
+            setOrderToPayed(u.getOrder());
+
         }
     }
 
@@ -147,6 +143,13 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         throw new UserAlreadyExistsException();
     }
 
+    private void passwordChecker(User user, byte[] hashedPassword){
+        System.out.println("Checking password.");
+        if(!Arrays.equals(hashedPassword, user.getPassword())){
+            throw new AccessDeniedException();
+        }
+    }
+
     private User getUserByUsername(String username){
         for(User u : getUserSet()){
             if(u.getUsername().equals(username)) return u;
@@ -156,7 +159,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     private User getUserBySessionId(byte[] sessionId){
         for(User u : getUserSet()){
-            checkAndLogoutUser(u);
+            checkSessionTimeoutAndLogoutUser(u);
             if(u.getSession() != null && Arrays.equals(u.getSession().getSessionId(), sessionId)) return u;
         }
         throw new UserWithSessionIdDoenstExistException();
@@ -184,7 +187,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
             notFound = false;
             for(User u : getUserSet()) {
                 if(u.getSession() != null) {
-                    checkAndLogoutUser(u);
+                    checkSessionTimeoutAndLogoutUser(u);
                     if (u.getSession() != null && Arrays.equals(u.getSession().getSessionId(), tokenHash) && !notFound)
                         notFound = true;
                 }
@@ -203,7 +206,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
             notFound = false;
             for(User u : getUserSet()) {
                 if(u.getOrder() != null) {
-                    checkAndLogoutUser(u);
+                    checkSessionTimeoutAndLogoutUser(u);
                     if (u.getOrder().getId() == id && !notFound)
                         notFound = true;
                 }
@@ -212,11 +215,12 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         return id;
     }
 
-    private void checkAndLogoutUser(User u) {
+    private void checkSessionTimeoutAndLogoutUser(User u) {
         if(u.getSession() != null){
             if(new DateTime().getMillis() - u.getSession().getLoginTime().getMillis() > TIMEOUT_SESSION_TIME) {
                 u.getSession().remove();
                 u.setSession(null);
+                throw new SessionExpiredException(u.getUsername());
             }
         }
     }
@@ -229,6 +233,25 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
             } else
                 throw new OrderDoesntExistException();
         }
+    }
+
+    private void setOrderToPayed(Order order){
+        for (User u : getUserSet()) {
+            if (u.getOrder() != null && u.getOrder().getId() == order.getId()) {
+                u.getOrder().remove();
+                u.setOrder(null);
+                System.out.println("Payment verified, you are good to go.");
+                break;
+            } else
+                throw new OrderDoesntExistException();
+        }
+    }
+
+    private void checkPaypalPayment(String paypalReference){
+        // To simplify, and since this is an university project, we will not contact PayPal
+        // We assume that the payment is always completed with success.
+        System.out.println("Checking payment reference.");
+
     }
 
 }
