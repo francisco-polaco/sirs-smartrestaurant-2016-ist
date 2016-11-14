@@ -2,6 +2,7 @@ package pt.tecnico.ulisboa.smartrestaurant;
 
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.ulisboa.smartrestaurant.domain.DomainFacade;
+import pt.tecnico.ulisboa.smartrestaurant.exception.OrderAlreadyRequestedException;
 import pt.tecnico.ulisboa.smartrestaurant.exception.UserAlreadyExistsException;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImpl;
 import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImpl;
@@ -75,9 +76,11 @@ public class Application {
         String username = "francisco";
         try {
             DomainFacade.getInstance().registerNewUser(username, password, "Francisco", "Santos", 100);
-        }catch (UserAlreadyExistsException e){}
+        }catch (UserAlreadyExistsException e){System.out.println(e.getMessage());}
         byte[] sessionId = DomainFacade.getInstance().login(username, password, 1);
-        DomainFacade.getInstance().addProductToOrder(sessionId, "Bife da Vazia");
+        try {
+            DomainFacade.getInstance().addProductToOrder(sessionId, "Bife da Vazia");
+        }catch (OrderAlreadyRequestedException e){System.out.println(e.getMessage());}
         List<ProductProxy> productProxies = DomainFacade.getInstance().requestMyOrdersProducts(sessionId);
         for(ProductProxy p : productProxies){
             System.out.println(p);
