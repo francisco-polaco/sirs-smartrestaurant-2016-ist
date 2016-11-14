@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
-    private static final int TIMEOUT_SESSION_TIME = 1800;     // half an hour
+    private static final int TIMEOUT_SESSION_TIME = 1800000;     // half an hour
 
     private SmartRestaurantManager() {
         FenixFramework.getDomainRoot().setSmartRestaurantManager(this);
@@ -51,27 +51,24 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     byte[] login(String username, byte[] hashedPassword, int tableNo) throws NoSuchAlgorithmException {
         System.out.println(username + " is logging in...");
-        User user;
         byte[] hashToken;
-        user = getUserByUsername(username);
+        User user = getUserByUsername(username);
         try {
             checkSessionTimeoutAndLogoutUser(user);
-        }catch (SessionExpiredException e){}
-        if(Arrays.equals(user.getPassword(), hashedPassword)) {
-            if (user.getSession() != null) {
-                System.out.println(username + " is logged in.");
-                return user.getSession().getSessionId();
-            } else {
-                System.out.println(username + " session timed out, creating a new session.");
-                hashToken = generateToken();
-                Session s = new Session(hashToken, tableNo);
-                s.setUser(user);
-                user.setSession(s);
-                System.out.println(username + " is logged in.");
-                return hashToken;
-            }
-        }else
-            throw new AccessDeniedException();
+        }catch (SessionExpiredException e){
+            System.out.println(user.getUsername() + " session has expired. Creating a new session.");
+            passwordChecker(user, hashedPassword);
+            hashToken = generateToken();
+            Session s = new Session(hashToken, tableNo);
+            s.setUser(user);
+            user.setSession(s);
+            System.out.println(username + " is logged in.");
+            return hashToken;
+        }
+
+        passwordChecker(user, hashedPassword);
+        System.out.println(username + " is logged in.");
+        return user.getSession().getSessionId();
     }
 
     void addRequestToOrder(byte[] sessionId, String productName){
@@ -131,6 +128,16 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
             setOrderToPayed(u.getOrder());
 
         }
+    }
+
+    double getPaymentDetails(byte[] sessionId) {
+        // Payment details will only be the amount own, just to do something with product's prices
+        User u = getUserBySessionId(sessionId);
+        checkSessionTimeoutAndLogoutUser(u);
+        if(u.getSession() != null){
+            return u.getOrder().amountToPay();
+        }else
+            throw new SessionExpiredException(u.getUsername());
     }
 
     // Private methods
@@ -217,7 +224,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     private void checkSessionTimeoutAndLogoutUser(User u) {
         if(u.getSession() != null){
-            if(new DateTime().getMillis() - u.getSession().getLoginTime().getMillis() > TIMEOUT_SESSION_TIME) {
+            if( new DateTime().getMillis() - u.getSession().getLoginTime().getMillis() > TIMEOUT_SESSION_TIME) {
                 u.getSession().remove();
                 u.setSession(null);
                 throw new SessionExpiredException(u.getUsername());
@@ -240,7 +247,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
             if (u.getOrder() != null && u.getOrder().getId() == order.getId()) {
                 u.getOrder().remove();
                 u.setOrder(null);
-                System.out.println("Payment verified, you are good to go.");
+                System.out.println("Payment was done with success.");
                 break;
             } else
                 throw new OrderDoesntExistException();
@@ -251,6 +258,11 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         // To simplify, and since this is an university project, we will not contact PayPal
         // We assume that the payment is always completed with success.
         System.out.println("Checking payment reference.");
+        try {
+            Thread.sleep(2500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 

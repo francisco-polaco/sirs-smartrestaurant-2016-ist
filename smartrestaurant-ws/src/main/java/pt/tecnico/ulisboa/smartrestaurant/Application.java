@@ -86,6 +86,9 @@ public class Application {
             System.out.println(p);
         }
         DomainFacade.getInstance().orderProducts(sessionId, password);
+        System.out.println("You owe: " + DomainFacade.getInstance().getPaymentDetails(sessionId) + "€");
         DomainFacade.getInstance().confirmPayment(sessionId, password, "ola");
+        byte[] sessionId2 = DomainFacade.getInstance().login(username, password, 1);
+
     }
 }

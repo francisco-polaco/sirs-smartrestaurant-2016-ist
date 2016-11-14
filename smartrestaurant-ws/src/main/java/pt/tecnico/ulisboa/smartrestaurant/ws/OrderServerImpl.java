@@ -54,4 +54,9 @@ public class OrderServerImpl implements OrderServer {
         DomainFacade.getInstance().confirmPayment(sessionId, passwordSha2Hash, paypalReference);
     }
 
+    @Override
+    public double getPaymentDetails(byte[] sessionId) {
+        return DomainFacade.getInstance().getPaymentDetails(sessionId);
+    }
+
 }

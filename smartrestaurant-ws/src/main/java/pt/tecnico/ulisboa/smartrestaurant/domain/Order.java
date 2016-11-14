@@ -1,6 +1,7 @@
 package pt.tecnico.ulisboa.smartrestaurant.domain;
 
 import pt.tecnico.ulisboa.smartrestaurant.exception.OrderAlreadyRequestedException;
+import pt.tecnico.ulisboa.smartrestaurant.exception.OrderIsNotRequestedYetException;
 
 public class Order extends Order_Base {
     /*
@@ -38,6 +39,15 @@ public class Order extends Order_Base {
         for(Product p : getProductSet()){
             removeProduct(p);
         }
+    }
+
+    double amountToPay(){
+        if(getState() == 0) throw new OrderIsNotRequestedYetException();
+        double result = 0.0;
+        for(Product p : getProductSet()){
+            result += p.getPrice();
+        }
+        return result;
     }
 
 }

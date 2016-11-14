@@ -1,7 +1,7 @@
 package pt.tecnico.ulisboa.smartrestaurant.domain;
 
 import pt.ist.fenixframework.Atomic;
-import pt.tecnico.ulisboa.smartrestaurant.ws.*;
+import pt.tecnico.ulisboa.smartrestaurant.ws.ProductProxy;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ import java.util.List;
 public class DomainFacade {
 
     private static DomainFacade instance;
+
     public static DomainFacade getInstance(){
         if(instance == null) instance = new DomainFacade();
         return instance;
@@ -62,4 +63,10 @@ public class DomainFacade {
     public void confirmPayment(byte[] sessionId, byte[] hashedPassword, String paypalReference){
         SmartRestaurantManager.getInstance().confirmPayment(sessionId, hashedPassword, paypalReference);
     }
+
+    @Atomic
+    public double getPaymentDetails(byte[] sessionId){
+        return SmartRestaurantManager.getInstance().getPaymentDetails(sessionId);
+    }
+
 }

@@ -22,4 +22,6 @@ public interface OrderServer {
 
     void confirmPayment(byte[] sessionId, byte[] passwordSha2Hash, String paypalReference);
 
+    double getPaymentDetails(byte[] sessionId);
+
 }
