@@ -72,7 +72,7 @@ public class Application {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] password = digest.digest("batata".getBytes(StandardCharsets.UTF_8));
         String username = "francisco";
-        // DomainFacade.getInstance().registerNewUser(username, password, "Francisco", "Santos", 100);
+        DomainFacade.getInstance().registerNewUser(username, password, "Francisco", "Santos", 100);
         byte[] sessionId = DomainFacade.getInstance().login(username, password, 1);
         DomainFacade.getInstance().addProductToOrder(sessionId, "Bife da Vazia");
         List<ProductProxy> productProxies = DomainFacade.getInstance().requestMyOrdersProducts(sessionId);

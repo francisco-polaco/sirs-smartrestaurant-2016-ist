@@ -1,7 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.cli;
 
 
-import com.sun.xml.internal.ws.developer.JAXWSProperties;
 import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServer;
 import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImplService;
 

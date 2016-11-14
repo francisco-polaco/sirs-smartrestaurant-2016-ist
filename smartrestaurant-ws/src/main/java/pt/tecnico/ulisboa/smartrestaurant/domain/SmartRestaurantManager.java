@@ -213,9 +213,11 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     }
 
     private void checkAndLogoutUser(User u) {
-        if(new DateTime().getMillis() - u.getSession().getLoginTime().getMillis() > TIMEOUT_SESSION_TIME) {
-            u.getSession().remove();
-            u.setSession(null);
+        if(u.getSession() != null){
+            if(new DateTime().getMillis() - u.getSession().getLoginTime().getMillis() > TIMEOUT_SESSION_TIME) {
+                u.getSession().remove();
+                u.setSession(null);
+            }
         }
     }
 
