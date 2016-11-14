@@ -1,2 +1,2 @@
 # Notes
-First run the user creation script, and then the database creation script.
+First run the database creation script, and then the user creation script.
