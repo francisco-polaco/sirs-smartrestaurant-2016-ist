@@ -10,6 +10,8 @@ import java.util.List;
 public interface OrderServer {
     String ping(String msg);
 
+    void registerNewUser(String username, byte[] hashedPassword, String firstName, String lastName, int nif);
+
     byte[] login(String username, byte[] passwordSha2Hash, int tableNo);
 
 //    List<ProductProxy> requestAllProducts();

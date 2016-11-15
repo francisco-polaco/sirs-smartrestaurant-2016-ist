@@ -19,6 +19,11 @@ public class OrderServerImpl implements OrderServer {
     }
 
     @Override
+    public void registerNewUser(String username, byte[] hashedPassword, String firstName, String lastName, int nif) {
+        DomainFacade.getInstance().registerNewUser(username, hashedPassword, firstName, lastName, nif);
+    }
+
+    @Override
     public byte[] login(String username, byte[] passwordSha2Hash, int tableNo) {
 
         try {
