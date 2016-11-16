@@ -37,13 +37,8 @@ public class OrderServerImpl implements OrderServer {
         }
     }
 
-    /*@Override
-    public List<ProductProxy> requestAllProducts() {
-        return null;
-    }*/
-
     @Override
-    public List<ProductProxy> requestMyOrdersProducts(byte[] sessionId) {
+    public String requestMyOrdersProducts(byte[] sessionId) {
         return DomainFacade.getInstance().requestMyOrdersProducts(sessionId);
     }
 

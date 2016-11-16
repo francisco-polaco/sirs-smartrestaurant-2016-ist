@@ -24,5 +24,14 @@ public class Product extends Product_Base {
         setDescription(null);
         setSmartRestaurantManager(null);
     }
+
+    @Override
+    public String toString() {
+        return "ProductProxy{" +
+                "name='" + getName() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", price=" + getPrice() +
+                '}';
+    }
     
 }

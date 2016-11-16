@@ -35,13 +35,13 @@ public class DomainFacade {
     }
 
     @Atomic
-    public List<ProductProxy> requestMyOrdersProducts(byte[] sessionId){
+    public String requestMyOrdersProducts(byte[] sessionId){
         List<Product> productList = SmartRestaurantManager.getInstance().requestMyOrdersProducts(sessionId);
-        List<ProductProxy> productProxies = new ArrayList<>();
+        String res = "";
         for(Product p : productList){
-            productProxies.add(new ProductProxy(p));
+            res += p.toString() + "\n";
         }
-        return productProxies;
+        return res;
     }
 
     @Atomic

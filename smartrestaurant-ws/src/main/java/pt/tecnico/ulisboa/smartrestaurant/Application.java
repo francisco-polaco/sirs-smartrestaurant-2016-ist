@@ -86,10 +86,8 @@ public class Application {
             } catch (OrderAlreadyRequestedException e) {
                 System.out.println(e.getMessage());
             }
-            List<ProductProxy> productProxies = DomainFacade.getInstance().requestMyOrdersProducts(sessionId);
-            for (ProductProxy p : productProxies) {
-                System.out.println(p);
-            }
+            String products = DomainFacade.getInstance().requestMyOrdersProducts(sessionId);
+            System.out.println(products);
             DomainFacade.getInstance().orderProducts(sessionId, password);
             System.out.println("You owe: " + DomainFacade.getInstance().getPaymentDetails(sessionId) + "€");
             DomainFacade.getInstance().confirmPayment(sessionId, password, "ola");

@@ -17,6 +17,7 @@ public class HandlerConstants {
      final String KEY_PASSWORD = "1nsecure";
      final String TIMESTAMP = "timestamp";
      final String NONCE = "secure_random";
-     final String AES_KEY_FILE = "extras/aes_file.jks";
+     final String AES_KEY_FILE = "extras/aes_key.jks";
+     final String AES_KEY_FILE_PASSWORD = "sirs_insecure";
 
 }

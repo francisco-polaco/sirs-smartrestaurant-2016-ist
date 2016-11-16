@@ -14,9 +14,7 @@ public interface OrderServer {
 
     byte[] login(String username, byte[] passwordSha2Hash, int tableNo);
 
-//    List<ProductProxy> requestAllProducts();
-
-    List<ProductProxy> requestMyOrdersProducts(byte[] sessionId);
+    String requestMyOrdersProducts(byte[] sessionId);
 
     void addProductToOrder(byte[] sessionId, String productName);
 
