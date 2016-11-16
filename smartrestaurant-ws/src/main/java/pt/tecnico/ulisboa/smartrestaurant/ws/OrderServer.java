@@ -1,5 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.ws;
 
+import javax.jws.WebMethod;
 import javax.jws.WebService;
 import java.util.List;
 
@@ -8,22 +9,22 @@ import java.util.List;
  */
 @WebService
 public interface OrderServer {
-    String ping(String msg);
+    @WebMethod String ping(String msg);
 
-    void registerNewUser(String username, byte[] hashedPassword, String firstName, String lastName, int nif);
+    @WebMethod void registerNewUser(String username, byte[] hashedPassword, String firstName, String lastName, int nif);
 
-    byte[] login(String username, byte[] passwordSha2Hash, int tableNo);
+    @WebMethod byte[] login(String username, byte[] passwordSha2Hash, int tableNo);
 
 //    List<ProductProxy> requestAllProducts();
 
-    List<ProductProxy> requestMyOrdersProducts(byte[] sessionId);
+    @WebMethod List<ProductProxy> requestMyOrdersProducts(byte[] sessionId);
 
-    void addProductToOrder(byte[] sessionId, String productName);
+    @WebMethod void addProductToOrder(byte[] sessionId, String productName);
 
-    void orderProducts(byte[] sessionId, byte[] passwordSha2Hash);
+    @WebMethod void orderProducts(byte[] sessionId, byte[] passwordSha2Hash);
 
-    void confirmPayment(byte[] sessionId, byte[] passwordSha2Hash, String paypalReference);
+    @WebMethod void confirmPayment(byte[] sessionId, byte[] passwordSha2Hash, String paypalReference);
 
-    double getPaymentDetails(byte[] sessionId);
+    @WebMethod double getPaymentDetails(byte[] sessionId);
 
 }
