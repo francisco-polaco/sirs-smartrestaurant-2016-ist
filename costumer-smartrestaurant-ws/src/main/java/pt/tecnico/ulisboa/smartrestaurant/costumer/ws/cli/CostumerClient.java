@@ -1,5 +1,9 @@
 package pt.tecnico.ulisboa.smartrestaurant.costumer.ws.cli;
 
+import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServer;
+import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImplService;
+import pt.tecnico.ulisboa.smartrestaurant.ws.ProductProxy;
+
 import javax.xml.ws.BindingProvider;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -7,10 +11,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServer;
-import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImplService;
-import pt.tecnico.ulisboa.smartrestaurant.ws.ProductProxy;
 
 import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
 
@@ -38,7 +38,6 @@ public class CostumerClient {
         BindingProvider bindingProvider = (BindingProvider) _port;
         Map<String, Object> requestContext = bindingProvider.getRequestContext();
         requestContext.put(ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
-        //requestContext.put(JAXWSProperties.SSL_SOCKET_FACTORY, batata().getServerSocketFactory());
     }
 
     public String ping(String pingMessage){

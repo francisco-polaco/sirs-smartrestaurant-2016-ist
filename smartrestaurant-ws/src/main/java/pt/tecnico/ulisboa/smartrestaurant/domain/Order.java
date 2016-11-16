@@ -1,8 +1,8 @@
 package pt.tecnico.ulisboa.smartrestaurant.domain;
 
 import pt.tecnico.ulisboa.smartrestaurant.exception.OrderAlreadyRequestedException;
-import pt.tecnico.ulisboa.smartrestaurant.exception.OrderWasNotRequestedYetException;
 import pt.tecnico.ulisboa.smartrestaurant.exception.OrderWasNotDeliveredYetException;
+import pt.tecnico.ulisboa.smartrestaurant.exception.OrderWasNotRequestedYetException;
 
 public class Order extends Order_Base {
     /*

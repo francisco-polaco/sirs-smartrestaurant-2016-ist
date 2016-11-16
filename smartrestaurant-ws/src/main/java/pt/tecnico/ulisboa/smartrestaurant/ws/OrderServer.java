@@ -1,7 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.ws;
 
 import javax.jws.WebService;
-import java.util.List;
 
 /**
  * Created by francisco on 13/11/2016.

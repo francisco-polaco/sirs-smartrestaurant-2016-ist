@@ -1,15 +1,11 @@
 package pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli;
 
-import javax.xml.ws.BindingProvider;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Map;
-import java.util.Random;
-
 import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServer;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImplService;
+
+import javax.xml.ws.BindingProvider;
+import java.util.Map;
 
 import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
 
@@ -40,7 +36,6 @@ public class KitchenClient {
         BindingProvider bindingProvider = (BindingProvider) _port;
         Map<String, Object> requestContext = bindingProvider.getRequestContext();
         requestContext.put(ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
-        //requestContext.put(JAXWSProperties.SSL_SOCKET_FACTORY, batata().getServerSocketFactory());
     }
 
     public String ping(String pingMessage){

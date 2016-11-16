@@ -3,10 +3,8 @@ package pt.tecnico.ulisboa.smartrestaurant.ws;
 import pt.tecnico.ulisboa.smartrestaurant.domain.DomainFacade;
 import pt.tecnico.ulisboa.smartrestaurant.exception.InsecureServerExceptionException;
 
-import javax.jws.HandlerChain;
 import javax.jws.WebService;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 /**
  * Created by francisco on 13/11/2016.

@@ -2,7 +2,6 @@ package pt.tecnico.ulisboa.smartrestaurant.costumer;
 
 import pt.tecnico.ulisboa.smartrestaurant.costumer.ws.cli.CostumerClient;
 
-import javax.sound.midi.SysexMessage;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 

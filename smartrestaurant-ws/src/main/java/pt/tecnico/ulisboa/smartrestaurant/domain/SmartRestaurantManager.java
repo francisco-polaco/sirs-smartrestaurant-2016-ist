@@ -43,6 +43,8 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     // Who's "they" you may ask, the Illuminati ofc
     void registerNewUser(String username, byte[] hashedPassword, String firstName, String lastName, int nif)
             throws UserAlreadyExistsException {
+        if(username == null || hashedPassword == null || firstName == null || lastName == null) throw new IllegalArgumentException();
+
         System.out.println(username + " is being registered.");
 
         canICreateAnUser(username);
@@ -50,6 +52,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     }
 
     byte[] login(String username, byte[] hashedPassword, int tableNo) throws NoSuchAlgorithmException {
+        if(username == null || hashedPassword == null) throw new IllegalArgumentException();
         System.out.println(username + " is logging in...");
         byte[] hashToken;
         User user = getUserByUsername(username);
@@ -75,6 +78,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     }
 
     void addRequestToOrder(byte[] sessionId, String productName){
+        if(sessionId == null || productName == null) throw new IllegalArgumentException();
         Product product = getProductByName(productName);
         if(product == null) throw new ProductDoesntExistException(productName);
         else {
@@ -91,6 +95,8 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     }
 
     List<Product> requestMyOrdersProducts(byte[] sessionId){
+        if(sessionId == null) throw new IllegalArgumentException();
+
         User u = getUserBySessionId(sessionId);
         List<Product> productList = new ArrayList<>();
         if(u.getOrder() != null) {
@@ -102,6 +108,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     }
 
     void orderProducts(byte[] sessionId, byte[] hashedPassword){
+        if(sessionId == null || hashedPassword == null) throw new IllegalArgumentException();
         User u = getUserBySessionId(sessionId);
         checkSessionTimeoutAndLogoutUser(u);
         if(u.getSession() != null){
@@ -123,6 +130,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     }
 
     void confirmPayment(byte[] sessionId, byte[] hashedPassword, String paypalReference){
+        if(sessionId == null || hashedPassword == null || paypalReference == null) throw new IllegalArgumentException();
         User u = getUserBySessionId(sessionId);
         checkSessionTimeoutAndLogoutUser(u);
         if(u.getSession() != null){
@@ -134,6 +142,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     }
 
     double getPaymentDetails(byte[] sessionId) {
+        if(sessionId == null) throw new IllegalArgumentException();
         // Payment details will only be the amount own, just to do something with product's prices
         User u = getUserBySessionId(sessionId);
         checkSessionTimeoutAndLogoutUser(u);

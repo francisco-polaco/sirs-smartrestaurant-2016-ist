@@ -3,8 +3,6 @@ package pt.tecnico.ulisboa.smartrestaurant;
 import org.junit.After;
 import org.junit.Before;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by franc on 13/11/2016.
  */

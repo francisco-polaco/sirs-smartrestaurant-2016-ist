@@ -6,7 +6,6 @@ import pt.tecnico.ulisboa.smartrestaurant.exception.OrderAlreadyRequestedExcepti
 import pt.tecnico.ulisboa.smartrestaurant.exception.UserAlreadyExistsException;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImpl;
 import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImpl;
-import pt.tecnico.ulisboa.smartrestaurant.ws.ProductProxy;
 import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterServerImpl;
 
 import javax.xml.ws.Endpoint;
@@ -14,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by franc on 13/11/2016.

@@ -1,10 +1,8 @@
 package pt.tecnico.ulisboa.smartrestaurant.domain;
 
 import pt.ist.fenixframework.Atomic;
-import pt.tecnico.ulisboa.smartrestaurant.ws.ProductProxy;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
