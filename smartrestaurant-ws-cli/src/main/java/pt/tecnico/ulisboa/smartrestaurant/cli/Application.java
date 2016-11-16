@@ -46,7 +46,6 @@ public class Application {
         BindingProvider bindingProvider = (BindingProvider) port;
         Map<String, Object> requestContext = bindingProvider.getRequestContext();
         requestContext.put(ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
-        //requestContext.put(JAXWSProperties.SSL_SOCKET_FACTORY, batata().getServerSocketFactory());
 
         System.out.println("Remote call ...");
         String result = port.ping("Ping!");
@@ -54,18 +53,5 @@ public class Application {
         System.in.read();
     }
 
-   /* public static SSLContext batata() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-        SSLContext sc = SSLContext.getInstance("SSLv3");
 
-        KeyManagerFactory kmf =
-                KeyManagerFactory.getInstance( KeyManagerFactory.getDefaultAlgorithm() );
-
-        KeyStore ks = KeyStore.getInstance( KeyStore.getDefaultType() );
-        ks.load(new FileInputStream( certPath ), certPasswd.toCharArray() );
-
-        kmf.init( ks, certPasswd.toCharArray() );
-
-        sc.init( kmf.getKeyManagers(), null, null );
-        return sc;
-    }*/
 }

@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Random;
 
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServer;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImplService;
 
@@ -29,6 +30,9 @@ public class KitchenClient {
         }
 
         System.out.println("Creating stub ...");
+        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenServer";
+        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
+
         _service = new KitchenServerImplService();
         _port = _service.getKitchenServerImplPort();
 

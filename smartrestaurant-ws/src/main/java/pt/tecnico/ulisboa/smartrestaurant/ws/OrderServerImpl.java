@@ -3,6 +3,7 @@ package pt.tecnico.ulisboa.smartrestaurant.ws;
 import pt.tecnico.ulisboa.smartrestaurant.domain.DomainFacade;
 import pt.tecnico.ulisboa.smartrestaurant.exception.InsecureServerExceptionException;
 
+import javax.jws.HandlerChain;
 import javax.jws.WebService;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.List;
  */
 @WebService(endpointInterface = "pt.tecnico.ulisboa.smartrestaurant.ws.OrderServer")
 public class OrderServerImpl implements OrderServer {
+
+
     @Override
     public String ping(String msg) {
         System.out.println("Customer " +msg);

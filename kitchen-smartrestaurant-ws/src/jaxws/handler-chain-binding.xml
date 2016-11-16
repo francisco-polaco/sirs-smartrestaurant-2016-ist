@@ -1,0 +1,8 @@
+<!DOCTYPE doc [
+        <!ENTITY handlerChain SYSTEM "KitchenPort_handler.xml">
+        ]>
+<jaxws:bindings
+        xmlns:jaxws="http://java.sun.com/xml/ns/jaxws"
+>
+    &handlerChain;
+</jaxws:bindings>
