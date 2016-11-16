@@ -19,7 +19,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <!-- WSDL is required for client code generation -->
-        <ws.url>http://localhost:8080/smartrestaurant-ws/endpoint</ws.url>
+        <!-- mete o url aqui diogo -->
+        <ws.url>https://localhost:8080/smartrestaurant-ws/endpoint</ws.url>
         <wsdl.url>${ws.url}?WSDL</wsdl.url>
 
         <mainclass>pt.tecnico.ulisboa.smartrestaurant.cli.Application</mainclass>

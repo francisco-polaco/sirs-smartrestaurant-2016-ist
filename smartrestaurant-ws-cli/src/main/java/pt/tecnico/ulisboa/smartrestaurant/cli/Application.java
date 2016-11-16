@@ -6,8 +6,11 @@ import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImplService;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
+import javax.xml.ws.Service;
 import java.io.FileInputStream;
+import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -39,8 +42,13 @@ public class Application {
         }
 
         System.out.println("Creating stub ...");
-        OrderServerImplService service = new OrderServerImplService();
-        OrderServer port = service.getOrderServerImplPort();
+        // Copiado do tutorial do Indiano
+        URL url = new URL(endpointAddress);
+        QName qname = new QName("http://ws.mkyong.com/", "HelloWorldImplService");
+        Service service = Service.create(url, qname);
+
+        //OrderServerImplService service = new OrderServerImplService();
+        OrderServer port = service.getPort(OrderServer.class);
 
         System.out.println("Setting endpoint address ...");
         BindingProvider bindingProvider = (BindingProvider) port;
