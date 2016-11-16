@@ -1,7 +1,12 @@
 package pt.tecnico.ulisboa.smartrestaurant.handler;
 
 
-import javax.crypto.*;
+import pt.tecnico.ulisboa.smartrestaurant.ca.ws.cli.CAClient;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.namespace.QName;
@@ -20,10 +25,9 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import static javax.xml.bind.DatatypeConverter.parseBase64Binary;
-import static javax.xml.bind.DatatypeConverter.printBase64Binary;
-import static javax.xml.bind.DatatypeConverter.printHexBinary;
+import static javax.xml.bind.DatatypeConverter.*;
 
 /**
  * Created by xxlxpto on 07-05-2016.
@@ -33,10 +37,11 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
 
 
     private static final int MAX_MESSAGES_WITHOUT_GETTING_CERTIFICATE_AGAIN = 10;
+    private static final String CA_ENDPOINT_ADDRESS = "http://localhost:7070/ca-ws/endpoint";
     public static HandlerConstants handlerConstants = new HandlerConstants();
 
     private ArrayList<String> oldTimestamps = new ArrayList<>();
-    private ConcurrentHashMap<String, Integer> numberMessagesReceived = new ConcurrentHashMap<>();
+    private AtomicInteger numberMessagesReceive = new AtomicInteger(0);
 
 
     public Set<QName> getHeaders() {
@@ -63,7 +68,7 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
                if(!checkIfOtherCertificateIsPresent(handlerConstants.RCPT_SERVICE_NAME)){
                    getCertificateFromCA(handlerConstants.RCPT_SERVICE_NAME,
                            handlerConstants.RCPT_SERVICE_NAME + handlerConstants.CERTIFICATE_EXTENSION);
-                   numberMessagesReceived.put(handlerConstants.RCPT_SERVICE_NAME, 0);
+                   numberMessagesReceive.set(0);
                }
                verifySignature(smc);
                getTimeStampAndNonceFromSoap(smc);
@@ -138,13 +143,12 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
     }
 
     private void getCertificateFromCA(String entity, String filename) throws Exception {
-        //FIXME
-       /* CAClient caClient = new CAClient();
+        CAClient caClient = new CAClient(CA_ENDPOINT_ADDRESS);
         try{
             caClient.getAndWriteEntityCertificate(entity, filename);
         }catch (IOException e){
             failAuthentication("Error downloading certificate.");
-        }*/
+        }
         Certificate certificate = readCertificateFile(filename);
         KeyStore keyStore = readKeystoreFile(handlerConstants.SENDER_SERVICE_NAME + ".jks",
                 handlerConstants.KEYSTORE_PASSWORD.toCharArray());
@@ -544,18 +548,14 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
     public void close(MessageContext messageContext) {
     }
 
-    private boolean checkIfOtherCertificateIsPresent(String entity){
+    private synchronized boolean checkIfOtherCertificateIsPresent(String entity){
         if(!(new File(entity + handlerConstants.CERTIFICATE_EXTENSION)).exists() ||
-                !numberMessagesReceived.containsKey(entity) ||
-                numberMessagesReceived.get(entity) >= MAX_MESSAGES_WITHOUT_GETTING_CERTIFICATE_AGAIN){
+                numberMessagesReceive.get() >= MAX_MESSAGES_WITHOUT_GETTING_CERTIFICATE_AGAIN){
             System.out.printf("We need to refresh the %s certificate.\n", entity);
             return false;
         } else {
-            Integer i = numberMessagesReceived.get(entity);
-            ++i;
-            numberMessagesReceived.put(entity, i);
             System.out.printf("%s certificate is present. Times until renewal: %d\n", entity,
-                    MAX_MESSAGES_WITHOUT_GETTING_CERTIFICATE_AGAIN - i);
+                    MAX_MESSAGES_WITHOUT_GETTING_CERTIFICATE_AGAIN - numberMessagesReceive.getAndIncrement());
             return true;
         }
 
