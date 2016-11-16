@@ -71,24 +71,32 @@ public class Application {
 
     private static void interaction() throws NoSuchAlgorithmException {
         //Thread.sleep(2000);
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] password = digest.digest("batata".getBytes(StandardCharsets.UTF_8));
-        String username = "francisco";
         try {
-            DomainFacade.getInstance().registerNewUser(username, password, "Francisco", "Santos", 100);
-        }catch (UserAlreadyExistsException e){System.out.println(e.getMessage());}
-        byte[] sessionId = DomainFacade.getInstance().login(username, password, 1);
-        try {
-            DomainFacade.getInstance().addProductToOrder(sessionId, "Bife da Vazia");
-        }catch (OrderAlreadyRequestedException e){System.out.println(e.getMessage());}
-        List<ProductProxy> productProxies = DomainFacade.getInstance().requestMyOrdersProducts(sessionId);
-        for(ProductProxy p : productProxies){
-            System.out.println(p);
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] password = digest.digest("batata".getBytes(StandardCharsets.UTF_8));
+            String username = "francisco";
+            try {
+                DomainFacade.getInstance().registerNewUser(username, password, "Francisco", "Santos", 100);
+            } catch (UserAlreadyExistsException e) {
+                System.out.println(e.getMessage());
+            }
+            byte[] sessionId = DomainFacade.getInstance().login(username, password, 1);
+            try {
+                DomainFacade.getInstance().addProductToOrder(sessionId, "Bife da Vazia");
+            } catch (OrderAlreadyRequestedException e) {
+                System.out.println(e.getMessage());
+            }
+            List<ProductProxy> productProxies = DomainFacade.getInstance().requestMyOrdersProducts(sessionId);
+            for (ProductProxy p : productProxies) {
+                System.out.println(p);
+            }
+            DomainFacade.getInstance().orderProducts(sessionId, password);
+            System.out.println("You owe: " + DomainFacade.getInstance().getPaymentDetails(sessionId) + "€");
+            DomainFacade.getInstance().confirmPayment(sessionId, password, "ola");
+            byte[] sessionId2 = DomainFacade.getInstance().login(username, password, 1);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
-        DomainFacade.getInstance().orderProducts(sessionId, password);
-        System.out.println("You owe: " + DomainFacade.getInstance().getPaymentDetails(sessionId) + "€");
-        DomainFacade.getInstance().confirmPayment(sessionId, password, "ola");
-        byte[] sessionId2 = DomainFacade.getInstance().login(username, password, 1);
-
     }
 }

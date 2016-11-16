@@ -53,22 +53,25 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         System.out.println(username + " is logging in...");
         byte[] hashToken;
         User user = getUserByUsername(username);
+        boolean haveToDeleteOldSession= true;
         try {
             checkSessionTimeoutAndLogoutUser(user);
         }catch (SessionExpiredException e){
-            System.out.println(user.getUsername() + " session has expired. Creating a new session.");
-            passwordChecker(user, hashedPassword);
-            hashToken = generateToken();
-            Session s = new Session(hashToken, tableNo);
-            s.setUser(user);
-            user.setSession(s);
-            System.out.println(username + " is logged in.");
-            return hashToken;
+            System.out.println(user.getUsername() + " session has expired.");
+            haveToDeleteOldSession = false;
         }
 
         passwordChecker(user, hashedPassword);
+        hashToken = generateToken();
+        if(haveToDeleteOldSession) {
+            user.getSession().remove();
+            user.setSession(null);
+        }
+        Session s = new Session(hashToken, tableNo);
+        s.setUser(user);
+        user.setSession(s);
         System.out.println(username + " is logged in.");
-        return user.getSession().getSessionId();
+        return hashToken;
     }
 
     void addRequestToOrder(byte[] sessionId, String productName){
@@ -245,6 +248,8 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     private void setOrderToPayed(Order order){
         for (User u : getUserSet()) {
             if (u.getOrder() != null && u.getOrder().getId() == order.getId()) {
+
+                // Only delivered orders can be payed
                 u.getOrder().remove();
                 u.setOrder(null);
                 System.out.println("Payment was done with success.");
