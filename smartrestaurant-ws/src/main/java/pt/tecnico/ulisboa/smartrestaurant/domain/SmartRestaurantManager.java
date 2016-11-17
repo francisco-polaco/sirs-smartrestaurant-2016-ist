@@ -257,9 +257,9 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
                 u.setOrder(null);
                 System.out.println("Payment was done with success.");
                 break;
-            } else
-                throw new OrderDoesntExistException();
+            }
         }
+        throw new OrderDoesntExistException();
     }
 
     private void checkPaypalPayment(String paypalReference){
