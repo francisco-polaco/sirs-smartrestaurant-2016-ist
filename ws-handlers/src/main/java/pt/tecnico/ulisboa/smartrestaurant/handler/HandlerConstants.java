@@ -4,7 +4,7 @@ package pt.tecnico.ulisboa.smartrestaurant.handler;
  * Created by xxlxpto on 07-05-2016.
  */
 public class HandlerConstants {
-     final String CERTIFICATE_EXTENSION = ".cer";
+     final String CERTIFICATE_EXTENSION = ".cre";
      final String KEYSTORE_EXTENSION = ".jks";
      final String CONTEXT_PROPERTY = "my.property";
      final String SIG_ELEMENT_NAME = "signature";
