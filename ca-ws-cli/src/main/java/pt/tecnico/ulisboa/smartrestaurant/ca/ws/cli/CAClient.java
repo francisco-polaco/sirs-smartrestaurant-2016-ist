@@ -1,8 +1,7 @@
 package pt.tecnico.ulisboa.smartrestaurant.ca.ws.cli;
 
 import pt.tecnico.ulisboa.smartrestaurant.ca.ws.CA;
-import pt.tecnico.ulisboa.smartrestaurant.ca.ws.CAImplementionService;
-import pt.tecnico.ulisboa.smartrestaurant.ca.ws.CertificateDoesntExists_Exception;
+import pt.tecnico.ulisboa.smartrestaurant.ca.ws.CAImplementationService;
 
 import javax.xml.ws.BindingProvider;
 import java.io.File;
@@ -22,8 +21,8 @@ public class CAClient {
     public CAClient(String endpointAddress){
         System.out.println("============CA Client============");
         System.out.println("Creating CA Client...");
-        CAImplementionService tttImplService = new CAImplementionService();
-        mCa = tttImplService.getCAImplementionPort();
+        CAImplementationService tttImplService = new CAImplementationService();
+        mCa = tttImplService.getCAImplementationPort();
 
 
         if (endpointAddress == null) {
@@ -42,7 +41,8 @@ public class CAClient {
         requestContext.put(ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
     }
 
-    public void getAndWriteEntityCertificate(String entity, String filename) throws IOException, CertificateDoesntExists_Exception {
+    public void getAndWriteEntityCertificate(String entity, String filename)
+            throws IOException{
         byte[] certificate = mCa.getEntityCertificate(entity);
         File f = new File(filename);
         if(f.createNewFile()) {

@@ -1,8 +1,10 @@
 package pt.tecnico.ulisboa.smartrestaurant.ca.ws;
 
-import pt.tecnico.ulisboa.smartrestaurant.ca.ws.exception.CertificateDoesntExists;
+import pt.tecnico.ulisboa.smartrestaurant.ca.ws.exception.CertificateDoesntExistsException;
+import pt.tecnico.ulisboa.smartrestaurant.ca.ws.exception.CertificateIsInBlackListException;
 
 import javax.jws.WebService;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -17,44 +19,53 @@ import java.util.ArrayList;
  * Created by xxlxpto on 06-05-2016.
  */
 @WebService(endpointInterface = "pt.tecnico.ulisboa.smartrestaurant.ca.ws.CA")
-public class CAImplemention implements CA {
+public class CAImplementation implements CA {
 
     private final static String CA_CERTIFICATE_FILE = "certs/ca-certificate.pem.txt";
 
-    private ArrayList<String> mFileNames = new ArrayList<>();
+    private ArrayList<String> fileNames = new ArrayList<>();
+    private ArrayList<Certificate> blackList = new ArrayList<>();
 
-    public CAImplemention(){
+    public CAImplementation(){
         File dir = new File("certs/");
         if(!dir.exists()) dir.mkdir();
         for (File file : dir.listFiles()) {
             if (file.getName().startsWith("Waiter") && file.getName().endsWith(".cer") ) {
-                mFileNames.add(file.getName());
+                fileNames.add(file.getName());
             }
         }
-        mFileNames.add("KitchenServer.cer");
-        mFileNames.add("OrderServer.cer");
+        fileNames.add("KitchenServer.cer");
+        fileNames.add("OrderServer.cer");
 
-        for(String f: mFileNames){
+        for(String f: fileNames){
             System.out.println(f);
         }
-        System.out.println("Number of certificates loaded: " + mFileNames.size());
+        System.out.println("Number of certificates loaded: " + fileNames.size());
+    }
+
+    public void addEntityToBlackList(String entity) throws IOException, CertificateException {
+        final String certificatePath = "certs/" + entity + ".cer";
+        Certificate certificate = readCertificate(certificatePath);
+        System.out.println("Adding " + certificatePath + " to the blacklist...");
+        blackList.add(certificate);
+        System.out.println(entity + " blacklisted!");
     }
 
     @Override
-    public byte[] getEntityCertificate(String entity) throws CertificateDoesntExists {
+    public byte[] getEntityCertificate(String entity) throws CertificateDoesntExistsException {
         if(entity == null){
             return null;
         }
         System.out.println(entity + " Certificate Requested...");
-        if(mFileNames.contains(entity + ".cer")){
+        if(fileNames.contains(entity + ".cer")){
             try {
-                return readCertificateFile("certs/" + entity + ".cer");
+                return readCertificateFile(entity);
             } catch (IOException | CertificateException e){
                 System.out.println("We are having problems with our certificates.\n" + e.getMessage());
-                throw new CertificateDoesntExists(entity);
+                throw new CertificateDoesntExistsException(entity);
             }
         }else{
-            throw new CertificateDoesntExists(entity);
+            throw new CertificateDoesntExistsException(entity);
         }
     }
 
@@ -64,9 +75,11 @@ public class CAImplemention implements CA {
      * @return
      * @throws IOException
      */
-    private byte[] readCertificateFile(String certificateFilePath) throws IOException, CertificateException {
-
+    private byte[] readCertificateFile(String entity) throws IOException, CertificateException {
+        String certificateFilePath = "certs/" + entity + ".cer";
         Certificate certificate = readCertificate(certificateFilePath);
+
+        if(blackList.contains(certificate)) throw new CertificateIsInBlackListException(entity);
 
         Certificate caCertificate = readCertificate(CA_CERTIFICATE_FILE);
         PublicKey caPublicKey = caCertificate.getPublicKey();

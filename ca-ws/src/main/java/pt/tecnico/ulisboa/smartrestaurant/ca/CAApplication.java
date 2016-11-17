@@ -1,8 +1,9 @@
 package pt.tecnico.ulisboa.smartrestaurant.ca;
 
-import pt.tecnico.ulisboa.smartrestaurant.ca.ws.CAImplemention;
+import pt.tecnico.ulisboa.smartrestaurant.ca.ws.CAImplementation;
 
 import javax.xml.ws.Endpoint;
+import java.util.Scanner;
 
 /**
  * Created by xxlxpto on 06-05-2016.
@@ -20,16 +21,33 @@ public class CAApplication {
 
         Endpoint endpoint = null;
         try {
-            endpoint = Endpoint.create(new CAImplemention());
+            CAImplementation ca = new CAImplementation();
+            endpoint = Endpoint.create(ca);
             // publish endpoint
             System.out.printf("Starting %s%n", url);
             endpoint.publish(url);
-
-
-            // wait
             System.out.println("Awaiting connections");
-            System.out.println("Press enter to shutdown");
-            System.in.read();
+
+            System.out.println("Welcome to CA terminal!");
+            printHelp();
+            Scanner scanner = new Scanner(System.in);
+            String line;
+            System.out.print("> ");
+            while(!((line = scanner.nextLine()).equals("q"))){
+                if(line.startsWith("blacklist ")){
+                    String[] tokens = line.split(" ");
+                    if(tokens.length == 2){
+                        ca.addEntityToBlackList(tokens[1]);
+                    }
+                }else if (line.startsWith("h") && line.length() == 1) {
+                    printHelp();
+                }
+                else{
+                    System.err.println("Unknown Command! Type 'h' for help.");
+                }
+                System.out.print("> ");
+            }
+            System.out.println("Bye!");
 
         } catch (Exception e) {
             System.out.printf("Caught exception: %s%n", e);
@@ -46,5 +64,12 @@ public class CAApplication {
                 System.out.printf("Caught exception when stopping: %s%n", e);
             }
         }
+    }
+
+    private static void printHelp(){
+        System.out.println("You have the following commands available:" +
+                "\n\tblacklist <entity> - blacklists an entity" +
+                "\n\th - shows this message" +
+                "\n\tq - exits CA");
     }
 }

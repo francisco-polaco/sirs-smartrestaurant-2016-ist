@@ -1,6 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.ca.ws;
 
-import pt.tecnico.ulisboa.smartrestaurant.ca.ws.exception.CertificateDoesntExists;
+import pt.tecnico.ulisboa.smartrestaurant.ca.ws.exception.CertificateDoesntExistsException;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -10,6 +10,6 @@ import javax.jws.WebService;
  */
 @WebService
 public interface CA {
-    @WebMethod byte[] getEntityCertificate(String entity) throws CertificateDoesntExists;
+    @WebMethod byte[] getEntityCertificate(String entity) throws CertificateDoesntExistsException;
 
 }

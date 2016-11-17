@@ -3,16 +3,16 @@ package pt.tecnico.ulisboa.smartrestaurant.ca.ws.exception;
 /**
  * Created by xxlxpto on 08-05-2016.
  */
-public class CertificateDoesntExists extends Exception{
+public class CertificateIsInBlackListException extends RuntimeException{
 
     private String mEntity;
 
-    public CertificateDoesntExists(String entity){
+    public CertificateIsInBlackListException(String entity){
         mEntity = entity;
     }
 
     @Override
     public String getMessage(){
-        return "CA does not have the certificate of " + mEntity;
+        return "CA reports that " + mEntity + " is blacklisted.";
     }
 }
