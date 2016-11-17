@@ -45,7 +45,10 @@ public class KitchenClient {
     public String setOrderReadyToDeliver(long orderId){
         try{
             _port.setOrderReadyToDeliver(orderId);
-        }catch (Exception e){ System.err.println(e.getMessage()); }
+        }catch (Exception e){
+            System.err.println(e.getMessage());
+            return "Item wasn't set";
+        }
         return "Item set to ready!";
     }
 }

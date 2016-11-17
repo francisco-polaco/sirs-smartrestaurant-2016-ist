@@ -18,7 +18,7 @@ public class KitchenClientApplication {
         System.out.println("cenas " + args[0]);
 
 
-        KitchenClient costumer = new KitchenClient(args[0]);
+        KitchenClient kitchen = new KitchenClient(args[0]);
         Scanner scanner = new Scanner(System.in);
 
         while(true){
@@ -31,6 +31,7 @@ public class KitchenClientApplication {
             try{
                 option=scanner.nextInt();
             }catch (InputMismatchException e ){
+                scanner.nextLine();
                 System.err.println("Não é um número");
                 continue;
             }
@@ -46,10 +47,10 @@ public class KitchenClientApplication {
                     System.out.print("Ping\nIntroduza mensagem de ping:\n>");
                     try{
                         String pingMessage = scanner.nextLine();
-                        String ping = costumer.ping(pingMessage);
+                        String ping = kitchen.ping(pingMessage);
                         System.out.println(ping);
                     }catch (InputMismatchException e){
-                        System.err.println("Não pode conter \ns");
+                        System.err.println("Não pode conter new lines");
                         break;
                     }
                     break;
@@ -57,11 +58,12 @@ public class KitchenClientApplication {
                 case 2:
                     System.out.print("Finished order\nIntroduza nr da order:\n>");
                     try{
-                        int orderNr = scanner.nextInt();
+                        long orderNr = scanner.nextLong();
                         scanner.nextLine();
-                        String statusOrderNr = costumer.setOrderReadyToDeliver(orderNr);
+                        System.out.println(kitchen.setOrderReadyToDeliver(orderNr));
                     }catch (InputMismatchException e){
-                        System.err.println("Não pode conter \ns");
+                        scanner.nextLine();
+                        System.err.println("Não é um número");
                         break;
                     }
                     break;

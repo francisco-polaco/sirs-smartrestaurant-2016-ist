@@ -58,9 +58,9 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
                addSenderToSoap(smc.getMessage());
                addTimestampAndNonceToSoap(smc.getMessage());
                signMessage(smc);
-               cipherMessage(smc);
+               //cipherMessage(smc);
            } else {
-               decipherMessage(smc);
+               //decipherMessage(smc);
                System.out.print("Inbound SOAP message from: ");
                handlerConstants.RCPT_SERVICE_NAME = getSenderFromSoap(smc, false);
                System.out.println(handlerConstants.RCPT_SERVICE_NAME);

@@ -1,6 +1,7 @@
 package pt.tecnico.ulisboa.smartrestaurant.ws;
 
 import pt.tecnico.ulisboa.smartrestaurant.domain.Product;
+import java.io.Serializable;
 
 /**
  * Created by francisco on 14/11/2016.

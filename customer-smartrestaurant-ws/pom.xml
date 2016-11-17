@@ -5,9 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pt.tecnico.ulisboa</groupId>
-    <artifactId>kitchen-smartrestaurant-ws</artifactId>
+    <artifactId>customer-smartrestaurant-ws</artifactId>
     <version>1.0-SNAPSHOT</version>
-
+    <dependencies>
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-rt</artifactId>
+            <version>2.2.10</version>
+        </dependency>
+    </dependencies>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -20,12 +26,12 @@
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <!-- WSDL is required for client code generation -->
-        <ws.url>http://localhost:8082/smartrestaurant-ws/endpoint</ws.url>
+        <ws.url>http://localhost:8080/smartrestaurant-ws/endpoint</ws.url>
         <wsdl.url>${ws.url}?WSDL</wsdl.url>
 
         <version.junit>4.12</version.junit>
 
-        <mainclass>pt.tecnico.ulisboa.smartrestaurant.kitchen.KitchenClientApplication</mainclass>
+        <mainclass>pt.tecnico.ulisboa.smartrestaurant.customer.CustomerClientApplication</mainclass>
 
     </properties>
 
@@ -98,16 +104,7 @@
                 </configuration>
             </plugin>
         </plugins>
-
     </build>
 
-    <dependencies>
-        <dependency>
-            <groupId>pt.tecnico.ulisboa</groupId>
-            <artifactId>ws-handlers</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-    </dependencies>
 
 </project>

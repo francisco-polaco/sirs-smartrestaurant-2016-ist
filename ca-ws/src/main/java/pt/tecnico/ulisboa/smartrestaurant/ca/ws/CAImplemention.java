@@ -31,8 +31,12 @@ public class CAImplemention implements CA {
                 mFileNames.add(file.getName());
             }
         }
-        mFileNames.add("Kitchen.cer");
-        mFileNames.add("Order.cer");
+        mFileNames.add("KitchenServer.cer");
+        mFileNames.add("OrderServer.cer");
+
+        for(String f: mFileNames){
+            System.out.println(f);
+        }
         System.out.println("Number of certificates loaded: " + mFileNames.size());
     }
 
@@ -44,7 +48,7 @@ public class CAImplemention implements CA {
         System.out.println(entity + " Certificate Requested...");
         if(mFileNames.contains(entity + ".cer")){
             try {
-                return readCertificateFile(entity + ".cer");
+                return readCertificateFile("certs/" + entity + ".cer");
             } catch (IOException | CertificateException e){
                 System.out.println("We are having problems with our certificates.\n" + e.getMessage());
                 throw new CertificateDoesntExists(entity);

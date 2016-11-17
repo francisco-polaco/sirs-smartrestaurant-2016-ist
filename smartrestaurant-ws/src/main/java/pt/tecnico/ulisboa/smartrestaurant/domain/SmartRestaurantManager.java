@@ -56,12 +56,12 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         System.out.println(username + " is logging in...");
         byte[] hashToken;
         User user = getUserByUsername(username);
-        boolean haveToDeleteOldSession= true;
+        boolean haveToDeleteOldSession= false;
         try {
             checkSessionTimeoutAndLogoutUser(user);
         }catch (SessionExpiredException e){
             System.out.println(user.getUsername() + " session has expired.");
-            haveToDeleteOldSession = false;
+            haveToDeleteOldSession = true;
         }
 
         passwordChecker(user, hashedPassword);

@@ -269,7 +269,7 @@
         </dependency>-->
 
         <dependency>
-            <groupId>pt.tecnico.ulisboa.smartrestaurant</groupId>
+            <groupId>pt.tecnico.ulisboa</groupId>
             <artifactId>ws-handlers</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
