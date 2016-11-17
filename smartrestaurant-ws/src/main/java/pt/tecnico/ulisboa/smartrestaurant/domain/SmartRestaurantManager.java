@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
-    private static final int TIMEOUT_SESSION_TIME = 1800000;     // half an hour
+    private static final int TIMEOUT_SESSION_TIME = 1800000/15;     // half an hour
 
     private SmartRestaurantManager() {
         FenixFramework.getDomainRoot().setSmartRestaurantManager(this);
@@ -56,20 +56,14 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         System.out.println(username + " is logging in...");
         byte[] hashToken;
         User user = getUserByUsername(username);
-        boolean haveToDeleteOldSession= false;
         try {
             checkSessionTimeoutAndLogoutUser(user);
         }catch (SessionExpiredException e){
             System.out.println(user.getUsername() + " session has expired.");
-            haveToDeleteOldSession = true;
         }
 
         passwordChecker(user, hashedPassword);
         hashToken = generateToken();
-        if(haveToDeleteOldSession) {
-            user.getSession().remove();
-            user.setSession(null);
-        }
         Session s = new Session(hashToken, tableNo);
         s.setUser(user);
         user.setSession(s);

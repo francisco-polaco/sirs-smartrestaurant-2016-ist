@@ -76,9 +76,13 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
 
         }
 
-        }catch(AuthenticationException | MissedFormedSOAPException | InvalidTimestampSOAPException e){
+        }catch(AuthenticationException | MissedFormedSOAPException | javax.xml.ws.WebServiceException | InvalidTimestampSOAPException e){
             System.out.println(e.getMessage());
-            throw e;
+            if(handlerConstants.SENDER_SERVICE_NAME.equals("OrderServer"))
+                return false;
+            else{
+                throw new RuntimeException();
+            }
         }catch (Exception e) {
             System.out.println("Caught exception in handleMessage: " + e.getMessage());
             e.printStackTrace();
@@ -404,37 +408,38 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
             InvalidAlgorithmParameterException, InvalidKeyException,
             BadPaddingException, IllegalBlockSizeException, IOException, SOAPException {
 
+        SOAPPart sp = smc.getMessage().getSOAPPart();
+        SOAPEnvelope se = sp.getEnvelope();
+        SOAPHeader sh = se.getHeader();
+        SOAPBody sb = se.getBody();
 
         final String plainText = smc.getMessage().toString();
         final byte[] plainBytes = plainText.getBytes();
+        final String plainTextHeader = sh.toString();
+        final byte[] plainBytesHeader = plainTextHeader.getBytes();
+        final String plainTextBody = sb.toString();
+        final byte[] plainBytesBody = plainTextBody.getBytes();
 
-       /* System.out.println("Text:");
-        System.out.println(plainText);
-        System.out.println("Bytes:");
-        System.out.println(printHexBinary(plainBytes));*/
 
         // get a AES private key
         Key key = getAESKey();
         byte[] iv = getIV();
 
-
         // get a AES cipher object and print the provider
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        System.out.println(cipher.getProvider().getInfo());
 
-        // encrypt using the key and the plaintext
-        /*System.out.println("Text:");
-        System.out.println(plainText);
-        System.out.println("Bytes:");
-        System.out.println(printHexBinary(plainBytes));*/
 
         System.out.println("Ciphering ...");
 
         IvParameterSpec ips = new IvParameterSpec(iv);
         cipher.init(Cipher.ENCRYPT_MODE, key, ips);
         byte[] cipherBytes = cipher.doFinal(plainBytes);
-        /*System.out.println("Result:");
-        System.out.println(printHexBinary(cipherBytes));*/
+        byte[] cipherBytesHeader = cipher.doFinal(plainBytesHeader);
+        byte[] cipherBytesBody = cipher.doFinal(plainBytesBody);
+        sh.removeContents();
+
+
+
         setSOAPMessage(smc.getMessage(), cipherBytes);
     }
 
@@ -531,10 +536,6 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
         // replace contents of old message with new message's
         old.getSOAPPart().setContent(newMessage.getSOAPPart().getContent());
 
-        // print SOAP message again
-        System.out.println("Message (after content change):");
-        old.writeTo(System.out);
-        System.out.println();
         old.saveChanges();
         System.out.println("Finished");
     }
