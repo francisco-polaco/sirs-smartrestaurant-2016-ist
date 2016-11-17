@@ -14,17 +14,14 @@ import javax.xml.soap.*;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
+import java.awt.*;
 import java.io.*;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static javax.xml.bind.DatatypeConverter.*;
@@ -38,6 +35,9 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
 
     private static final int MAX_MESSAGES_WITHOUT_GETTING_CERTIFICATE_AGAIN = 10;
     private static final String CA_ENDPOINT_ADDRESS = "http://localhost:7070/ca-ws/endpoint";
+    public static final String REAL_BODY = "real_body";
+    public static final String REAL_HEADER = "real_header";
+    public static final String IV = "iv";
     public static HandlerConstants handlerConstants = new HandlerConstants();
 
     private ArrayList<String> oldTimestamps = new ArrayList<>();
@@ -228,12 +228,12 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
 
     }
 
-    private void insertElement(SOAPEnvelope se, SOAPHeader sh, String nonce, String x, String text) throws SOAPException {
+    private void insertElement(SOAPEnvelope se, SOAPHeader sh, String tag, String print, String text) throws SOAPException {
         // add header element (name, namespace prefix, namespace)
-        Name name = se.createName(nonce,
+        Name name = se.createName(tag,
                 handlerConstants.PREFIX, handlerConstants.NAMESPACE);
         SOAPHeaderElement element = sh.addHeaderElement(name);
-        System.out.println(x);
+        System.out.println(print);
         // add header element value
 
         element.addTextNode(text);
@@ -264,7 +264,7 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
                 handlerConstants.PREFIX, handlerConstants.NAMESPACE);
         Iterator it = sh.getChildElements(name);
         // check header element
-        checkSOAPHeaderElement(it);
+        checkSOAPElement(it);
 
         SOAPElement element = (SOAPElement) it.next();
         String timestamp = element.getValue();  //Getting Timestamp value
@@ -338,7 +338,7 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
                 handlerConstants.PREFIX, handlerConstants.NAMESPACE);
         Iterator it = sh.getChildElements(name);
         // check header element
-        checkSOAPHeaderElement(it);
+        checkSOAPElement(it);
 
         SOAPElement element = (SOAPElement) it.next();
         String sender = element.getValue();
@@ -352,7 +352,7 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
         return sender;
     }
 
-    private void checkSOAPHeaderElement(Iterator it) {
+    private void checkSOAPElement(Iterator it) {
         if (!it.hasNext()) {
             failMissedFormedSOAP("Header element not found.");
         }
@@ -379,7 +379,7 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
                 handlerConstants.PREFIX, handlerConstants.NAMESPACE);
         Iterator it = sh.getChildElements(name);
         // check header element
-        checkSOAPHeaderElement(it);
+        checkSOAPElement(it);
 
         SOAPElement element = (SOAPElement) it.next();
 
@@ -413,11 +413,9 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
         SOAPHeader sh = se.getHeader();
         SOAPBody sb = se.getBody();
 
-        final String plainText = smc.getMessage().toString();
-        final byte[] plainBytes = plainText.getBytes();
-        final String plainTextHeader = sh.toString();
-        final byte[] plainBytesHeader = plainTextHeader.getBytes();
-        final String plainTextBody = sb.toString();
+        String headerContent = getHeaderContent(smc);
+        final byte[] plainBytesHeader = headerContent.getBytes();
+        final String plainTextBody = getBodyContent(smc);
         final byte[] plainBytesBody = plainTextBody.getBytes();
 
 
@@ -433,14 +431,43 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
 
         IvParameterSpec ips = new IvParameterSpec(iv);
         cipher.init(Cipher.ENCRYPT_MODE, key, ips);
-        byte[] cipherBytes = cipher.doFinal(plainBytes);
         byte[] cipherBytesHeader = cipher.doFinal(plainBytesHeader);
         byte[] cipherBytesBody = cipher.doFinal(plainBytesBody);
+
+
         sh.removeContents();
+        insertElement(se, sh, "real_header", "Adding ciphered Header to SOAP...", printBase64Binary(cipherBytesHeader));
+        insertElement(se, sh, "iv", "Adding IV to SOAP...", printBase64Binary(iv));
 
+        sb.removeContents();
+        Name name = se.createName(REAL_BODY,
+                handlerConstants.PREFIX, handlerConstants.NAMESPACE);
+        SOAPBodyElement element = sb.addBodyElement(name);
+        element.addTextNode(printBase64Binary(cipherBytesBody));
 
+        smc.getMessage().saveChanges();
+    }
 
-        setSOAPMessage(smc.getMessage(), cipherBytes);
+    private String getHeaderContent(SOAPMessageContext smc) throws SOAPException, IOException {
+        ByteArrayOutputStream ba = new ByteArrayOutputStream();
+        smc.getMessage().writeTo(ba);
+        String message = ba.toString();
+        ba.close();
+        int indexOfHeader = message.indexOf("<SOAP-ENV:Header>") + "<SOAP-ENV:Header>".length();
+        int indexOfHeaderEnd = message.indexOf("</SOAP-ENV:Header>");
+
+        return message.substring(indexOfHeader, indexOfHeaderEnd);
+    }
+
+    private String getBodyContent(SOAPMessageContext smc) throws SOAPException, IOException {
+        ByteArrayOutputStream ba = new ByteArrayOutputStream();
+        smc.getMessage().writeTo(ba);
+        String message = ba.toString();
+        ba.close();
+        int indexOfHeader = message.indexOf("<S:Body>") + "<S:Body>".length();
+        int indexOfHeaderEnd = message.indexOf("</S:Body>");
+
+        return message.substring(indexOfHeader, indexOfHeaderEnd);
     }
 
     private byte[] getIV() throws NoSuchAlgorithmException {
@@ -456,38 +483,85 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
             InvalidAlgorithmParameterException, InvalidKeyException,
             BadPaddingException, IllegalBlockSizeException, IOException, SOAPException {
 
+        SOAPPart sp = smc.getMessage().getSOAPPart();
+        SOAPEnvelope se = sp.getEnvelope();
+        SOAPHeader sh = se.getHeader();
+        SOAPBody sb = se.getBody();
 
-        final String cipheredText = smc.getMessage().toString();
-        final byte[] cipheredTextBytes = cipheredText.getBytes();
 
-       /* System.out.println("Text:");
-        System.out.println(cipheredText);
-        System.out.println("Bytes:");
-        System.out.println(printHexBinary(plainBytes));*/
+        String ivString = getHeaderAttribute(se, sh, IV);
+
+        byte[] iv = parseBase64Binary(ivString);
         Key key = getAESKey();
+        //System.out.println("HEADER:\n"+getHeaderAttribute(se, sh, REAL_HEADER));
+
+        byte[] cipherBytesHeader =  parseBase64Binary(getHeaderAttribute(se, sh, REAL_HEADER));
+
+        String realBody = getBodyAttribute(se, sb, REAL_BODY);
+
+        byte[] cipherBytesBody =  parseBase64Binary(realBody);
 
 
-        // generate sample AES 16 byte initialization vector
-        byte[] iv = getIV();
 
         // get a AES cipher object and print the provider
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         System.out.println(cipher.getProvider().getInfo());
 
-        // encrypt using the key and the plaintext
-        /*System.out.println("Text:");
-        System.out.println(cipheredText);
-        System.out.println("Bytes:");
-        System.out.println(printHexBinary(plainBytes));*/
 
-        System.out.println("Ciphering ...");
+        System.out.println("Deciphering ...");
 
         IvParameterSpec ips = new IvParameterSpec(iv);
         cipher.init(Cipher.DECRYPT_MODE, key, ips);
-        byte[] cipherBytes = cipher.doFinal(cipheredTextBytes);
-        /*System.out.println("Result:");
-        System.out.println(printHexBinary(cipherBytes));*/
-        setSOAPMessage(smc.getMessage(), cipherBytes);
+        byte[] plainBytesHeader = cipher.doFinal(cipherBytesHeader);
+        byte[] plainBytesBody = cipher.doFinal(cipherBytesBody);
+
+        sh.removeContents();
+        String s = new String(plainBytesHeader);
+        System.out.println(s + "\n\n");
+        sh.setTextContent(s);
+        //sh.setValue("MERDA");
+
+        System.out.println("BCENOURA");
+
+        sb.removeContents();
+        sb.setValue(new String(plainBytesBody));
+        System.out.println("Bdsasdas");
+        smc.getMessage().saveChanges();
+
+        System.out.println("RESULTADO:");
+        smc.getMessage().writeTo(System.out);
+    }
+
+    private String getHeaderAttribute(SOAPEnvelope se, SOAPHeader sh, String tag) throws SOAPException {
+        Name name = se.createName(tag,
+                handlerConstants.PREFIX, handlerConstants.NAMESPACE);
+        Iterator it = sh.getChildElements(name);
+        // check header element
+        checkSOAPElement(it);
+
+        SOAPElement element = (SOAPElement) it.next();
+        String elementValue = element.getValue();  //Getting Timestamp value
+
+        it.remove();
+        element.removeAttribute(name);
+        element.removeContents();
+        return elementValue;
+    }
+
+    private String getBodyAttribute(SOAPEnvelope se, SOAPBody sb, String tag) throws SOAPException {
+        Name name = se.createName(tag,
+                handlerConstants.PREFIX, handlerConstants.NAMESPACE);
+        Iterator it = sb.getChildElements(name);
+        // check header element
+        checkSOAPElement(it);
+
+        SOAPElement element = (SOAPElement) it.next();
+        String elementValue = element.getValue();  //Getting Timestamp value
+
+        it.remove();
+        element.removeAttribute(name);
+        element.removeContents();
+        return elementValue;
     }
 
     private Key getAESKey() throws IOException {

@@ -40,7 +40,7 @@ public class Application {
                 endpoints.get(i).publish(urls[i]);
             }
 
-            interaction();
+            //interaction();
 
             // wait
             System.out.println("Awaiting connections");
