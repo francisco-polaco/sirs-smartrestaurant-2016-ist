@@ -158,7 +158,9 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     private void passwordChecker(User user, byte[] hashedPassword){
         System.out.println("Checking password.");
+        user.checkLoginTimeout();
         if(!Arrays.equals(hashedPassword, user.getPassword())){
+            user.incrementFailedLoginAttempts();
             throw new AccessDeniedException();
         }
     }
