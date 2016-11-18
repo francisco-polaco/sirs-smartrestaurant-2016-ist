@@ -59,6 +59,8 @@
 
         <version.org.jdom.jdom>2.0.5</version.org.jdom.jdom>
 
+        <ws.url>http://localhost:6060/kitchen-smartrestaurant-ws-server/endpoint</ws.url>
+        <wsdl.url>${ws.url}?WSDL</wsdl.url>
 
         <ws.urlO>http://localhost:8080/smartrestaurant-ws/endpoint</ws.urlO>
         <ws.urlW>http://localhost:8081/smartrestaurant-ws/endpoint</ws.urlW>
@@ -84,6 +86,32 @@
             </testResource>
         </testResources>
         <plugins>
+            <plugin>
+                <groupId>org.jvnet.jax-ws-commons</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                    </execution>
+
+                </executions>
+                <configuration>
+                    <!-- https://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html -->
+                    <wsdlUrls>
+                        <wsdlUrl>${wsdl.url}</wsdlUrl>
+                    </wsdlUrls>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.sun.xml.ws</groupId>
+                        <artifactId>jaxws-tools</artifactId>
+                        <version>2.2.10</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -140,35 +168,11 @@
                     </arguments>
                     <killAfter>-1</killAfter>
                 </configuration>
-                <!--<plugin>
-                    <groupId>org.jvnet.jax-ws-commons</groupId>
-                    <artifactId>jaxws-maven-plugin</artifactId>
-                    <version>2.3</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>wsimport</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        &lt;!&ndash; https://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html &ndash;&gt;
-                        <wsdlDirectory>${wsdl.directory}</wsdlDirectory>
-                        <wsdlFiles>
-                            <wsdlFile>${wsdl.filename}</wsdlFile>
-                        </wsdlFiles>
-                    </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>com.sun.xml.ws</groupId>
-                            <artifactId>jaxws-tools</artifactId>
-                            <version>2.2.10</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>-->
-
-
             </plugin>
+
+
+
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>appassembler-maven-plugin</artifactId>
