@@ -102,7 +102,7 @@ public class CAImplementation implements CA {
      */
     private Certificate readCertificate(String certificateFilePath) throws IOException, CertificateException {
         FileInputStream fis;
-
+        failIfDirectoryTraversal(certificateFilePath);
         try {
             fis = new FileInputStream(certificateFilePath);
         } catch (FileNotFoundException e) {
@@ -150,6 +150,28 @@ public class CAImplementation implements CA {
             return false;
         }
         return true;
+    }
+
+    private void failIfDirectoryTraversal(String relativePath)
+    {
+        File file = new File(relativePath);
+
+        String pathUsingCanonical;
+        String pathUsingAbsolute;
+        try
+        {
+            pathUsingCanonical = file.getCanonicalPath();
+            pathUsingAbsolute = file.getAbsolutePath();
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException("Directory traversal attempt?", e);
+        }
+
+        if (! pathUsingCanonical.equals(pathUsingAbsolute))
+        {
+            throw new RuntimeException("Directory traversal attempt!");
+        }
     }
 
 }
