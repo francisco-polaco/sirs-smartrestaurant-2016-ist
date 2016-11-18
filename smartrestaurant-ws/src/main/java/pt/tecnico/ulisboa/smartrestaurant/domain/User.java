@@ -1,5 +1,8 @@
 package pt.tecnico.ulisboa.smartrestaurant.domain;
 
+import org.joda.time.DateTime;
+import pt.tecnico.ulisboa.smartrestaurant.exception.BruteForceAttemptException;
+
 public class User extends User_Base {
 
 
@@ -14,8 +17,26 @@ public class User extends User_Base {
         super.setLastName(lastName);
         super.setNif(nif);
         super.setSmartRestaurantManager(manager);
+        super.setNumberOfFailedLogins(0);
     }
 
+    void incrementFailedLoginAttempts(){
+        setNumberOfFailedLogins(getNumberOfFailedLogins() + 1);
+        if(getNumberOfFailedLogins() >= 10) {
+            setNumberOfFailedLoginsReachedTime(new DateTime());
+            throw new BruteForceAttemptException();
+        }
+    }
+    void checkLoginTimeout(){
+        if(getNumberOfFailedLoginsReachedTime() != null) {
+            if (new DateTime().getMillis() - getNumberOfFailedLoginsReachedTime().getMillis() > 600000) {
+                setNumberOfFailedLoginsReachedTime(null);
+                setNumberOfFailedLogins(0);
+            }else
+                throw new BruteForceAttemptException();
+        }
+    }
+    
     void remove() {
         removeObject();
         deleteDomainObject();
@@ -30,6 +51,7 @@ public class User extends User_Base {
         setLastName(null);
         setSmartRestaurantManager(null);
         setPassword(null);
+        setNumberOfFailedLoginsReachedTime(null);
     }
 
 
