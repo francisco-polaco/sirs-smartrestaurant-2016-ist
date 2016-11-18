@@ -31,8 +31,6 @@ public class KitchenClientImpl{
         }
 
         System.out.println("Creating stub ...");
-        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenServer";
-        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
 
         _service = new KitchenServerImplService();
         _port = _service.getKitchenServerImplPort();
@@ -52,10 +50,14 @@ public class KitchenClientImpl{
     }
 
     public String ping(String pingMessage){
+        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenClient";
+        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
         return _port.ping(pingMessage);
     }
 
     public String setOrderReadyToDeliver(long orderId){
+        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenClient";
+        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
 //        if(!_list.contains(new Long(orderId))){
 //            return "Wrong id number";
 //        }
@@ -69,6 +71,8 @@ public class KitchenClientImpl{
     }
 
     public String listAllOrders(){
+        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenClient";
+        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer";
         return _port2.getList();
     }
 

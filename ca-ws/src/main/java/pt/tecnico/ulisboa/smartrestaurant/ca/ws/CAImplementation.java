@@ -35,6 +35,7 @@ public class CAImplementation implements CA {
             }
         }
         fileNames.add("KitchenServer.cer");
+        fileNames.add("KitchenClient.cer");
         fileNames.add("OrderServer.cer");
 
         for(String f: fileNames){

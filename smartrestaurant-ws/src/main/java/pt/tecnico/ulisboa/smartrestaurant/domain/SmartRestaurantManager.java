@@ -73,13 +73,14 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         System.out.println(username + " is logging in...");
         byte[] hashToken;
         User user = getUserByUsername(username);
-        try {
-            checkSessionTimeoutAndLogoutUser(user);
-        }catch (SessionExpiredException e){
-            System.out.println(user.getUsername() + " session has expired.");
-        }
+//        try {
+//            checkSessionTimeoutAndLogoutUser(user);
+//        }catch (SessionExpiredException e){
+//            System.out.println(user.getUsername() + " session has expired.");
+//        }
 
         passwordChecker(user, hashedPassword);
+
         hashToken = generateToken();
         Session s = new Session(hashToken, tableNo);
         s.setUser(user);
@@ -94,6 +95,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         if(product == null) throw new ProductDoesntExistException(productName);
         else {
             User u = getUserBySessionId(sessionId);
+
             if(u.getOrder() == null){ // if there is not an active order
                 Order order = new Order(generateOrderId(), u);
                 order.addProduct(product);
@@ -103,6 +105,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
                 u.getOrder().addProduct(product);
             System.out.println("Adding " + productName + " to " + u.getFirstName() + " order.");
         }
+
     }
 
     List<Product> requestMyOrdersProducts(byte[] sessionId){
@@ -121,15 +124,19 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     void orderProducts(byte[] sessionId, byte[] hashedPassword){
         if(sessionId == null || hashedPassword == null) throw new IllegalArgumentException();
         User u = getUserBySessionId(sessionId);
-        checkSessionTimeoutAndLogoutUser(u);
+        //checkSessionTimeoutAndLogoutUser(u);
         if(u.getSession() != null){
             passwordChecker(u, hashedPassword);
             // Para alem do session id, a password esta correta. Logo, devera ser o utilizador
             System.out.println(u.getUsername() + " is ordering his order.");
             Order toRequest = u.getOrder();
-            toRequest.setState(1); // set state meaning that the request is at the kitchen
-            _port.addList(toRequest.getId());
-            // send order to kitchen
+            if(toRequest.getState() == 0) {
+                toRequest.setState(1); // set state meaning that the request is at the kitchen
+                _port.addList(toRequest.getId());
+                // send order to kitchen
+            }else{
+                throw new AlreadyAskedRequestException();
+            }
         }
     }
 
@@ -190,8 +197,11 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     private User getUserBySessionId(byte[] sessionId){
         for(User u : getUserSet()){
-            checkSessionTimeoutAndLogoutUser(u);
-            if(u.getSession() != null && Arrays.equals(u.getSession().getSessionId(), sessionId)) return u;
+            //checkSessionTimeoutAndLogoutUser(u);
+            if(u.getSession() != null && Arrays.equals(u.getSession().getSessionId(), sessionId)){
+                checkSessionTimeoutAndLogoutUser(u);
+                return u;
+            }
         }
         throw new UserWithSessionIdDoenstExistException();
     }
@@ -209,16 +219,16 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         byte[] tokenHash = null;
         while(notFound) {
             // Integers can be negative, so to assure unicity for tests we only consider the positive ones
-            long randomLong = new BigInteger(64, new Random()).longValue();
+            long randomLong = new BigInteger(128, new Random()).longValue();
+
             token = randomLong < 0 ? -randomLong : randomLong;
             // Hashing
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             tokenHash = digest.digest(Long.toString(token).getBytes(StandardCharsets.UTF_8));
-
             notFound = false;
             for(User u : getUserSet()) {
                 if(u.getSession() != null) {
-                    checkSessionTimeoutAndLogoutUser(u);
+                    //checkSessionTimeoutAndLogoutUser(u);
                     if (u.getSession() != null && Arrays.equals(u.getSession().getSessionId(), tokenHash) && !notFound)
                         notFound = true;
                 }
@@ -232,12 +242,12 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         long id = 0;
         while(notFound) {
             // Integers can be negative, so to assure unicity for tests we only consider the positive ones
-            long randomLong = new BigInteger(64, new Random()).longValue();
+            long randomLong = new BigInteger(128, new Random()).longValue();
             id = randomLong < 0 ? -randomLong : randomLong;
             notFound = false;
             for(User u : getUserSet()) {
                 if(u.getOrder() != null) {
-                    checkSessionTimeoutAndLogoutUser(u);
+                    //checkSessionTimeoutAndLogoutUser(u);
                     if (u.getOrder().getId() == id && !notFound)
                         notFound = true;
                 }

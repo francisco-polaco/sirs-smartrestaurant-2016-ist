@@ -27,11 +27,9 @@ public class Product extends Product_Base {
 
     @Override
     public String toString() {
-        return "ProductProxy{" +
-                "name='" + getName() + '\'' +
+        return "name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
-                ", price=" + getPrice() +
-                '}';
+                ", price=" + getPrice();
     }
     
 }
