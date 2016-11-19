@@ -34,10 +34,15 @@ public class CAApplication {
             String line;
             System.out.print("> ");
             while(!((line = scanner.nextLine()).equals("q"))){
-                if(line.startsWith("blacklist ")){
+                if(line.startsWith("b ")){
                     String[] tokens = line.split(" ");
                     if(tokens.length == 2){
                         ca.addEntityToBlackList(tokens[1]);
+                    }
+                }else if(line.startsWith("w ")){
+                    String[] tokens = line.split(" ");
+                    if(tokens.length == 2){
+                        ca.removeEntityFromBlackList(tokens[1]);
                     }
                 }else if (line.startsWith("h") && line.length() == 1) {
                     printHelp();
@@ -68,7 +73,8 @@ public class CAApplication {
 
     private static void printHelp(){
         System.out.println("You have the following commands available:" +
-                "\n\tblacklist <entity> - blacklists an entity" +
+                "\n\tb <entity> - blacklists an entity" +
+                "\n\tw <entity> - whitelists an entity" +
                 "\n\th - shows this message" +
                 "\n\tq - exits CA");
     }

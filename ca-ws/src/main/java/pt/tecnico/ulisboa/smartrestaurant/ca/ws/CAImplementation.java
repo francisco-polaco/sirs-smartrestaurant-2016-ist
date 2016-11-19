@@ -52,6 +52,14 @@ public class CAImplementation implements CA {
         System.out.println(entity + " blacklisted!");
     }
 
+    public void removeEntityFromBlackList(String entity) throws IOException, CertificateException {
+        final String certificatePath = "certs/" + entity + ".cer";
+        Certificate certificate = readCertificate(certificatePath);
+        System.out.println("Removing " + certificatePath + " from the blacklist...");
+        blackList.remove(certificate);
+        System.out.println(entity + " whitelisted!");
+    }
+
     @Override
     public byte[] getEntityCertificate(String entity) throws CertificateDoesntExistsException {
         if(entity == null){
