@@ -1,5 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.kitchenServer.ws.cli;
 
+import javax.jws.HandlerChain;
 import javax.jws.WebService;
 import java.util.ArrayList;
 import java.io.Serializable;
@@ -8,6 +9,7 @@ import java.io.Serializable;
  * Created by tiago on 11/17/16.
  */
 @WebService(endpointInterface = "pt.tecnico.ulisboa.smartrestaurant.kitchenServer.ws.cli.KitchenClientServer")
+@HandlerChain(file= "/kitchen_client_server_handler-chain.xml")
 public class KitchenClientServerImpl implements KitchenClientServer, Serializable{
     private ArrayList<Long> _list = new ArrayList<Long>();
 

@@ -1,8 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.kitchenServer;
 
 import javax.xml.ws.Endpoint;
-import java.util.InputMismatchException;
-import java.util.Scanner;
 
 import pt.tecnico.ulisboa.smartrestaurant.kitchenServer.ws.cli.KitchenClientServerImpl;
 

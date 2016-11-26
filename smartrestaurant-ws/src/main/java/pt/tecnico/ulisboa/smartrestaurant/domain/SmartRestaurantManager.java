@@ -19,13 +19,13 @@ import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
 public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     private static final int TIMEOUT_SESSION_TIME = 1800000/15;     // half an hour
-    private KitchenClientServer _port;
-    private KitchenClientServerImplService _service;
+    private static KitchenClientServer _port;
+    private static KitchenClientServerImplService _service;
 
     private SmartRestaurantManager() {
         FenixFramework.getDomainRoot().setSmartRestaurantManager(this);
 
-        String url = "http://localhost:6060/kitchen-smartrestaurant-ws-server/endpoint";
+        setKitchenServer("http://localhost:6060/kitchen-smartrestaurant-ws-server/endpoint");
 
         addProduct(new Product("Bife da Vazia", "Um soculento bife da Vazia que o irá fazer chorar por mais.", 12.99, this));
         addProduct(new Product("Bacalhau à Lagareiro", "Experimente o que mais de Português " +
@@ -35,6 +35,11 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         addProduct(new Product("Sopa de Peixe", "Porque a sopa faz bem a todos!", 7.56, this));
         addProduct(new Product("Leite Creme", "Experimente este belo leite creme queimado na hora!", 7.56, this));
 
+        SmartRestaurantManagerStart();
+
+    }
+
+    private void SmartRestaurantManagerStart(){
         System.out.println("Creating stub ...");
         _service = new KitchenClientServerImplService();
         _port = _service.getKitchenClientServerImplPort();
@@ -43,16 +48,17 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         BindingProvider bindingProvider = (BindingProvider) _port;
         Map<String, Object> requestContext = bindingProvider.getRequestContext();
         requestContext.put(ENDPOINT_ADDRESS_PROPERTY, "http://localhost:6060/kitchen-smartrestaurant-ws-server/endpoint");
-
     }
 
 
     public static SmartRestaurantManager getInstance(){
         SmartRestaurantManager mngr = FenixFramework.getDomainRoot().getSmartRestaurantManager();
-        if (mngr != null)
+        if (mngr != null) {
+            mngr.SmartRestaurantManagerStart();
             return mngr;
-
+        }
         System.out.println("New Manager");
+
         return new SmartRestaurantManager();
     }
 

@@ -39,7 +39,6 @@ public class Application {
                 System.out.printf("Starting %s%n", urls[i]);
                 endpoints.get(i).publish(urls[i]);
             }
-
             //interaction();
 
             // wait
@@ -66,7 +65,6 @@ public class Application {
             FenixFramework.shutdown();
         }
     }
-
     private static void interaction() throws NoSuchAlgorithmException {
         //Thread.sleep(2000);
         try {
