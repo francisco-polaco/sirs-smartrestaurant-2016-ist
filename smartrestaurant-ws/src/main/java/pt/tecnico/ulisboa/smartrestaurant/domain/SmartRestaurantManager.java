@@ -17,7 +17,7 @@ import java.util.Random;
 
 public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
-    private static final int TIMEOUT_SESSION_TIME = 1800000/15;     // half an hour
+    private static final int TIMEOUT_SESSION_TIME = 1800000;     // half an hour
     private static KitchenProxy _kp;
 
     private SmartRestaurantManager() {
@@ -165,7 +165,10 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         User u = getUserBySessionId(sessionId);
         checkSessionTimeoutAndLogoutUser(u);
         if(u.getSession() != null){
-            return u.getOrder().amountToPay();
+            if(u.getOrder() != null)
+                return u.getOrder().amountToPay();
+            else
+                throw new OrderDoesntExistException("Order already payed or not ordered at all.");
         }else
             throw new SessionExpiredException(u.getUsername());
     }
