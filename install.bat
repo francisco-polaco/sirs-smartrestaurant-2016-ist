@@ -33,6 +33,17 @@ cd customer-smartrestaurant-ws
 timeout 7
 start mvn clean install
 echo "Customer Ready"
+cd ..
+cd waiter-smartrestaurant-ws-cli
+timeout 7
+start mvn clean install
+cd ..
+cd waiter-smartrestaurant-ws
+timeout 7
+start mvn clean install
+cd ..
+cd waiter-smartrestaurant
+timeout 7
+start mvn clean install exec:java
 echo "Everything is ready"
-pause
 exit
