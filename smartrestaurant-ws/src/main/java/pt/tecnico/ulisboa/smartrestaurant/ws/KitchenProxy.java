@@ -1,13 +1,12 @@
 package pt.tecnico.ulisboa.smartrestaurant.ws;
 
+import pt.tecnico.ulisboa.smartrestaurant.kitchenserver.ws.cli.KitchenClientServer;
+import pt.tecnico.ulisboa.smartrestaurant.kitchenserver.ws.cli.KitchenClientServerImplService;
+
 import javax.xml.ws.BindingProvider;
 import java.util.Map;
 
 import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
-
-import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
-import pt.tecnico.ulisboa.smartrestaurant.kitchenserver.ws.cli.KitchenClientServer;
-import pt.tecnico.ulisboa.smartrestaurant.kitchenserver.ws.cli.KitchenClientServerImplService;
 
 /**
  * Created by tiago on 12/3/16.
