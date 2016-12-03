@@ -13,7 +13,7 @@ for idx, folder in enumerate(folders):
 	if os.name == "posix":
 		subprocess.Popen(args=["gnome-terminal", "--command=" + cmds[idx]])
 	elif os.name == "nt":
-		subprocess.Popen("cmd /K " + cmds[idx])
+		break
 	
 	if folder == "smartrestaurant-ws":
 		time.sleep(15)
