@@ -1,6 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.waiter;
 
-import pt.tecnico.ulisboa.smartrestaurant.waiter.ws.WaiterClientPort;
+import pt.tecnico.ulisboa.smartrestaurant.waiter.ws.WaiterRealClientPort;
 
 import java.util.Scanner;
 
@@ -19,7 +19,7 @@ public class WaiterClientApplication {
         }
         System.out.println("cenas " + args[0]);
 
-        WaiterClientPort port = new WaiterClientPort(args[0]);
+        WaiterRealClientPort port = new WaiterRealClientPort(args[0]);
 
         System.out.println(port.ping());
         System.in.read();

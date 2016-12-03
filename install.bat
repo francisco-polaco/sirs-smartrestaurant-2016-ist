@@ -34,5 +34,4 @@ timeout 7
 start mvn clean install
 echo "Customer Ready"
 echo "Everything is ready"
-pause
 exit

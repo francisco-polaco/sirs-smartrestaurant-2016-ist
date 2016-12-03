@@ -7,8 +7,8 @@ import javax.jws.WebService;
 /**
  * Created by francisco on 13/11/2016.
  */
-@WebService(endpointInterface = "pt.tecnico.ulisboa.smartrestaurant.ws.WaiterServer")
-public class WaiterServerImpl implements WaiterServer {
+@WebService(endpointInterface = "pt.tecnico.ulisboa.smartrestaurant.ws.WaiterSoftServer")
+public class WaiterSoftServerImpl implements WaiterSoftServer {
     @Override
     public String ping(String msg) {
         System.out.println("Waiter " + msg);

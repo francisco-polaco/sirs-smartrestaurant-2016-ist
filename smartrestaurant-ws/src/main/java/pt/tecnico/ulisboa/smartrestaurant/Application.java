@@ -7,7 +7,7 @@ import pt.tecnico.ulisboa.smartrestaurant.exception.UserAlreadyExistsException;
 import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImpl;
 import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImpl;
-import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterServerImpl;
+import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterSoftServerImpl;
 
 import javax.xml.ws.Endpoint;
 import java.nio.charset.StandardCharsets;
@@ -35,7 +35,7 @@ public class Application {
         ArrayList<Endpoint> endpoints = new ArrayList<>();
         try {
             endpoints.add(Endpoint.create(new OrderServerImpl()));
-            endpoints.add(Endpoint.create(new WaiterServerImpl()));
+            endpoints.add(Endpoint.create(new WaiterSoftServerImpl()));
             endpoints.add(Endpoint.create(new KitchenServerImpl()));
 
             // publish endpoint
