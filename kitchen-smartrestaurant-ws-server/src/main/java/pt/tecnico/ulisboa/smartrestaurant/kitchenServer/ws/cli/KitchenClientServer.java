@@ -12,4 +12,6 @@ public interface KitchenClientServer {
 
     String getList();
 
+    void removeList(long id);
+
 }

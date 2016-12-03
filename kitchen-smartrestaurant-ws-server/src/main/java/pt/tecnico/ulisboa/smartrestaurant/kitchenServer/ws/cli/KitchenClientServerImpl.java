@@ -34,4 +34,11 @@ public class KitchenClientServerImpl implements KitchenClientServer{
         System.out.println("lista\n" + result);
         return result;
     }
+
+    @Override
+    public void removeList(long id){
+        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenServer";
+        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenClient";
+        _list.remove(id);
+    }
 }

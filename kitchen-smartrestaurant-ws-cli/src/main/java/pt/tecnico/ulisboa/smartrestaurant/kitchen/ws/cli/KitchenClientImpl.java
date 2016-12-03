@@ -67,6 +67,7 @@ public class KitchenClientImpl{
             System.err.println(e.getMessage());
             return "Item wasn't set";
         }
+        removeList(orderId);
         return "Item set to ready!";
     }
 
@@ -74,6 +75,18 @@ public class KitchenClientImpl{
         SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenClient";
         SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer";
         return _port2.getList();
+    }
+
+    public String removeList(long id){
+        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenClient";
+        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer";
+        try{
+            _port2.removeList(id);
+        }catch (Exception e ){
+            System.err.println(e.getMessage());
+            return "Could not removed\n";
+        }
+        return "Removed\n";
     }
 
 }
