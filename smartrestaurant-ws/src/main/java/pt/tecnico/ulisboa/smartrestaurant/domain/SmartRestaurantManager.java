@@ -3,8 +3,7 @@ package pt.tecnico.ulisboa.smartrestaurant.domain;
 import org.joda.time.DateTime;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.ulisboa.smartrestaurant.exception.*;
-import pt.tecnico.ulisboa.smartrestaurant.kitchenserver.ws.cli.KitchenClientServer;
-import pt.tecnico.ulisboa.smartrestaurant.kitchenserver.ws.cli.KitchenClientServerImplService;
+import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenProxy;
 
 
 import javax.xml.ws.BindingProvider;
@@ -19,8 +18,7 @@ import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
 public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     private static final int TIMEOUT_SESSION_TIME = 1800000/15;     // half an hour
-    private static KitchenClientServer _port;
-    private static KitchenClientServerImplService _service;
+    private static KitchenProxy _kp;
 
     private SmartRestaurantManager() {
         FenixFramework.getDomainRoot().setSmartRestaurantManager(this);
@@ -35,31 +33,22 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         addProduct(new Product("Sopa de Peixe", "Porque a sopa faz bem a todos!", 7.56, this));
         addProduct(new Product("Leite Creme", "Experimente este belo leite creme queimado na hora!", 7.56, this));
 
-        SmartRestaurantManagerStart();
 
-    }
-
-    private void SmartRestaurantManagerStart(){
-        System.out.println("Creating stub ...");
-        _service = new KitchenClientServerImplService();
-        _port = _service.getKitchenClientServerImplPort();
-
-        System.out.println("Setting endpoint address ...");
-        BindingProvider bindingProvider = (BindingProvider) _port;
-        Map<String, Object> requestContext = bindingProvider.getRequestContext();
-        requestContext.put(ENDPOINT_ADDRESS_PROPERTY, "http://localhost:6060/kitchen-smartrestaurant-ws-server/endpoint");
     }
 
 
     public static SmartRestaurantManager getInstance(){
         SmartRestaurantManager mngr = FenixFramework.getDomainRoot().getSmartRestaurantManager();
         if (mngr != null) {
-            mngr.SmartRestaurantManagerStart();
+            mngr._kp = new KitchenProxy("http://localhost:6060/kitchen-smartrestaurant-ws-server/endpoint");
             return mngr;
         }
         System.out.println("New Manager");
 
-        return new SmartRestaurantManager();
+        mngr = new SmartRestaurantManager();
+        mngr._kp= new KitchenProxy("http://localhost:6060/kitchen-smartrestaurant-ws-server/endpoint");
+        return mngr;
+
     }
 
     // Package methods to ensure that "they" only access Facade.
@@ -138,7 +127,8 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
             Order toRequest = u.getOrder();
             if(toRequest.getState() == 0) {
                 toRequest.setState(1); // set state meaning that the request is at the kitchen
-                _port.addList(toRequest.getId());
+                //_port.addList(toRequest.getId());
+                _kp.addList(toRequest.getId());
                 // send order to kitchen
             }else{
                 throw new AlreadyAskedRequestException();
