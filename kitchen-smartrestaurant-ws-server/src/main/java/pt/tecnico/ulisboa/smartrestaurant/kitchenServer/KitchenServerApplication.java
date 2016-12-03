@@ -2,6 +2,7 @@ package pt.tecnico.ulisboa.smartrestaurant.kitchenServer;
 
 import javax.xml.ws.Endpoint;
 
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
 import pt.tecnico.ulisboa.smartrestaurant.kitchenServer.ws.cli.KitchenClientServerImpl;
 
 public class KitchenServerApplication {
@@ -14,6 +15,9 @@ public class KitchenServerApplication {
             System.err.printf("Usage: java %s uddiURL name%n", KitchenServerApplication.class.getName());
             return;
         }
+
+        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenServer";
+        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
 
         Endpoint kitchenS =Endpoint.create(new KitchenClientServerImpl());
         System.out.println(args[0]);
