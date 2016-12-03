@@ -16,7 +16,7 @@ public class OrderServerImpl implements OrderServer {
     @Override
     public String ping(String msg) {
         System.out.println("Customer " +msg);
-        return "Pong!";
+        return "Order Pong!";
     }
 
     @Override

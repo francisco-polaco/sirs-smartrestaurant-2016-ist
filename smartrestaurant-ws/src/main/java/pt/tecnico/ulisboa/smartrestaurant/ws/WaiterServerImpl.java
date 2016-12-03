@@ -12,7 +12,7 @@ public class WaiterServerImpl implements WaiterServer {
     @Override
     public String ping(String msg) {
         System.out.println("Waiter " + msg);
-        return "Pong!";
+        return "Order Pong!";
     }
 
     @Override

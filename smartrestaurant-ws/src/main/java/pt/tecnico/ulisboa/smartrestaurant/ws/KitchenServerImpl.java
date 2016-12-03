@@ -13,14 +13,10 @@ import javax.jws.WebService;
 @HandlerChain(file= "/kitchen_handler-chain.xml")
 public class KitchenServerImpl implements KitchenServer {
 
-    public KitchenServerImpl(){
-
-    }
-
     @Override
     public String ping(String msg) {
         System.out.println("Kitchen " + msg);
-        return "Pong!";
+        return "Order Pong!";
     }
 
     @Override
