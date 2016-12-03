@@ -25,8 +25,8 @@ public class WaiterRealClientPort {
         requestContext.put(ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
     }
 
-    public String ping(){
-        return port.ping("Ping");
+    public String ping(String ping){
+        return port.ping(ping);
     }
 
     public void setOrderToDelivered(long orderId){

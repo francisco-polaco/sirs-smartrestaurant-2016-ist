@@ -10,13 +10,7 @@
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
-    <dependencies>
-        <dependency>
-            <groupId>com.sun.xml.ws</groupId>
-            <artifactId>jaxws-rt</artifactId>
-            <version>2.2.10</version>
-        </dependency>
-    </dependencies>
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,9 +19,9 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
+
         <!-- WSDL is required for client code generation -->
-        <ws.url>http://localhost:7070/smartrestaurant-ws/endpoint</ws.url>
-        <wsdl.url>${ws.url}?WSDL</wsdl.url>
+        <ws.url>http://localhost:5050/smartrestaurant-ws/endpoint</ws.url>
 
         <version.junit>4.12</version.junit>
 
@@ -74,5 +68,6 @@
 
 
     </build>
+
 
 </project>

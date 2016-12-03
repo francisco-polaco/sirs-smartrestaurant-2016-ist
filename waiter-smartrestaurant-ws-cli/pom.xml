@@ -25,7 +25,7 @@
 
         <version.junit>4.12</version.junit>
 
-        <mainclass>WaiterClientApplication</mainclass>
+        <mainclass>pt.tecnico.ulisboa.smartrestaurant.waiter.WaiterClientApplication</mainclass>
 
     </properties>
 
