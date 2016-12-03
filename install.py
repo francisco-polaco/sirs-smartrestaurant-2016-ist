@@ -10,9 +10,9 @@ cmds = ["mvn clean install exec:java", "mvn clean install", "mvn clean install",
 for idx, folder in enumerate(folders):
 	os.chdir(folder)
 	
-	if os.name() == "posix":
+	if os.name == "posix":
 		subprocess.Popen(args=["gnome-terminal", "--command=" + cmds[idx]])
-	elif os.name() == "nt":
+	elif os.name == "nt":
 		subprocess.Popen("cmd /K " + cmds[idx])
 	
 	if folder == "smartrestaurant-ws":
