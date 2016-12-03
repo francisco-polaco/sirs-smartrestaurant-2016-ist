@@ -28,4 +28,8 @@ public class WaiterClientPort {
     public String ping(){
         return port.ping("Ping");
     }
+
+    public void setOrderToDelivered(long orderId){
+        port.setOrderToDelivered(orderId);
+    }
 }

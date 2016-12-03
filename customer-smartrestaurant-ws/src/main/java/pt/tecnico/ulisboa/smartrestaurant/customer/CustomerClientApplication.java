@@ -35,7 +35,7 @@ public class CustomerClientApplication {
                     "6 - Order Products\n" +
                     "7 - Confirm payment\n" +
                     "8 - Payment Details\n" +
-                    "\n>");
+                    "\n> ");
             int option;
             try{
                 option=scanner.nextInt();
@@ -54,7 +54,7 @@ public class CustomerClientApplication {
             switch (option){
                 //Ping
                 case 1:
-                    System.out.print("Ping\nIntroduza mensagem de ping:\n>");
+                    System.out.print("Ping\nIntroduza mensagem de ping:\n> ");
                     try{
                         String pingMessage = scanner.nextLine();
                         String ping = customer.ping(pingMessage);
@@ -68,10 +68,10 @@ public class CustomerClientApplication {
                 //Login
                 case 2:
                     System.out.println("Login");
-                    System.out.print("Introduza username:\n>");
+                    System.out.print("Introduza username:\n> ");
                     String username = scanner.nextLine();
-                    String password = new String(console.readPassword("Introduza password:\n>"));
-                    System.out.print("Leia o QR code da sua mesa:\n>");
+                    String password = new String(console.readPassword("Introduza password:\n> "));
+                    System.out.print("Leia o QR code da sua mesa:\n> ");
                     scanner.nextLine();
                     int tableNo = customer.readQRCode();
                     System.out.println(customer.login(username, password, tableNo));
@@ -94,7 +94,7 @@ public class CustomerClientApplication {
                         break;
                     }
                     System.out.println("Add Product");
-                    System.out.print("Introduza nome do prato:\n>");
+                    System.out.print("Introduza nome do prato:\n> ");
                     String meal = scanner.nextLine();
                     System.out.println(customer.addProductToOrder(meal));
                     break;
@@ -106,17 +106,17 @@ public class CustomerClientApplication {
                     }
                     while(true){
                         System.out.println("Register user");
-                        System.out.print("Escolha um username:\n>");
+                        System.out.print("Escolha um username:\n> ");
                         String regUsername = scanner.nextLine();
-                        String regPassword = new String(console.readPassword("Introduza password:\n>"));
-                        System.out.print("Qual o seu primeiro nome:\n>");
+                        String regPassword = new String(console.readPassword("Introduza password:\n> "));
+                        System.out.print("Qual o seu primeiro nome:\n> ");
                         String firstName = scanner.nextLine();
-                        System.out.print("Qual o seu ultimo nome:\n>");
+                        System.out.print("Qual o seu ultimo nome:\n> ");
                         String lastName = scanner.nextLine();
                         int nif;
                         while(true) {
                             try {
-                                System.out.print("Qual o seu nif:\n>");
+                                System.out.print("Qual o seu nif:\n> ");
                                 nif= scanner.nextInt();
                                 scanner.nextLine();
 
@@ -143,7 +143,7 @@ public class CustomerClientApplication {
                         break;
                     }
                     System.out.println("Order Products");
-                    String orderPassword = new String(console.readPassword("Introduza password:\n>"));
+                    String orderPassword = new String(console.readPassword("Introduza password:\n> "));
                     System.out.println(customer.orderProducts(orderPassword));
                     break;
 
@@ -153,8 +153,8 @@ public class CustomerClientApplication {
                         break;
                     }
                     System.out.println("Confirm payment");
-                    String paymentPassword = new String(console.readPassword("Introduza password:\n>"));
-                    System.out.print("Referencia paypal:\n>");
+                    String paymentPassword = new String(console.readPassword("Introduza password:\n> "));
+                    System.out.print("Referencia paypal:\n> ");
                     String refPaypal = scanner.nextLine();
                     System.out.println(customer.confirmPayment(paymentPassword, refPaypal));
                     break;
