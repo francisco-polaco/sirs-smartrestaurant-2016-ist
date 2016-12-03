@@ -4,6 +4,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.ulisboa.smartrestaurant.domain.DomainFacade;
 import pt.tecnico.ulisboa.smartrestaurant.exception.OrderAlreadyRequestedException;
 import pt.tecnico.ulisboa.smartrestaurant.exception.UserAlreadyExistsException;
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImpl;
 import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImpl;
 import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterServerImpl;
@@ -27,6 +28,9 @@ public class Application {
         }
 
         String[] urls = { args[0], args[1], args[2]};
+
+        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "OrderServer";
+        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer";
 
         ArrayList<Endpoint> endpoints = new ArrayList<>();
         try {

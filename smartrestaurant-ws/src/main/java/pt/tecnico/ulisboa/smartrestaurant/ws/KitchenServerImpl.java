@@ -14,8 +14,7 @@ import javax.jws.WebService;
 public class KitchenServerImpl implements KitchenServer {
 
     public KitchenServerImpl(){
-        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "OrderServer";
-        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer";
+
     }
 
     @Override
