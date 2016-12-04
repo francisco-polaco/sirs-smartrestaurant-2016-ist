@@ -62,25 +62,39 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         super.addUser(new User(username, hashedPassword, firstName, lastName, nif, this));
     }
 
+    @Deprecated
     byte[] login(String username, byte[] hashedPassword, int tableNo) throws NoSuchAlgorithmException {
         if(username == null || hashedPassword == null) throw new IllegalArgumentException();
         System.out.println(username + " is logging in...");
         byte[] hashToken;
         User user = getUserByUsername(username);
-//        try {
-//            checkSessionTimeoutAndLogoutUser(user);
-//        }catch (SessionExpiredException e){
-//            System.out.println(user.getUsername() + " session has expired.");
-//        }
-
         passwordChecker(user, hashedPassword);
-
         hashToken = generateToken();
         Session s = new Session(hashToken, tableNo);
         s.setUser(user);
         user.setSession(s);
         System.out.println(username + " is logged in.");
         return hashToken;
+    }
+
+    byte[] login(String username, byte[] hashedPassword, int tableNo, int OTP) throws NoSuchAlgorithmException {
+        if(username == null || hashedPassword == null) throw new IllegalArgumentException();
+        System.out.println(username + " is logging in...");
+        byte[] hashToken;
+        User user = getUserByUsername(username);
+        passwordChecker(user, hashedPassword);
+        otpChecker(OTP);
+        hashToken = generateToken();
+        Session s = new Session(hashToken, tableNo);
+        s.setUser(user);
+        user.setSession(s);
+        System.out.println(username + " is logged in.");
+        return hashToken;
+    }
+
+    private void otpChecker(int otp) {
+        // to simplify
+        if(otp != 123456) throw new AuthenticatorCodeRejectedException();
     }
 
     void addRequestToOrder(byte[] sessionId, String productName){

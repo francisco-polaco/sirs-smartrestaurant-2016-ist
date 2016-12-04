@@ -36,6 +36,16 @@ public class OrderServerImpl implements OrderServer {
     }
 
     @Override
+    public byte[] login1(String username, byte[] passwordSha2Hash, int tableNo, int OTP) {
+        try {
+            return DomainFacade.getInstance().login(username, passwordSha2Hash, tableNo, OTP);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            throw new InsecureServerExceptionException();
+        }
+    }
+
+    @Override
     public String requestMyOrdersProducts(byte[] sessionId) {
         return DomainFacade.getInstance().requestMyOrdersProducts(sessionId);
     }

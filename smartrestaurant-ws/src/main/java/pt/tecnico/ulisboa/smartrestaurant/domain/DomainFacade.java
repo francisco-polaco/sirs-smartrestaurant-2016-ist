@@ -23,8 +23,13 @@ public class DomainFacade {
     }
 
     @Atomic
-    public byte[] login(String username, byte[] hashedPassword,int tableNo) throws NoSuchAlgorithmException {
+    public byte[] login(String username, byte[] hashedPassword, int tableNo) throws NoSuchAlgorithmException {
         return SmartRestaurantManager.getInstance().login(username, hashedPassword, tableNo);
+    }
+
+    @Atomic
+    public byte[] login(String username, byte[] hashedPassword, int tableNo, int OTP) throws NoSuchAlgorithmException {
+        return SmartRestaurantManager.getInstance().login(username, hashedPassword, tableNo, OTP);
     }
 
     @Atomic

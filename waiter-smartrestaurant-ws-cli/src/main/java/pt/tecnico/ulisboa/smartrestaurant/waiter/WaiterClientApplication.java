@@ -23,9 +23,7 @@ public class WaiterClientApplication {
 
         System.out.println(port.ping("no puedo"));
         System.in.read();
-        Scanner scanner = new Scanner(System.in);
 
-        /**/
 
     }
 }

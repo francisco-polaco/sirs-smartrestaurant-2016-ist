@@ -1,4 +1,5 @@
 @echo off
+title Install
 echo Building CA and its client
 cd ca-ws
 start "CA-WS" cmd /c "mvn clean install exec:java"
