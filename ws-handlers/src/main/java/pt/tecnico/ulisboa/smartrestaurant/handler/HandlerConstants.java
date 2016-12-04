@@ -9,6 +9,7 @@ public class HandlerConstants {
      final String CONTEXT_PROPERTY = "my.property";
      final String SIG_ELEMENT_NAME = "signature";
      final String SENDER_ELEMENT_NAME = "sender";
+     final String RECEIVER_ELEMENT_NAME = "receiver";
      final String PREFIX = "S";
      final String NAMESPACE = "pt.tecnico.ulisboa";
      public String SENDER_SERVICE_NAME = "OrderServer";
