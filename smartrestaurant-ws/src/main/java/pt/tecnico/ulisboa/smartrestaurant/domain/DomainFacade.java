@@ -38,6 +38,11 @@ public class DomainFacade {
     }
 
     @Atomic
+    public void logOut(byte[] sessionId){
+        SmartRestaurantManager.getInstance().logOut(sessionId);
+    }
+
+    @Atomic
     public String requestMyOrdersProducts(byte[] sessionId){
         List<Product> productList = SmartRestaurantManager.getInstance().requestMyOrdersProducts(sessionId);
         String res = "";

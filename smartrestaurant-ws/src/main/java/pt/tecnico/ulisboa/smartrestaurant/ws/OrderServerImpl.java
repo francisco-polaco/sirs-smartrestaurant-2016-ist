@@ -36,6 +36,11 @@ public class OrderServerImpl implements OrderServer {
     }
 
     @Override
+    public void logOut(byte[] sessionId){
+            DomainFacade.getInstance().logOut(sessionId);
+    }
+
+    @Override
     public byte[] login1(String username, byte[] passwordSha2Hash, int tableNo, int OTP) {
         try {
             return DomainFacade.getInstance().login(username, passwordSha2Hash, tableNo, OTP);

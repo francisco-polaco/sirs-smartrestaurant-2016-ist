@@ -137,6 +137,12 @@ public class CustomerClient {
     }
 
     public String logOut(){
+        try {
+            _port.logOut(_sessionId);
+        }catch (Exception e){
+            System.err.println(e.getMessage());
+            return "Falha no logout!";
+        }
         _sessionId = null;
         return "Logout Efetuado com Sucesso";
     }

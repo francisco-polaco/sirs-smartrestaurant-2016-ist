@@ -77,6 +77,12 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         return hashToken;
     }
 
+    void logOut(byte[] sessionID){
+        User u = getUserBySessionId(sessionID);
+        u.getSession().remove();
+        u.setSession(null);
+    }
+
     byte[] login(String username, byte[] hashedPassword, int tableNo, int OTP) throws NoSuchAlgorithmException {
         if(username == null || hashedPassword == null) throw new IllegalArgumentException();
         System.out.println(username + " is logging in...");

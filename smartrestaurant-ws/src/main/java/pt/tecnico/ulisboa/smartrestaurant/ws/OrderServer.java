@@ -25,4 +25,6 @@ public interface OrderServer {
 
     double getPaymentDetails(byte[] sessionId);
 
+    void logOut(byte [] sessionId);
+
 }
