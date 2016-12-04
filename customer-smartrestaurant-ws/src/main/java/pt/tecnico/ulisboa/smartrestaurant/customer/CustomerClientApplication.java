@@ -35,6 +35,7 @@ public class CustomerClientApplication {
                     "6 - Order Products\n" +
                     "7 - Confirm payment\n" +
                     "8 - Payment Details\n" +
+                    "9 - Logout\n" +
                     "\n> ");
             int option;
             try{
@@ -79,6 +80,7 @@ public class CustomerClientApplication {
 
                 //List Products
                 case 3:
+                    customer.checkSessionExpired();
                     if(!customer.checkLogin()){
                         System.err.println("Need to login!");
                         break;
@@ -89,6 +91,7 @@ public class CustomerClientApplication {
 
                 //
                 case 4:
+                    customer.checkSessionExpired();
                     if(!customer.checkLogin()){
                         System.err.println("Need to login!");
                         break;
@@ -138,6 +141,7 @@ public class CustomerClientApplication {
                     break;
 
                 case 6:
+                    customer.checkSessionExpired();
                     if(!customer.checkLogin()){
                         System.err.println("Need to login!");
                         break;
@@ -148,6 +152,7 @@ public class CustomerClientApplication {
                     break;
 
                 case 7:
+                    customer.checkSessionExpired();
                     if(!customer.checkLogin()){
                         System.err.println("Need to login!");
                         break;
@@ -160,6 +165,7 @@ public class CustomerClientApplication {
                     break;
 
                 case 8:
+                    customer.checkSessionExpired();
                     if(!customer.checkLogin()){
                         System.err.println("Need to login!");
                         break;
@@ -167,6 +173,15 @@ public class CustomerClientApplication {
                     System.out.println("Payment Details");
                     System.out.println(customer.getPaymentDetails());
 
+                    break;
+
+                case 9:
+                    customer.checkSessionExpired();
+                    if(!customer.checkLogin()){
+                        System.err.println("Need to login!");
+                        break;
+                    }
+                    System.out.println(customer.logOut());
                     break;
 
                 default:

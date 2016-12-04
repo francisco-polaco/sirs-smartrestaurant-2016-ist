@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.Random;
 
+import org.joda.time.DateTime;
 import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServer;
 import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImplService;
 
@@ -19,6 +20,8 @@ public class CustomerClient {
     private OrderServer _port;
     private OrderServerImplService _service;
     private byte[] _sessionId = null;
+    private DateTime _loginTime;
+    private static final int TIMEOUT_SESSION_TIME = 1800000/15;
 
     public CustomerClient(String endpointAddress){
         if (endpointAddress ==null) {
@@ -50,6 +53,7 @@ public class CustomerClient {
             System.err.println(e.getMessage());
             return "Falha no login!";
         }
+        _loginTime = new DateTime();
         return "Sucesso login!";
     }
 
@@ -60,7 +64,7 @@ public class CustomerClient {
 
     public String requestMyOrderProducts(){
         System.out.println(_port.requestMyOrdersProducts(_sessionId));
-
+        _loginTime = new DateTime();
         return "";
     }
 
@@ -71,6 +75,7 @@ public class CustomerClient {
             System.err.println(e.getMessage());
             return "Erro no pedido";
         }
+        _loginTime = new DateTime();
         return "Pedido efetuado com sucesso!";
     }
 
@@ -91,6 +96,7 @@ public class CustomerClient {
             System.err.println(e.getMessage());
             return "Falha no pedido!";
         }
+        _loginTime = new DateTime();
         return "Pedido efetuado com sucesso!";
     }
 
@@ -101,16 +107,20 @@ public class CustomerClient {
             System.err.println(e.getMessage());
             return "Falha na confirmação de pagamento!";
         }
+        _loginTime = new DateTime();
         return "Confirmação de pagamento efetuada com sucesso!";
     }
 
     public String getPaymentDetails(){
+        String value;
         try {
-            return String.valueOf(_port.getPaymentDetails(_sessionId));
+             value = String.valueOf(_port.getPaymentDetails(_sessionId));
         }catch (Exception e){
             System.err.println(e.getMessage());
             return "Falha na confirmação de pagamento!";
         }
+        _loginTime = new DateTime();
+        return value;
     }
 
 
@@ -122,6 +132,20 @@ public class CustomerClient {
     public boolean checkLogin(){
         if(_sessionId ==null)
             return false;
+
         return true;
+    }
+
+    public String logOut(){
+        _sessionId = null;
+        return "Logout Efetuado com Sucesso";
+    }
+
+    public void checkSessionExpired(){
+        if (_loginTime != null) {
+            if (new DateTime().getMillis() - _loginTime.getMillis() > TIMEOUT_SESSION_TIME) {
+                logOut();
+            }
+        }
     }
 }
