@@ -4,26 +4,25 @@ import org.joda.time.DateTime;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.ulisboa.smartrestaurant.exception.*;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenProxy;
+import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterProxy;
 
-
-import javax.xml.ws.BindingProvider;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
-
-import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
-    private static final int TIMEOUT_SESSION_TIME = 1800000/15;     // half an hour
+    private static final int TIMEOUT_SESSION_TIME = 1800000;     // half an hour
     private static KitchenProxy _kp;
 
     private SmartRestaurantManager() {
         FenixFramework.getDomainRoot().setSmartRestaurantManager(this);
 
-        setKitchenServer("http://localhost:6060/kitchen-smartrestaurant-ws-server/endpoint");
 
         addProduct(new Product("Bife da Vazia", "Um soculento bife da Vazia que o irá fazer chorar por mais.", 12.99, this));
         addProduct(new Product("Bacalhau à Lagareiro", "Experimente o que mais de Português " +
@@ -63,25 +62,39 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         super.addUser(new User(username, hashedPassword, firstName, lastName, nif, this));
     }
 
+    @Deprecated
     byte[] login(String username, byte[] hashedPassword, int tableNo) throws NoSuchAlgorithmException {
         if(username == null || hashedPassword == null) throw new IllegalArgumentException();
         System.out.println(username + " is logging in...");
         byte[] hashToken;
         User user = getUserByUsername(username);
-//        try {
-//            checkSessionTimeoutAndLogoutUser(user);
-//        }catch (SessionExpiredException e){
-//            System.out.println(user.getUsername() + " session has expired.");
-//        }
-
         passwordChecker(user, hashedPassword);
-
         hashToken = generateToken();
         Session s = new Session(hashToken, tableNo);
         s.setUser(user);
         user.setSession(s);
         System.out.println(username + " is logged in.");
         return hashToken;
+    }
+
+    byte[] login(String username, byte[] hashedPassword, int tableNo, int OTP) throws NoSuchAlgorithmException {
+        if(username == null || hashedPassword == null) throw new IllegalArgumentException();
+        System.out.println(username + " is logging in...");
+        byte[] hashToken;
+        User user = getUserByUsername(username);
+        passwordChecker(user, hashedPassword);
+        otpChecker(OTP);
+        hashToken = generateToken();
+        Session s = new Session(hashToken, tableNo);
+        s.setUser(user);
+        user.setSession(s);
+        System.out.println(username + " is logged in.");
+        return hashToken;
+    }
+
+    private void otpChecker(int otp) {
+        // to simplify
+        if(otp != 123456) throw new AuthenticatorCodeRejectedException();
     }
 
     void addRequestToOrder(byte[] sessionId, String productName){
@@ -138,10 +151,14 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     void setOrderReadyToDeliver(long orderId){
         setOrderToState(orderId, 2);
+        System.out.println("Order " + orderId + " is being delivered.");
+        new WaiterProxy().requestToDeliverOrder(orderId);
     }
 
     void setOrderToDelivered(long orderId){
         setOrderToState(orderId, 3);
+        System.out.println("Order " + orderId + " is delivered.");
+
     }
 
     void confirmPayment(byte[] sessionId, byte[] hashedPassword, String paypalReference){
@@ -162,7 +179,10 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         User u = getUserBySessionId(sessionId);
         checkSessionTimeoutAndLogoutUser(u);
         if(u.getSession() != null){
-            return u.getOrder().amountToPay();
+            if(u.getOrder() != null)
+                return u.getOrder().amountToPay();
+            else
+                throw new OrderDoesntExistException("Order already payed or not ordered at all.");
         }else
             throw new SessionExpiredException(u.getUsername());
     }
@@ -206,7 +226,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     private Product getProductByName(String name){
         for(Product p : getProductSet()){
-            if(p.getName().equals(name)) return p;
+            if(p.getName().toLowerCase().equals(name.toLowerCase())) return p; // Lower case is nice
         }
         return null;
     }
@@ -276,13 +296,13 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     private void setOrderToPayed(Order order){
         for (User u : getUserSet()) {
+            System.out.println("" + u.getOrder().getId() + " vs " + order.getId());
             if (u.getOrder() != null && u.getOrder().getId() == order.getId()) {
-
                 // Only delivered orders can be payed
                 u.getOrder().remove();
                 u.setOrder(null);
                 System.out.println("Payment was done with success.");
-                break;
+                return;
             }
         }
         throw new OrderDoesntExistException();
@@ -293,7 +313,8 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         // We assume that the payment is always completed with success.
         System.out.println("Checking payment reference.");
         try {
-            Thread.sleep(2500);
+            Random random = new Random();
+            Thread.sleep(random.nextInt(3000));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -1,9 +1,9 @@
-package pt.tecnico.ulisboa.smartrestaurant.kitchenServer;
+package pt.tecnico.ulisboa.smartrestaurant.kitchen;
 
 import javax.xml.ws.Endpoint;
 
 import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
-import pt.tecnico.ulisboa.smartrestaurant.kitchenServer.ws.cli.KitchenClientServerImpl;
+import pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli.KitchenClientServerImpl;
 
 public class KitchenServerApplication {
 

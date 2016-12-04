@@ -6,7 +6,7 @@ import javax.jws.WebService;
  * Created by francisco on 13/11/2016.
  */
 @WebService
-public interface WaiterServer {
+public interface WaiterSoftServer {
 
     String ping(String msg);
 

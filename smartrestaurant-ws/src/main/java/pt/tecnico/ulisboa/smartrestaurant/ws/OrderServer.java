@@ -13,6 +13,8 @@ public interface OrderServer {
 
     byte[] login(String username, byte[] passwordSha2Hash, int tableNo);
 
+    byte[] login1(String username, byte[] passwordSha2Hash, int tableNo, int OTP);
+
     String requestMyOrdersProducts(byte[] sessionId);
 
     void addProductToOrder(byte[] sessionId, String productName);

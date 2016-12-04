@@ -23,7 +23,7 @@
 
         <version.junit>4.12</version.junit>
 
-        <mainclass>pt.tecnico.ulisboa.smartrestaurant.kitchenServer.KitchenServerApplication</mainclass>
+        <mainclass>pt.tecnico.ulisboa.smartrestaurant.kitchen.KitchenServerApplication</mainclass>
 
     </properties>
 

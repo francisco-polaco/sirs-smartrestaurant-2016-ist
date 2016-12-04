@@ -16,7 +16,7 @@ public class OrderServerImpl implements OrderServer {
     @Override
     public String ping(String msg) {
         System.out.println("Customer " +msg);
-        return "Pong!";
+        return "Order Pong!";
     }
 
     @Override
@@ -29,6 +29,16 @@ public class OrderServerImpl implements OrderServer {
 
         try {
             return DomainFacade.getInstance().login(username, passwordSha2Hash, tableNo);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            throw new InsecureServerExceptionException();
+        }
+    }
+
+    @Override
+    public byte[] login1(String username, byte[] passwordSha2Hash, int tableNo, int OTP) {
+        try {
+            return DomainFacade.getInstance().login(username, passwordSha2Hash, tableNo, OTP);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             throw new InsecureServerExceptionException();

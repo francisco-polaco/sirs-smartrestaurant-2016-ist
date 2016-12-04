@@ -7,7 +7,8 @@ import pt.tecnico.ulisboa.smartrestaurant.exception.UserAlreadyExistsException;
 import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImpl;
 import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImpl;
-import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterServerImpl;
+import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterProxy;
+import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterSoftServerImpl;
 
 import javax.xml.ws.Endpoint;
 import java.nio.charset.StandardCharsets;
@@ -21,13 +22,15 @@ import java.util.ArrayList;
 public class Application {
     public static void main(String[] args){
         // Check arguments
-        if (args.length != 3) {
+        if (args.length != 4) {
             System.err.println("Argument(s) missing!");
-            System.err.printf("Usage: java %s wsOrderURL wsWaiterURL wsKitchenURL%n", Application.class.getName());
+            System.err.printf("Usage: java %s wsOrderURL wsWaiterURL wsKitchenURL wsWaiterReal%n", Application.class.getName());
             return;
         }
 
         String[] urls = { args[0], args[1], args[2]};
+
+        WaiterProxy.endpointAddress = args[3];
 
         SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "OrderServer";
         SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer";
@@ -35,7 +38,7 @@ public class Application {
         ArrayList<Endpoint> endpoints = new ArrayList<>();
         try {
             endpoints.add(Endpoint.create(new OrderServerImpl()));
-            endpoints.add(Endpoint.create(new WaiterServerImpl()));
+            endpoints.add(Endpoint.create(new WaiterSoftServerImpl()));
             endpoints.add(Endpoint.create(new KitchenServerImpl()));
 
             // publish endpoint

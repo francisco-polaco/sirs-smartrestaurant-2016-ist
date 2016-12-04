@@ -1,8 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.domain;
 
-class SmartRestaurantManager{
-    String kitchenServer;
-}
+class SmartRestaurantManager;
 
 class Product{
     String name;

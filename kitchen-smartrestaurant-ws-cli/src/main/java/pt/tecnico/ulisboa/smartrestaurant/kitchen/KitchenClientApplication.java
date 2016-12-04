@@ -3,6 +3,7 @@ package pt.tecnico.ulisboa.smartrestaurant.kitchen;
 import pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli.KitchenClientImpl;
 
 import javax.xml.ws.Endpoint;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -19,7 +20,7 @@ public class KitchenClientApplication {
         System.out.println("cenas " + args[0]);
         System.out.println("cenas " + args[1]);
 
-        KitchenClientImpl kitchen = new KitchenClientImpl(args[0], args[1]);
+        KitchenClientImpl kitchen = new KitchenClientImpl(args[0]);
 
         Scanner scanner = new Scanner(System.in);
 
@@ -73,7 +74,11 @@ public class KitchenClientApplication {
 
                 case 3:
                     System.out.println("List Orders");
-                    System.out.println(kitchen.listAllOrders());
+                    //ArrayList<Long> lista = kitchen.getList();
+                    /*for(Long l : lista){
+                        System.out.println(l);
+
+                    }*/
                     break;
 
                 default:
