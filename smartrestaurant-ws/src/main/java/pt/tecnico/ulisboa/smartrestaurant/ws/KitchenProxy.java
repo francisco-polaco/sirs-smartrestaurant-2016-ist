@@ -1,7 +1,8 @@
 package pt.tecnico.ulisboa.smartrestaurant.ws;
 
-import pt.tecnico.ulisboa.smartrestaurant.kitchenserver.ws.cli.KitchenClientServer;
-import pt.tecnico.ulisboa.smartrestaurant.kitchenserver.ws.cli.KitchenClientServerImplService;
+
+import pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli.KitchenClientServer;
+import pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli.KitchenClientServerImplService;
 
 import javax.xml.ws.BindingProvider;
 import java.util.Map;
@@ -14,12 +15,11 @@ import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
 public class KitchenProxy {
 
     private KitchenClientServer _port;
-    private KitchenClientServerImplService _service;
 
     public KitchenProxy(String endpointAddress) {
 
         System.out.println("Creating stub ...");
-        _service = new KitchenClientServerImplService();
+        KitchenClientServerImplService _service = new KitchenClientServerImplService();
         _port = _service.getKitchenClientServerImplPort();
 
         System.out.println("Setting endpoint address ...");
@@ -34,7 +34,7 @@ public class KitchenProxy {
         try {
             _port.addList(id);
         }catch (Exception e){
-
+            System.err.println(e.getMessage());
         }
     }
 }

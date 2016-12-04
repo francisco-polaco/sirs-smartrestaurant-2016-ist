@@ -1,26 +1,36 @@
 package pt.tecnico.ulisboa.smartrestaurant.kitchen;
 
 import pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli.KitchenClientImpl;
+import pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli.KitchenClientServerImpl;
 
 import javax.xml.ws.Endpoint;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class KitchenClientApplication {
-
+/**
+ * Created by francisco on 04/12/2016.
+ */
+public class KitchenApplication {
     public static void main(String[] args) throws Exception {
-        System.out.println(KitchenClientApplication.class.getSimpleName() + " starting...");
+        System.out.println(KitchenApplication.class.getSimpleName() + " starting...");
 
         if (args.length != 2) {
             System.err.println("Argument(s) missing!");
-            System.err.printf("Usage: java %s uddiURL name%n", KitchenClientApplication.class.getName());
+            System.err.printf("Usage: java %s orderurl url %n", KitchenApplication.class.getName());
             return;
         }
-        System.out.println("cenas " + args[0]);
-        System.out.println("cenas " + args[1]);
+        KitchenClientServerImpl server = new KitchenClientServerImpl();
 
-        KitchenClientImpl kitchen = new KitchenClientImpl(args[0]);
+        Endpoint kitchenS = Endpoint.create(server);
+        System.out.println(args[1]);
+        kitchenS.publish(args[1]);
+
+        System.out.println("URL published: " + args[1]);
+        System.out.println("Awaiting connections");
+
+        KitchenClientImpl port = new KitchenClientImpl(args[0]);
+        System.out.println("Connected to: " + args[0]);
 
         Scanner scanner = new Scanner(System.in);
 
@@ -51,7 +61,7 @@ public class KitchenClientApplication {
                     System.out.print("Ping\nIntroduza mensagem de ping:\n>");
                     try{
                         String pingMessage = scanner.nextLine();
-                        String ping = kitchen.ping(pingMessage);
+                        String ping = port.ping(pingMessage);
                         System.out.println(ping);
                     }catch (InputMismatchException e){
                         System.err.println("Não pode conter new lines");
@@ -64,7 +74,7 @@ public class KitchenClientApplication {
                     try{
                         long orderNr = scanner.nextLong();
                         scanner.nextLine();
-                        System.out.println(kitchen.setOrderReadyToDeliver(orderNr));
+                        System.out.println(port.setOrderReadyToDeliver(orderNr));
                     }catch (InputMismatchException e){
                         scanner.nextLine();
                         System.err.println("Não é um número");
@@ -74,11 +84,10 @@ public class KitchenClientApplication {
 
                 case 3:
                     System.out.println("List Orders");
-                    //ArrayList<Long> lista = kitchen.getList();
-                    /*for(Long l : lista){
+                    ArrayList<Long> lista = server.getList();
+                    for(Long l : lista){
                         System.out.println(l);
-
-                    }*/
+                    }
                     break;
 
                 default:

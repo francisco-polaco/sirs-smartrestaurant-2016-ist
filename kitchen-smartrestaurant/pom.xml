@@ -5,12 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pt.tecnico.ulisboa</groupId>
-    <artifactId>kitchen-smartrestaurant-ws-cli</artifactId>
+    <artifactId>kitchen-smartrestaurant</artifactId>
     <version>1.0-SNAPSHOT</version>
-
-    <packaging>jar</packaging>
-
-    <name>${project.artifactId}</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,47 +15,21 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <!-- WSDL is required for client code generation -->
-        <ws.url>http://localhost:8082/smartrestaurant-ws/endpoint</ws.url>
-        <wsdl.url>${ws.url}?WSDL</wsdl.url>
 
-        <ws.urlK>http://localhost:6060/kitchen-smartrestaurant-ws-server/endpoint</ws.urlK>
-        <wsdl.urlK>${ws.urlK}?WSDL</wsdl.urlK>
+        <!-- WSDL is required for client code generation -->
+        <wsK.url>http://localhost:8082/smartrestaurant-ws/endpoint</wsK.url>
+        <wsKM.url>http://localhost:6060/kitchen-smartrestaurant-ws-server/endpoint</wsKM.url>
+
 
         <version.junit>4.12</version.junit>
 
-        <mainclass>pt.tecnico.ulisboa.smartrestaurant.kitchen.KitchenClientApplication</mainclass>
+        <mainclass>pt.tecnico.ulisboa.smartrestaurant.kitchen.KitchenApplication</mainclass>
 
     </properties>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.jvnet.jax-ws-commons</groupId>
-                <artifactId>jaxws-maven-plugin</artifactId>
-                <version>2.3</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>wsimport</goal>
-                        </goals>
-                    </execution>
 
-                </executions>
-                <configuration>
-                    <!-- https://jax-ws-commons.java.net/jaxws-maven-plugin/wsimport-mojo.html -->
-                    <wsdlUrls>
-                        <wsdlUrl>${wsdl.url}</wsdlUrl>
-                    </wsdlUrls>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.sun.xml.ws</groupId>
-                        <artifactId>jaxws-tools</artifactId>
-                        <version>2.2.10</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -76,8 +46,8 @@
                     <killAfter>-1</killAfter>
                     <mainClass>${mainclass}</mainClass>
                     <arguments>
-                        <argument>${ws.url}</argument>
-                        <argument>${ws.urlK}</argument>
+                        <argument>${wsK.url}</argument>
+                        <argument>${wsKM.url}</argument>
                     </arguments>
                 </configuration>
             </plugin>
@@ -103,21 +73,23 @@
                 </configuration>
             </plugin>
         </plugins>
-
     </build>
 
     <dependencies>
         <dependency>
             <groupId>pt.tecnico.ulisboa</groupId>
-            <artifactId>ws-handlers</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <!--<dependency>
-            <groupId>pt.tecnico.ulisboa</groupId>
             <artifactId>kitchen-smartrestaurant-ws-server</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>-->
+        </dependency>
 
+        <dependency>
+            <groupId>pt.tecnico.ulisboa</groupId>
+            <artifactId>kitchen-smartrestaurant-ws-cli</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
+
+
+
 
 </project>

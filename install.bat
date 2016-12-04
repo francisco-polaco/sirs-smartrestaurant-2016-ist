@@ -18,7 +18,7 @@ echo Handlers Ready
 echo Building SmartRestaurant and Kitchen
 cd kitchen-smartrestaurant-ws-server
 timeout 7
-start "Kitchen Server" cmd /c "mvn clean install exec:java"
+start "kitchen-ws" cmd /c "mvn clean install exec:java"
 cd ..
 cd waiter-smartrestaurant-ws
 timeout 7
@@ -28,10 +28,14 @@ cd smartrestaurant-ws
 timeout 7
 start "SmartRestaurant" cmd /c "mvn clean install exec:java"
 cd ..
-echo After building SmartRestaurant please press enter on the waiter-ws windows and then press any here.
+echo After building SmartRestaurant please press enter on the waiter-ws and kitchen-ws windows and then press any here.
 pause
 cd kitchen-smartrestaurant-ws-cli
-start "Kitchen Client" cmd /c "mvn clean install exec:java"
+start "Kitchen Client" cmd /c "mvn clean install"
+cd ..
+cd kitchen-smartrestaurant
+timeout 7
+start "Kitchen" cmd /c "mvn clean install exec:java"
 cd ..
 cd smartrestaurant-ws-cli
 timeout 7
