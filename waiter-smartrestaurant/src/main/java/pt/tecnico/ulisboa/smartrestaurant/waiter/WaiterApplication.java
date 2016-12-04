@@ -15,9 +15,6 @@ import java.util.TimerTask;
  */
 public class WaiterApplication {
 
-    private static BigInteger order;
-    private static WaiterRealServerImpl server;
-
     public static void main(String[] args) throws Exception {
         System.out.println(WaiterApplication.class.getSimpleName() + " starting...");
 
@@ -26,7 +23,7 @@ public class WaiterApplication {
             System.err.printf("Usage: java %s orderurl url %n", WaiterApplication.class.getName());
             return;
         }
-        server = new WaiterRealServerImpl();
+        WaiterRealServerImpl server = new WaiterRealServerImpl();
 
         Endpoint waiterS = Endpoint.create(server);
         System.out.println(args[1]);
@@ -36,7 +33,6 @@ public class WaiterApplication {
         System.out.println("Awaiting connections");
 
         WaiterRealClientPort port = new WaiterRealClientPort(args[0]);
-        startUpdate();
 
         Scanner scanner = new Scanner(System.in);
         while(true){
@@ -44,6 +40,7 @@ public class WaiterApplication {
                     "0 - Exit\n" +
                     "1 - Ping\n" +
                     "2 - Deliver Order\n" +
+                    "3 - Check Order Number\n" +
                     "> ");
             int option;
             try{
@@ -76,11 +73,20 @@ public class WaiterApplication {
                 case 2:
                     try{
                         port.setOrderToDelivered(server.getOrderIdToDeliver().longValue());
+                        server.setOrderIdToDeliver(null);
                     }catch (IllegalStateException e){
                         System.err.println(e.getMessage());
                         break;
                     }
                     System.out.println("Order delivered");
+                    break;
+                case 3:
+                    try{
+                        System.out.println("You need to deliver order #" + server.getOrderIdToDeliver().longValue());
+                    }catch (IllegalStateException e){
+                        System.err.println(e.getMessage());
+                        break;
+                    }
                     break;
 
                 default:
@@ -98,17 +104,5 @@ public class WaiterApplication {
         }
     }
 
-    private static class UpdateUiTimerTask extends TimerTask{
 
-        public void run() {
-            if(order != null && !order.equals(server.getOrderIdToDeliver())){
-                System.out.println("You have now order #" + order.longValue() + " to deliver.");
-            }
-            startUpdate();
-        }
-    }
-
-    private static void startUpdate(){
-        new Timer().schedule(new UpdateUiTimerTask(), 5000);
-    }
 }

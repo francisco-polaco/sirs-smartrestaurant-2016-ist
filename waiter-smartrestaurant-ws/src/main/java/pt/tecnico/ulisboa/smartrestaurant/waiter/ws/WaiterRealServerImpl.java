@@ -11,7 +11,7 @@ public class WaiterRealServerImpl implements WaiterRealServer {
     private BigInteger orderIdToDeliver;
 
     public BigInteger getOrderIdToDeliver() {
-        if(orderIdToDeliver == null) throw  new IllegalStateException("You didn't have an order assign.");
+        if(orderIdToDeliver == null) throw  new IllegalStateException("You don't have an order assign.");
         return orderIdToDeliver;
     }
 
