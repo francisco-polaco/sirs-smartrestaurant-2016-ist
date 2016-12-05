@@ -1,5 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.ws;
 
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
 import pt.tecnico.ulisboa.smartrestaurant.waiter.ws.WaiterRealServer;
 import pt.tecnico.ulisboa.smartrestaurant.waiter.ws.WaiterRealServerImplService;
 
@@ -29,10 +30,13 @@ public class WaiterProxy {
     }
 
     public String ping(String msg){
+        synchronized (this){
+            SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "Waiter";}
         return _port.ping(msg);
     }
 
     public void requestToDeliverOrder(long orderId){
+        synchronized (this){SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "Waiter";}
         _port.requestToDeliverOrder(orderId);
     }
 

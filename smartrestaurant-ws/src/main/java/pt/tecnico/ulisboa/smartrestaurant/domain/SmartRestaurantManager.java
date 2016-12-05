@@ -3,6 +3,7 @@ package pt.tecnico.ulisboa.smartrestaurant.domain;
 import org.joda.time.DateTime;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.ulisboa.smartrestaurant.exception.*;
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenProxy;
 import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterProxy;
 
@@ -159,6 +160,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         setOrderToState(orderId, 2);
         System.out.println("Order " + orderId + " is being delivered.");
         new WaiterProxy().requestToDeliverOrder(orderId);
+        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer"; // hack
     }
 
     void setOrderToDelivered(long orderId){
@@ -294,7 +296,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         for (User u : getUserSet()) {
             if (u.getOrder() != null && u.getOrder().getId() == orderId) {
                 u.getOrder().setState(state);
-                break;
+                return;
             } else
                 throw new OrderDoesntExistException();
         }

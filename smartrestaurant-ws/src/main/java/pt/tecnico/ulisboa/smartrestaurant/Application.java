@@ -33,7 +33,7 @@ public class Application {
         WaiterProxy.endpointAddress = args[3];
 
         SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "OrderServer";
-        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer";
+
 
         ArrayList<Endpoint> endpoints = new ArrayList<>();
         try {

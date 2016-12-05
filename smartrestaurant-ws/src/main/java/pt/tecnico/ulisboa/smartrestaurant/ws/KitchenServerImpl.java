@@ -1,6 +1,7 @@
 package pt.tecnico.ulisboa.smartrestaurant.ws;
 
 import pt.tecnico.ulisboa.smartrestaurant.domain.DomainFacade;
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
 
 import javax.jws.HandlerChain;
 import javax.jws.WebService;

@@ -24,8 +24,6 @@ public class KitchenClientServerImpl implements KitchenClientServer{
 
     @Override
     public void addList(long id){
-        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenServer";
-        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
         _list.add(id);
         System.out.println("Novo pedido id "+id);
     }

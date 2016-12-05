@@ -17,8 +17,6 @@ public class KitchenClientImpl{
     private KitchenServerImplService _service;
 
     public KitchenClientImpl(String endpointAddress){
-        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenClient";
-        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
         if (endpointAddress == null) {
             System.out.println("Not found!");
             return;
@@ -39,7 +37,6 @@ public class KitchenClientImpl{
     }
 
     public String ping(String pingMessage){
-
         return _port.ping(pingMessage);
     }
 

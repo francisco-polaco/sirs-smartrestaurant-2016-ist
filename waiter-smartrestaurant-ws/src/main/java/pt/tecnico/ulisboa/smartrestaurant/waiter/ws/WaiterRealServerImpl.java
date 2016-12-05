@@ -1,5 +1,8 @@
 package pt.tecnico.ulisboa.smartrestaurant.waiter.ws;
 
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
+
+import javax.jws.HandlerChain;
 import javax.jws.WebService;
 import java.math.BigInteger;
 
@@ -7,8 +10,14 @@ import java.math.BigInteger;
  * Created by francisco on 13/11/2016.
  */
 @WebService(endpointInterface = "pt.tecnico.ulisboa.smartrestaurant.waiter.ws.WaiterRealServer")
+@HandlerChain(file= "/kitchen_handler-chain.xml")
 public class WaiterRealServerImpl implements WaiterRealServer {
     private BigInteger orderIdToDeliver;
+
+    public WaiterRealServerImpl() {
+        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "Waiter";
+        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
+    }
 
     public BigInteger getOrderIdToDeliver() {
         if(orderIdToDeliver == null) throw  new IllegalStateException("You don't have an order assign.");

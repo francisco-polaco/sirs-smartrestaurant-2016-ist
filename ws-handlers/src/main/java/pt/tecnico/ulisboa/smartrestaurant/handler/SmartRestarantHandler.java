@@ -69,7 +69,6 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
                }
 
                handlerConstants.RCPT_SERVICE_NAME = getFieldrFromHeader(smc, handlerConstants.SENDER_ELEMENT_NAME);
-               System.out.println(handlerConstants.RCPT_SERVICE_NAME);
 
                if(!checkIfOtherCertificateIsPresent(handlerConstants.RCPT_SERVICE_NAME)){
                    getCertificateFromCA(handlerConstants.RCPT_SERVICE_NAME,
@@ -86,17 +85,20 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
 
         }catch(AuthenticationException | MissedFormedSOAPException | javax.xml.ws.WebServiceException | InvalidTimestampSOAPException e){
             System.out.println(e.getMessage());
-            if(handlerConstants.SENDER_SERVICE_NAME.equals("OrderServer"))
+        }catch (Exception e) {
+            System.out.println("Caught exception in handleMessage: " + e.getMessage());
+            e.printStackTrace();
+            if(isAValidSenderName())
                 return false;
             else{
                 throw new RuntimeException();
             }
-        }catch (Exception e) {
-            System.out.println("Caught exception in handleMessage: " + e.getMessage());
-            e.printStackTrace();
-            System.out.println("Continue normal processing...");
         }
         return true;
+    }
+
+    private boolean isAValidSenderName() {
+        return handlerConstants.SENDER_SERVICE_NAME.equals("OrderServer") || handlerConstants.SENDER_SERVICE_NAME.equals("Waiter") || handlerConstants.SENDER_SERVICE_NAME.equals("KitchenServer");
     }
 
     private void formHeader(SOAPMessage message) throws Exception {

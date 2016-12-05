@@ -1,5 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.kitchen;
 
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
 import pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli.KitchenClientImpl;
 import pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli.KitchenClientServerImpl;
 
@@ -28,6 +29,9 @@ public class KitchenApplication {
 
         System.out.println("URL published: " + args[1]);
         System.out.println("Awaiting connections");
+
+        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenServer";
+        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
 
         KitchenClientImpl port = new KitchenClientImpl(args[0]);
         System.out.println("Connected to: " + args[0]);
