@@ -6,7 +6,7 @@
             <handler-class>pt.tecnico.ulisboa.smartrestaurant.handler.LoggingHandler</handler-class>
         </handler>
         <handler>
-            <handler-class>pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler</handler-class>
+            <handler-class>pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestaurantOutboundHandler</handler-class>
         </handler>
         <handler>
             <handler-class>pt.tecnico.ulisboa.smartrestaurant.handler.LoggingHandler</handler-class>

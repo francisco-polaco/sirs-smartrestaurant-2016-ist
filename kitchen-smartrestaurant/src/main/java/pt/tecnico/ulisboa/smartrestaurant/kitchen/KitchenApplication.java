@@ -1,6 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.kitchen;
 
-import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestaurantHandler;
 import pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli.KitchenClientImpl;
 import pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli.KitchenClientServerImpl;
 
@@ -21,6 +21,7 @@ public class KitchenApplication {
             System.err.printf("Usage: java %s orderurl url %n", KitchenApplication.class.getName());
             return;
         }
+        try{
         KitchenClientServerImpl server = new KitchenClientServerImpl();
 
         Endpoint kitchenS = Endpoint.create(server);
@@ -30,8 +31,6 @@ public class KitchenApplication {
         System.out.println("URL published: " + args[1]);
         System.out.println("Awaiting connections");
 
-        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenServer";
-        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
 
         KitchenClientImpl port = new KitchenClientImpl(args[0]);
         System.out.println("Connected to: " + args[0]);
@@ -100,6 +99,12 @@ public class KitchenApplication {
                     break;
             }
 
+        }
+
+        kitchenS.stop();
+        System.out.printf("Stopped %s%n", args[1]);
+        } catch (Exception e) {
+            System.out.printf("Caught exception when stopping: %s%n", e);
         }
 
     }

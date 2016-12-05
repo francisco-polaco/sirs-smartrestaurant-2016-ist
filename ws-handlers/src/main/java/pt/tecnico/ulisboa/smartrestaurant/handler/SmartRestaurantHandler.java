@@ -28,17 +28,22 @@ import static javax.xml.bind.DatatypeConverter.*;
  * Created by xxlxpto on 07-05-2016.
  */
 
-public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
+public abstract class SmartRestaurantHandler implements SOAPHandler<SOAPMessageContext> {
 
 
     private static final int MAX_MESSAGES_WITHOUT_GETTING_CERTIFICATE_AGAIN = 10;
     private static final String CA_ENDPOINT_ADDRESS = "http://localhost:7070/ca-ws/endpoint";
-    public static final String IV = "iv";
-    public static HandlerConstants handlerConstants = new HandlerConstants();
+    private static final String IV = "iv";
 
     private ArrayList<String> oldTimestamps = new ArrayList<>();
     private AtomicInteger numberMessagesReceive = new AtomicInteger(0);
 
+    public SmartRestaurantHandler() {
+        super();
+        initialize();
+    }
+
+    public abstract void initialize();
 
     public Set<QName> getHeaders() {
         return null;
@@ -60,25 +65,24 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
                System.out.print("Inbound SOAP message from: ");
                byte[] iv = setGetIVFromHeader(smc, null, false);
                cipherAndDecipherBodyHeader(smc, iv, false);
-
-               if(handlerConstants.SENDER_SERVICE_NAME.equals(getFieldrFromHeader(smc,handlerConstants.RECEIVER_ELEMENT_NAME)))
+               if(getHandlerConstants().SENDER_SERVICE_NAME.equals(getFieldrFromHeader(smc,getHandlerConstants().RECEIVER_ELEMENT_NAME)))
                    System.out.println("Receiver matches the receiver");
                else{
                    System.out.println("Receiver does not match the receiver");
                    throw new RuntimeException();
                }
 
-               handlerConstants.RCPT_SERVICE_NAME = getFieldrFromHeader(smc, handlerConstants.SENDER_ELEMENT_NAME);
+               getHandlerConstants().RCPT_SERVICE_NAME = getFieldrFromHeader(smc, getHandlerConstants().SENDER_ELEMENT_NAME);
 
-               if(!checkIfOtherCertificateIsPresent(handlerConstants.RCPT_SERVICE_NAME)){
-                   getCertificateFromCA(handlerConstants.RCPT_SERVICE_NAME,
-                           handlerConstants.RCPT_SERVICE_NAME + handlerConstants.CERTIFICATE_EXTENSION);
+               if(!checkIfOtherCertificateIsPresent(getHandlerConstants().RCPT_SERVICE_NAME)){
+                   getCertificateFromCA(getHandlerConstants().RCPT_SERVICE_NAME,
+                           getHandlerConstants().RCPT_SERVICE_NAME + getHandlerConstants().CERTIFICATE_EXTENSION);
                    numberMessagesReceive.set(0);
                }
                verifySignature(smc, iv);
                verifyTimestampAndNonce(
-                       getHeaderAttribute(smc.getMessage().getSOAPPart().getEnvelope(), smc.getMessage().getSOAPPart().getEnvelope().getHeader(), handlerConstants.TIMESTAMP),
-                       getHeaderAttribute(smc.getMessage().getSOAPPart().getEnvelope(), smc.getMessage().getSOAPPart().getEnvelope().getHeader(), handlerConstants.NONCE)
+                       getHeaderAttribute(smc.getMessage().getSOAPPart().getEnvelope(), smc.getMessage().getSOAPPart().getEnvelope().getHeader(), getHandlerConstants().TIMESTAMP),
+                       getHeaderAttribute(smc.getMessage().getSOAPPart().getEnvelope(), smc.getMessage().getSOAPPart().getEnvelope().getHeader(), getHandlerConstants().NONCE)
                        );
                removeHeader(smc.getMessage());
         }
@@ -98,7 +102,7 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
     }
 
     private boolean isAValidSenderName() {
-        return handlerConstants.SENDER_SERVICE_NAME.equals("OrderServer") || handlerConstants.SENDER_SERVICE_NAME.equals("Waiter") || handlerConstants.SENDER_SERVICE_NAME.equals("KitchenServer");
+        return getHandlerConstants().SENDER_SERVICE_NAME.equals("OrderServer") || getHandlerConstants().SENDER_SERVICE_NAME.equals("Waiter") || getHandlerConstants().SENDER_SERVICE_NAME.equals("KitchenServer");
     }
 
     private void formHeader(SOAPMessage message) throws Exception {
@@ -111,16 +115,16 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
         sh.removeContents();
 
         // add the sender
-        insertElement(se, sh, handlerConstants.SENDER_ELEMENT_NAME, "Adding sender to SOAP...", handlerConstants.SENDER_SERVICE_NAME);
+        insertElement(se, sh, getHandlerConstants().SENDER_ELEMENT_NAME, "Adding sender to SOAP...", getHandlerConstants().SENDER_SERVICE_NAME);
 
         // add the receiver
-        insertElement(se, sh, handlerConstants.RECEIVER_ELEMENT_NAME, "Adding receiver to SOAP...", handlerConstants.RCPT_SERVICE_NAME);
+        insertElement(se, sh, getHandlerConstants().RECEIVER_ELEMENT_NAME, "Adding receiver to SOAP...", getHandlerConstants().RCPT_SERVICE_NAME);
 
         // add timestamp
-        insertElement(se, sh, handlerConstants.TIMESTAMP, "Adding Timestamp to SOAP...", actualTime().toString());
+        insertElement(se, sh, getHandlerConstants().TIMESTAMP, "Adding Timestamp to SOAP...", actualTime().toString());
 
         // add nounce
-        insertElement(se, sh, handlerConstants.NONCE, "Adding Nonce to SOAP...", secureRandomNonce());
+        insertElement(se, sh, getHandlerConstants().NONCE, "Adding Nonce to SOAP...", secureRandomNonce());
 
         message.saveChanges();
     }
@@ -136,13 +140,13 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
 
         byte[] plainBytes = getSOAPtoByteArray(smc);
         byte[] digitalSignature = makeDigitalSignature(plainBytes,
-                getPrivateKeyFromKeystore(handlerConstants.SENDER_SERVICE_NAME + handlerConstants.KEYSTORE_EXTENSION,
-                        handlerConstants.KEYSTORE_PASSWORD.toCharArray(),
-                        handlerConstants.SENDER_SERVICE_NAME, handlerConstants.KEY_PASSWORD.toCharArray()));
+                getPrivateKeyFromKeystore(getHandlerConstants().SENDER_SERVICE_NAME + getHandlerConstants().KEYSTORE_EXTENSION,
+                        getHandlerConstants().KEYSTORE_PASSWORD.toCharArray(),
+                        getHandlerConstants().SENDER_SERVICE_NAME, getHandlerConstants().KEY_PASSWORD.toCharArray()));
 
         checkOwnSignature(smc, digitalSignature);
 
-        insertElement(se, sh, handlerConstants.SIG_ELEMENT_NAME, "Adding signature to SOAP...", printBase64Binary(digitalSignature));
+        insertElement(se, sh, getHandlerConstants().SIG_ELEMENT_NAME, "Adding signature to SOAP...", printBase64Binary(digitalSignature));
         msg.saveChanges();
     }
 
@@ -161,17 +165,16 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
             she = iterH.next();
             if (mode) {
                 // skip the IV and Signature
-                if(she.getTagName().equals(handlerConstants.PREFIX + ":" + IV) || she.getTagName().equals(handlerConstants.PREFIX + ":" + handlerConstants.SIG_ELEMENT_NAME))
+                if(she.getTagName().equals(getHandlerConstants().PREFIX + ":" + IV) || she.getTagName().equals(getHandlerConstants().PREFIX + ":" + getHandlerConstants().SIG_ELEMENT_NAME))
                     continue;
                 she.setTextContent(cipherContent(she.getTextContent(), iv));
             }
             else {
                 // skip the IV and Signature
-                if(she.getTagName().equals(handlerConstants.PREFIX + ":" + IV) || she.getTagName().equals(handlerConstants.PREFIX + ":" + handlerConstants.SIG_ELEMENT_NAME))
+                if(she.getTagName().equals(getHandlerConstants().PREFIX + ":" + IV) || she.getTagName().equals(getHandlerConstants().PREFIX + ":" + getHandlerConstants().SIG_ELEMENT_NAME))
                     continue;
                 she.setTextContent(new String(decipherMessage(parseBase64Binary(she.getTextContent()), iv)));
             }
-
         }
 
         if(mode)
@@ -239,7 +242,7 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
         SOAPEnvelope se = sp.getEnvelope();
         SOAPHeader sh = se.getHeader();
 
-        Name name = se.createName(tag, handlerConstants.PREFIX, handlerConstants.NAMESPACE);
+        Name name = se.createName(tag, getHandlerConstants().PREFIX, getHandlerConstants().NAMESPACE);
         Iterator it = sh.getChildElements(name);
         // check header element
         checkSOAPElement(it);
@@ -263,7 +266,7 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
         System.out.println("Verifying Signature... ");
         byte[] signature = getSignatureFromSoap(smc, iv);
         smc.getMessage().saveChanges();
-        Certificate certificate = readCertificateFile(handlerConstants.RCPT_SERVICE_NAME + handlerConstants.CERTIFICATE_EXTENSION);
+        Certificate certificate = readCertificateFile(getHandlerConstants().RCPT_SERVICE_NAME + getHandlerConstants().CERTIFICATE_EXTENSION);
         if(certificate == null){
             failAuthentication("Could not open the Recipient's certificate.");
         }
@@ -284,12 +287,12 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
     private void checkOwnSignature(SOAPMessageContext smc, byte[] signature)
             throws Exception {
         System.out.println("Checking signature...");
-        KeyStore keystore = readKeystoreFile(handlerConstants.SENDER_SERVICE_NAME + handlerConstants.KEYSTORE_EXTENSION,
-                handlerConstants.KEYSTORE_PASSWORD.toCharArray());
+        KeyStore keystore = readKeystoreFile(getHandlerConstants().SENDER_SERVICE_NAME + getHandlerConstants().KEYSTORE_EXTENSION,
+                getHandlerConstants().KEYSTORE_PASSWORD.toCharArray());
         if(keystore == null){
             failAuthentication("KeyStore doesn't exist.");
         }
-        Certificate certificate = keystore.getCertificate(handlerConstants.SENDER_SERVICE_NAME);
+        Certificate certificate = keystore.getCertificate(getHandlerConstants().SENDER_SERVICE_NAME);
         PublicKey publicKey = certificate.getPublicKey();
         boolean isValid = verifyDigitalSignature(signature, getSOAPtoByteArray(smc), publicKey);
         if (isValid) {
@@ -308,8 +311,8 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
             failAuthentication("Error downloading certificate.");
         }
         Certificate certificate = readCertificateFile(filename);
-        KeyStore keyStore = readKeystoreFile(handlerConstants.SENDER_SERVICE_NAME + ".jks",
-                handlerConstants.KEYSTORE_PASSWORD.toCharArray());
+        KeyStore keyStore = readKeystoreFile(getHandlerConstants().SENDER_SERVICE_NAME + ".jks",
+                getHandlerConstants().KEYSTORE_PASSWORD.toCharArray());
         if(keyStore == null){
             failAuthentication("KeyStore doesn't exist.");
         }
@@ -338,7 +341,7 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
     private void insertElement(SOAPEnvelope se, SOAPHeader sh, String tag, String print, String text) throws SOAPException {
         // add header element (name, namespace prefix, namespace)
         Name name = se.createName(tag,
-                handlerConstants.PREFIX, handlerConstants.NAMESPACE);
+                getHandlerConstants().PREFIX, getHandlerConstants().NAMESPACE);
         SOAPHeaderElement element = sh.addHeaderElement(name);
         System.out.println(print);
         // add header element value
@@ -409,13 +412,13 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
         // check header
         checkSOAPHeader(sh);
 
-        byte[] sig = parseBase64Binary(getHeaderAttribute(se, sh, handlerConstants.SIG_ELEMENT_NAME));
+        byte[] sig = parseBase64Binary(getHeaderAttribute(se, sh, getHandlerConstants().SIG_ELEMENT_NAME));
         String signature = new String(sig);
 
         // put header in a property context
-        smc.put(handlerConstants.CONTEXT_PROPERTY, signature);
+        smc.put(getHandlerConstants().CONTEXT_PROPERTY, signature);
         // set property scope to application client/server class can access it
-        smc.setScope(handlerConstants.CONTEXT_PROPERTY, MessageContext.Scope.APPLICATION);
+        smc.setScope(getHandlerConstants().CONTEXT_PROPERTY, MessageContext.Scope.APPLICATION);
 
         return sig;
     }
@@ -471,7 +474,7 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
 
     private String getHeaderAttribute(SOAPEnvelope se, SOAPHeader sh, String tag) throws SOAPException {
         Name name = se.createName(tag,
-                handlerConstants.PREFIX, handlerConstants.NAMESPACE);
+                getHandlerConstants().PREFIX, getHandlerConstants().NAMESPACE);
 
         Iterator it = sh.getChildElements(name);
         // check header element
@@ -488,14 +491,21 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
 
     private Key getAESKey() throws IOException {
         // get a AES private key
-        /*System.out.println("Generating AES key ...");
+        /* System.out.println("Generating AES key ...");
         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-        keyGen.init(128);
+        keyGen.initialize(128);
         Key key = keyGen.generateKey();
         System.out.println("Key:");
         System.out.println(printHexBinary(key.getEncoded()));
-        return key;*/
-        return readAESKey(handlerConstants.AES_KEY_FILE);
+        return key; */
+        if(getHandlerConstants().SENDER_SERVICE_NAME.equals("Waiter") || getHandlerConstants().RCPT_SERVICE_NAME.equals("Waiter")) {
+            System.out.println("extras/aes_key_Waiter.jks");
+            return readAESKey("extras/aes_key_Waiter.jks");
+        }
+        else {
+            System.out.println("extras/aes_key_KitchenServer.jks");
+            return readAESKey("extras/aes_key_KitchenServer.jks");
+        }
     }
 
     private Key readAESKey(String keyPath) throws IOException {
@@ -525,7 +535,7 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
     }
 
     private synchronized boolean checkIfOtherCertificateIsPresent(String entity){
-        if(!(new File(entity + handlerConstants.CERTIFICATE_EXTENSION)).exists() ||
+        if(!(new File(entity + getHandlerConstants().CERTIFICATE_EXTENSION)).exists() ||
                 numberMessagesReceive.get() >= MAX_MESSAGES_WITHOUT_GETTING_CERTIFICATE_AGAIN){
             System.out.printf("We need to refresh the %s certificate.\n", entity);
             return false;
@@ -661,4 +671,6 @@ public class SmartRestarantHandler implements SOAPHandler<SOAPMessageContext> {
             return false;
         }
     }
+
+    public abstract HandlerConstants getHandlerConstants();
 }

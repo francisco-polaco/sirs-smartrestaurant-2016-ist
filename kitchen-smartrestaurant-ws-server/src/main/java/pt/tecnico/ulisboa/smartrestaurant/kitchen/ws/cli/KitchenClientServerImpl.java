@@ -1,6 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli;
 
-import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestaurantOutboundHandler;
 
 import javax.jws.HandlerChain;
 import javax.jws.WebService;
@@ -13,6 +13,11 @@ import java.util.ArrayList;
 @HandlerChain(file= "/kitchen_handler-chain.xml")
 public class KitchenClientServerImpl implements KitchenClientServer{
     private ArrayList<Long> _list = new ArrayList<Long>();
+
+    public KitchenClientServerImpl() {
+        SmartRestaurantOutboundHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenServer";
+        SmartRestaurantOutboundHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
+    }
 
     public ArrayList<Long> getList() {
         return _list;

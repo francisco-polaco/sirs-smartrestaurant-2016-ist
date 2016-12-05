@@ -1,6 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli;
 
-import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestaurantOutboundHandler;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServer;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImplService;
 
@@ -14,7 +14,6 @@ import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
  */
 public class KitchenClientImpl{
     private KitchenServer _port;
-    private KitchenServerImplService _service;
 
     public KitchenClientImpl(String endpointAddress){
         if (endpointAddress == null) {
@@ -26,7 +25,7 @@ public class KitchenClientImpl{
 
         System.out.println("Creating stub ...");
 
-        _service = new KitchenServerImplService();
+        KitchenServerImplService _service = new KitchenServerImplService();
         _port = _service.getKitchenServerImplPort();
 
         System.out.println("Setting endpoint address ...");
@@ -37,13 +36,20 @@ public class KitchenClientImpl{
     }
 
     public String ping(String pingMessage){
+        setStrings();
         return _port.ping(pingMessage);
+    }
+
+    private synchronized void setStrings() {
+        SmartRestaurantOutboundHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenServer";
+        SmartRestaurantOutboundHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
     }
 
     public String setOrderReadyToDeliver(long orderId){
 //        if(!_list.contains(new Long(orderId))){
 //            return "Wrong id number";
 //        }
+        setStrings();
         try{
             _port.setOrderReadyToDeliver(orderId);
         }catch (Exception e){
@@ -59,8 +65,8 @@ public class KitchenClientImpl{
     }
 
     private String removeList(long id){
-        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenClient";
-        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer";
+        SmartRestaurantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenClient";
+        SmartRestaurantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer";
         try{
             _port2.removeList(id);
         }catch (Exception e ){

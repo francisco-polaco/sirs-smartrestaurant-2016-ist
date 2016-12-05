@@ -3,7 +3,6 @@ package pt.tecnico.ulisboa.smartrestaurant.domain;
 import org.joda.time.DateTime;
 import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.ulisboa.smartrestaurant.exception.*;
-import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenProxy;
 import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterProxy;
 
@@ -145,7 +144,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
             // Para alem do session id, a password esta correta. Logo, devera ser o utilizador
             System.out.println(u.getUsername() + " is ordering his order.");
             Order toRequest = u.getOrder();
-            if(toRequest.getState() == 0) {
+            if(toRequest != null && toRequest.getState() == 0) {
                 toRequest.setState(1); // set state meaning that the request is at the kitchen
                 //_port.addList(toRequest.getId());
                 _kp.addList(toRequest.getId());
@@ -160,12 +159,13 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         setOrderToState(orderId, 2);
         System.out.println("Order " + orderId + " is being delivered.");
         new WaiterProxy().requestToDeliverOrder(orderId);
-        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer"; // hack
+//        SmartRestaurantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer"; // hack
     }
 
     void setOrderToDelivered(long orderId){
         setOrderToState(orderId, 3);
         System.out.println("Order " + orderId + " is delivered.");
+//        SmartRestaurantHandler.handlerConstants.RCPT_SERVICE_NAME = "Waiter"; // hack
 
     }
 

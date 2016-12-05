@@ -1,6 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.waiter.ws;
 
-import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestaurantOutboundHandler;
 
 import javax.jws.HandlerChain;
 import javax.jws.WebService;
@@ -15,8 +15,8 @@ public class WaiterRealServerImpl implements WaiterRealServer {
     private BigInteger orderIdToDeliver;
 
     public WaiterRealServerImpl() {
-        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "Waiter";
-        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
+        SmartRestaurantOutboundHandler.handlerConstants.SENDER_SERVICE_NAME = "Waiter";
+        SmartRestaurantOutboundHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
     }
 
     public BigInteger getOrderIdToDeliver() {

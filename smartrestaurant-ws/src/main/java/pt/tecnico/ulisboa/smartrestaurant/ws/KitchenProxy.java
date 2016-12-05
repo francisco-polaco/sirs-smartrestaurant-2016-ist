@@ -1,7 +1,7 @@
 package pt.tecnico.ulisboa.smartrestaurant.ws;
 
 
-import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestaurantOutboundHandler;
 import pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli.KitchenClientServer;
 import pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli.KitchenClientServerImplService;
 
@@ -31,7 +31,8 @@ public class KitchenProxy {
     }
 
     public void addList(long id){
-        synchronized (this){SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer";}
+        synchronized (this){
+            SmartRestaurantOutboundHandler.handlerConstants.RCPT_SERVICE_NAME = "KitchenServer";}
         try {
             _port.addList(id);
         }catch (Exception e){

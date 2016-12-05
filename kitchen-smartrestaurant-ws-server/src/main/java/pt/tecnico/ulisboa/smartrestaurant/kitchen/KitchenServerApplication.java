@@ -1,9 +1,9 @@
 package pt.tecnico.ulisboa.smartrestaurant.kitchen;
 
-import javax.xml.ws.Endpoint;
-
-import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestaurantOutboundHandler;
 import pt.tecnico.ulisboa.smartrestaurant.kitchen.ws.cli.KitchenClientServerImpl;
+
+import javax.xml.ws.Endpoint;
 
 public class KitchenServerApplication {
 
@@ -16,8 +16,6 @@ public class KitchenServerApplication {
             return;
         }
 
-        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "KitchenServer";
-        SmartRestarantHandler.handlerConstants.RCPT_SERVICE_NAME = "OrderServer";
 
         Endpoint kitchenS =Endpoint.create(new KitchenClientServerImpl());
         System.out.println(args[0]);

@@ -4,7 +4,7 @@ import pt.ist.fenixframework.FenixFramework;
 import pt.tecnico.ulisboa.smartrestaurant.domain.DomainFacade;
 import pt.tecnico.ulisboa.smartrestaurant.exception.OrderAlreadyRequestedException;
 import pt.tecnico.ulisboa.smartrestaurant.exception.UserAlreadyExistsException;
-import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestarantHandler;
+import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestaurantOutboundHandler;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImpl;
 import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImpl;
 import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterProxy;
@@ -32,8 +32,7 @@ public class Application {
 
         WaiterProxy.endpointAddress = args[3];
 
-        SmartRestarantHandler.handlerConstants.SENDER_SERVICE_NAME = "OrderServer";
-
+        SmartRestaurantOutboundHandler.handlerConstants.SENDER_SERVICE_NAME = "OrderServer";
 
         ArrayList<Endpoint> endpoints = new ArrayList<>();
         try {
@@ -76,7 +75,7 @@ public class Application {
         //Thread.sleep(2000);
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] password = digest.digest("batata".getBytes(StandardCharsets.UTF_8));
+            byte[] password = digest.digest("initialize".getBytes(StandardCharsets.UTF_8));
             String username = "francisco";
             try {
                 DomainFacade.getInstance().registerNewUser(username, password, "Francisco", "Santos", 100);
