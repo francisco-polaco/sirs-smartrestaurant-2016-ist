@@ -75,6 +75,7 @@ public class KitchenApplication {
                         long orderNr = scanner.nextLong();
                         scanner.nextLine();
                         System.out.println(port.setOrderReadyToDeliver(orderNr));
+                        server.removeList(orderNr);
                     }catch (InputMismatchException e){
                         scanner.nextLine();
                         System.err.println("Não é um número");
