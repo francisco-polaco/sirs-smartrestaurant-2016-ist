@@ -333,7 +333,11 @@ public abstract class SmartRestaurantHandler implements SOAPHandler<SOAPMessageC
         if(f.exists()){
             try (BufferedReader reader = new BufferedReader(new FileReader(f))){
                 String address = reader.readLine();
-                if(address != null) return address;
+                if(address != null){
+                    address = address.replace(" ", "");
+                    address = address.replace("\t", "");
+                    if(address.startsWith("http://")) return address;
+                }
 
             }catch (IOException ex){
                 System.err.println(ex.getMessage());
