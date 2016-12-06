@@ -40,6 +40,14 @@
 
     </properties>
 
+    <profiles>
+        <profile>
+            <id>vm</id>
+            <properties>
+                <ws.url>http://192.168.1.1:8080/smartrestaurant-ws/endpoint</ws.url>
+            </properties>
+        </profile>
+    </profiles>
     <build>
         <plugins>
             <plugin>

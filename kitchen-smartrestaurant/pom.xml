@@ -27,6 +27,16 @@
 
     </properties>
 
+    <profiles>
+        <profile>
+            <id>vm</id>
+            <properties>
+                <wsK.url>http://192.168.1.1:8082/smartrestaurant-ws/endpoint</wsK.url>
+                <wsKM.url>http://192.168.1.10:6060/kitchen-smartrestaurant-ws-server/endpoint</wsKM.url>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
 
