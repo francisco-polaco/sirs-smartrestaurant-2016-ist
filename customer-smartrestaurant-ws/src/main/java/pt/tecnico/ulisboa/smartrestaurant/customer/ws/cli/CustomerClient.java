@@ -63,9 +63,12 @@ public class CustomerClient {
     }
 
     public String requestMyOrderProducts(){
-        System.out.println(_port.requestMyOrdersProducts(_sessionId));
+        String list = _port.requestMyOrdersProducts(_sessionId);
+        if(list.equals("")){
+            list = "A lista está vazia\n";
+        }
         _loginTime = new DateTime();
-        return "";
+        return list;
     }
 
     public String addProductToOrder(String meal){
@@ -91,7 +94,7 @@ public class CustomerClient {
 
     public String orderProducts(String password){
         try {
-            _port.orderProducts(_sessionId, pw2sha2(password));
+            _port.orderProducts(_sessionId, password);
         }catch (Exception e){
             System.err.println(e.getMessage());
             return "Falha no pedido!";
@@ -102,7 +105,7 @@ public class CustomerClient {
 
     public String confirmPayment(String password, String paypalReference){
         try {
-            _port.confirmPayment(_sessionId, pw2sha2(password), paypalReference);
+            _port.confirmPayment(_sessionId, password, paypalReference);
         }catch (Exception e){
             System.err.println(e.getMessage());
             return "Falha na confirmação de pagamento!";
@@ -124,10 +127,10 @@ public class CustomerClient {
     }
 
 
-    private byte[] pw2sha2(String password) throws NoSuchAlgorithmException {
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        return digest.digest(password.getBytes(StandardCharsets.UTF_8));
-    }
+//    private byte[] pw2sha2(String password) throws NoSuchAlgorithmException {
+//        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+//        return digest.digest(password.getBytes(StandardCharsets.UTF_8));
+//    }
 
     public boolean checkLogin(){
         if(_sessionId ==null)

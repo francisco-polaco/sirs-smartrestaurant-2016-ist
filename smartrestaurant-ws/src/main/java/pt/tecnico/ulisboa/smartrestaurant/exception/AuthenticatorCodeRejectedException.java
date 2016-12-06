@@ -7,6 +7,6 @@ public class AuthenticatorCodeRejectedException extends SmartRestaurantException
 
     @Override
     public String getMessage() {
-        return "The code provided is not valid.";
+        return "The authentication code provided is not valid.";
     }
 }

@@ -10,7 +10,7 @@ public class User extends User_Base {
         super();
     }
 
-    User(String username, byte[] hashedPassword, String firstname, String lastName, int nif, SmartRestaurantManager manager) {
+    User(String username, byte[] hashedPassword, String firstname, String lastName, int nif, String salt, SmartRestaurantManager manager) {
         super.setUsername(username);
         super.setPassword(hashedPassword);
         super.setFirstName(firstname);
@@ -18,6 +18,7 @@ public class User extends User_Base {
         super.setNif(nif);
         super.setSmartRestaurantManager(manager);
         super.setNumberOfFailedLogins(0);
+        super.setSalt(salt);
     }
 
     void incrementFailedLoginAttempts(){
@@ -52,6 +53,7 @@ public class User extends User_Base {
         setSmartRestaurantManager(null);
         setPassword(null);
         setNumberOfFailedLoginsReachedTime(null);
+        setSalt(null);
     }
 
 

@@ -4,6 +4,7 @@ import pt.tecnico.ulisboa.smartrestaurant.domain.DomainFacade;
 import pt.tecnico.ulisboa.smartrestaurant.exception.InsecureServerExceptionException;
 
 import javax.jws.WebService;
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -21,14 +22,11 @@ public class OrderServerImpl implements OrderServer {
 
     @Override
     public void registerNewUser(String username, String password, String firstName, String lastName, int nif) {
-        DomainFacade.getInstance().registerNewUser(username, password, firstName, lastName, nif);
-    }
-
-    @Override
-    public byte[] login1(String username, byte[] passwordSha2Hash, int tableNo) {
-
         try {
-            return DomainFacade.getInstance().login(username, passwordSha2Hash, tableNo);
+            DomainFacade.getInstance().registerNewUser(username, password, firstName, lastName, nif);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            throw new InsecureServerExceptionException();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             throw new InsecureServerExceptionException();
@@ -47,6 +45,9 @@ public class OrderServerImpl implements OrderServer {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             throw new InsecureServerExceptionException();
+        }catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            throw new InsecureServerExceptionException();
         }
     }
 
@@ -61,13 +62,23 @@ public class OrderServerImpl implements OrderServer {
     }
 
     @Override
-    public void orderProducts(byte[] sessionId, byte[] passwordSha2Hash) {
-        DomainFacade.getInstance().orderProducts(sessionId, passwordSha2Hash);
+    public void orderProducts(byte[] sessionId, String passwordSha2Hash) {
+        try {
+            DomainFacade.getInstance().orderProducts(sessionId, passwordSha2Hash);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            throw new InsecureServerExceptionException();
+        }
     }
 
     @Override
-    public void confirmPayment(byte[] sessionId, byte[] passwordSha2Hash, String paypalReference) {
-        DomainFacade.getInstance().confirmPayment(sessionId, passwordSha2Hash, paypalReference);
+    public void confirmPayment(byte[] sessionId, String passwordSha2Hash, String paypalReference) {
+        try {
+            DomainFacade.getInstance().confirmPayment(sessionId, passwordSha2Hash, paypalReference);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            throw new InsecureServerExceptionException();
+        }
     }
 
     @Override

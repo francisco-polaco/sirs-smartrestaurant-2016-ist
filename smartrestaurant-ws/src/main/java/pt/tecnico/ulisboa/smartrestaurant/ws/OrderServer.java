@@ -11,17 +11,15 @@ public interface OrderServer {
 
     void registerNewUser(String username, String password, String firstName, String lastName, int nif);
 
-    byte[] login1(String username, byte[] passwordSha2Hash, int tableNo);
-
     byte[] login(String username, String passwordSha2Hash, int tableNo, int OTP);
 
     String requestMyOrdersProducts(byte[] sessionId);
 
     void addProductToOrder(byte[] sessionId, String productName);
 
-    void orderProducts(byte[] sessionId, byte[] passwordSha2Hash);
+    void orderProducts(byte[] sessionId, String passwordSha2Hash);
 
-    void confirmPayment(byte[] sessionId, byte[] passwordSha2Hash, String paypalReference);
+    void confirmPayment(byte[] sessionId, String passwordSha2Hash, String paypalReference);
 
     double getPaymentDetails(byte[] sessionId);
 

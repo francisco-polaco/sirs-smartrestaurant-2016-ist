@@ -2,6 +2,7 @@ package pt.tecnico.ulisboa.smartrestaurant.domain;
 
 import pt.ist.fenixframework.Atomic;
 
+import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -18,17 +19,12 @@ public class DomainFacade {
     }
 
     @Atomic
-    public void registerNewUser(String username, String password, String firstName, String lastName, int nif){
+    public void registerNewUser(String username, String password, String firstName, String lastName, int nif) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         SmartRestaurantManager.getInstance().registerNewUser(username, password, firstName, lastName, nif);
     }
 
     @Atomic
-    public byte[] login(String username, byte[] hashedPassword, int tableNo) throws NoSuchAlgorithmException {
-        return SmartRestaurantManager.getInstance().login(username, hashedPassword, tableNo);
-    }
-
-    @Atomic
-    public byte[] login(String username, String password, int tableNo, int OTP) throws NoSuchAlgorithmException {
+    public byte[] login(String username, String password, int tableNo, int OTP) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         return SmartRestaurantManager.getInstance().login(username, password, tableNo, OTP);
     }
 
@@ -53,7 +49,7 @@ public class DomainFacade {
     }
 
     @Atomic
-    public void orderProducts(byte[] sessionId, byte[] hashedPassword){
+    public void orderProducts(byte[] sessionId, String hashedPassword) throws NoSuchAlgorithmException {
         SmartRestaurantManager.getInstance().orderProducts(sessionId, hashedPassword);
     }
 
@@ -68,7 +64,7 @@ public class DomainFacade {
     }
 
     @Atomic
-    public void confirmPayment(byte[] sessionId, byte[] hashedPassword, String paypalReference){
+    public void confirmPayment(byte[] sessionId, String hashedPassword, String paypalReference) throws NoSuchAlgorithmException {
         SmartRestaurantManager.getInstance().confirmPayment(sessionId, hashedPassword, paypalReference);
     }
 

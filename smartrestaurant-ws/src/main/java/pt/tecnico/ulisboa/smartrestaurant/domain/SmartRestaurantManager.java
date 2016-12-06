@@ -6,19 +6,24 @@ import pt.tecnico.ulisboa.smartrestaurant.exception.*;
 import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenProxy;
 import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterProxy;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import static javax.xml.bind.DatatypeConverter.printBase64Binary;
+
 public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     private static final int TIMEOUT_SESSION_TIME = 1800000;     // half an hour
     private static KitchenProxy _kp;
+    private MessageDigest _md = null;
 
     private SmartRestaurantManager() {
         FenixFramework.getDomainRoot().setSmartRestaurantManager(this);
@@ -53,28 +58,23 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     // Package methods to ensure that "they" only access Facade.
     // Who's "they" you may ask, the Illuminati ofc
     void registerNewUser(String username, String password, String firstName, String lastName, int nif)
-            throws UserAlreadyExistsException {
+            throws UserAlreadyExistsException, NoSuchAlgorithmException, UnsupportedEncodingException {
         if(username == null || password == null || firstName == null || lastName == null) throw new IllegalArgumentException();
 
         System.out.println(username + " is being registered.");
-        System.out.println(password);
-        // canICreateAnUser(username);
-        // super.addUser(new User(username, hashedPassword, firstName, lastName, nif, this));
+        canICreateAnUser(username);
+        String salt = generateSalt();
+        String concat = salt + password;
+        MessageDigest md = getMessageDigest();
+        byte[] hashedPassword = md.digest(concat.getBytes(StandardCharsets.UTF_8));
+        super.addUser(new User(username, hashedPassword, firstName, lastName, nif, salt, this));
     }
 
-    @Deprecated
-    byte[] login(String username, byte[] hashedPassword, int tableNo) throws NoSuchAlgorithmException {
-        if(username == null || hashedPassword == null) throw new IllegalArgumentException();
-        System.out.println(username + " is logging in...");
-        byte[] hashToken;
-        User user = getUserByUsername(username);
-        passwordChecker(user, hashedPassword);
-        hashToken = generateToken();
-        Session s = new Session(hashToken, tableNo);
-        s.setUser(user);
-        user.setSession(s);
-        System.out.println(username + " is logged in.");
-        return hashToken;
+    MessageDigest getMessageDigest() throws NoSuchAlgorithmException {
+        if(_md == null){
+            _md = MessageDigest.getInstance("SHA-256");
+        }
+        return _md;
     }
 
     void logOut(byte[] sessionID){
@@ -83,19 +83,18 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         u.setSession(null);
     }
 
-    byte[] login(String username, String hashedPassword, int tableNo, int OTP) throws NoSuchAlgorithmException {
-        if(username == null || hashedPassword == null) throw new IllegalArgumentException();
+    byte[] login(String username, String password, int tableNo, int OTP) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        if (username == null || password == null) throw new IllegalArgumentException();
         System.out.println(username + " is logging in...");
         byte[] hashToken = null;
-        System.out.println(hashedPassword);
-        // User user = getUserByUsername(username);
-        // passwordChecker(user, hashedPassword);
-        // otpChecker(OTP);
-        // hashToken = generateToken();
-        // Session s = new Session(hashToken, tableNo);
-        // s.setUser(user);
-        // user.setSession(s);
-        // System.out.println(username + " is logged in.");
+        User user = getUserByUsername(username);
+        passwordChecker(user, password);
+         otpChecker(OTP);
+         hashToken = generateToken();
+         Session s = new Session(hashToken, tableNo);
+         s.setUser(user);
+         user.setSession(s);
+         System.out.println(username + " is logged in.");
         return hashToken;
     }
 
@@ -136,7 +135,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         return productList;
     }
 
-    void orderProducts(byte[] sessionId, byte[] hashedPassword){
+    void orderProducts(byte[] sessionId, String hashedPassword) throws NoSuchAlgorithmException {
         if(sessionId == null || hashedPassword == null) throw new IllegalArgumentException();
         User u = getUserBySessionId(sessionId);
         //checkSessionTimeoutAndLogoutUser(u);
@@ -170,7 +169,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     }
 
-    void confirmPayment(byte[] sessionId, byte[] hashedPassword, String paypalReference){
+    void confirmPayment(byte[] sessionId, String hashedPassword, String paypalReference) throws NoSuchAlgorithmException {
         if(sessionId == null || hashedPassword == null || paypalReference == null) throw new IllegalArgumentException();
         User u = getUserBySessionId(sessionId);
         checkSessionTimeoutAndLogoutUser(u);
@@ -206,7 +205,12 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         throw new UserAlreadyExistsException();
     }
 
-    private void passwordChecker(User user, byte[] hashedPassword){
+    private void passwordChecker(User user, String password) throws NoSuchAlgorithmException {
+        String salt = user.getSalt();
+        System.out.println(salt);
+        String concat = salt + password;
+        MessageDigest md = getMessageDigest();
+        byte[] hashedPassword = md.digest(concat.getBytes(StandardCharsets.UTF_8));
         System.out.println("Checking password.");
         user.checkLoginTimeout();
         if(!Arrays.equals(hashedPassword, user.getPassword())){
@@ -238,6 +242,25 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
             if(p.getName().toLowerCase().equals(name.toLowerCase())) return p; // Lower case is nice
         }
         return null;
+    }
+
+    private String generateSalt() throws NoSuchAlgorithmException {
+        boolean notFound = true;
+        SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+        final byte array[] = new byte[32]; //256bits
+        String salt = "";
+
+        while(notFound){
+            random.nextBytes(array);
+            salt = printBase64Binary(array);
+            notFound = false;
+            for(User u: getUserSet()) {
+                if(u.getSalt() != null && u.getSalt().equals(salt)){
+                    notFound=true;
+                }
+            }
+        }
+        return salt;
     }
 
     private byte[] generateToken() throws NoSuchAlgorithmException {

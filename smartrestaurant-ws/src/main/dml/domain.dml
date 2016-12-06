@@ -16,6 +16,7 @@ class User{
     int nif;
     int numberOfFailedLogins;
     DateTime numberOfFailedLoginsReachedTime;
+    String salt;
 }
 
 class Session{
