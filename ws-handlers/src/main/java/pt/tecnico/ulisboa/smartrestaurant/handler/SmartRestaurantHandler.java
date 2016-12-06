@@ -1,6 +1,7 @@
 package pt.tecnico.ulisboa.smartrestaurant.handler;
 
 import org.w3c.dom.*;
+import pt.tecnico.ulisboa.smartrestaurant.ca.ws.CA;
 import pt.tecnico.ulisboa.smartrestaurant.ca.ws.cli.CAClient;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -304,7 +305,7 @@ public abstract class SmartRestaurantHandler implements SOAPHandler<SOAPMessageC
     }
 
     private void getCertificateFromCA(String entity, String filename) throws Exception {
-        CAClient caClient = new CAClient(CA_ENDPOINT_ADDRESS);
+        CAClient caClient = new CAClient(getCaAddressFromFile());
         try{
             caClient.getAndWriteEntityCertificate(entity, filename);
         }catch (IOException e){
@@ -325,6 +326,20 @@ public abstract class SmartRestaurantHandler implements SOAPHandler<SOAPMessageC
             System.err.println("The signed certificate is not valid");
             failAuthentication("Sender's certificate is not valid.");
         }
+    }
+
+    private String getCaAddressFromFile() {
+        File f = new File("extras/ca_address.dat");
+        if(f.exists()){
+            try (BufferedReader reader = new BufferedReader(new FileReader(f))){
+                String address = reader.readLine();
+                if(address != null) return address;
+
+            }catch (IOException ex){
+                System.err.println(ex.getMessage());
+            }
+        }
+        return CA_ENDPOINT_ADDRESS;
     }
 
     private byte[] getSOAPtoByteArray(SOAPMessageContext smc) {
