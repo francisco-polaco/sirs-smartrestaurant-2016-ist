@@ -18,7 +18,7 @@
 
         <!-- WSDL is required for client code generation -->
         <wsO.url>http://localhost:8081/smartrestaurant-ws/endpoint</wsO.url>
-        <wsW.url>http://localhost:5050/smartrestaurant-ws/endpoint</wsW.url>
+        <wsW.url>http://localhost:5050/waiter-ws/endpoint</wsW.url>
 
 
         <version.junit>4.12</version.junit>
@@ -32,7 +32,7 @@
             <id>vm</id>
             <properties>
                 <wsO.url>http://192.168.1.1:8081/smartrestaurant-ws/endpoint</wsO.url>
-                <wsW.url>http://localhost:5050/smartrestaurant-ws/endpoint</wsW.url>
+                <wsW.url>http://192.168.1.100:5050/waiter-ws/endpoint</wsW.url>
             </properties>
         </profile>
     </profiles>
