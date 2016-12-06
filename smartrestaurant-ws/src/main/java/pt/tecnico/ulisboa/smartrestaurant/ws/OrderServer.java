@@ -9,11 +9,11 @@ import javax.jws.WebService;
 public interface OrderServer {
     String ping(String msg);
 
-    void registerNewUser(String username, byte[] hashedPassword, String firstName, String lastName, int nif);
+    void registerNewUser(String username, String password, String firstName, String lastName, int nif);
 
-    byte[] login(String username, byte[] passwordSha2Hash, int tableNo);
+    byte[] login1(String username, byte[] passwordSha2Hash, int tableNo);
 
-    byte[] login1(String username, byte[] passwordSha2Hash, int tableNo, int OTP);
+    byte[] login(String username, String passwordSha2Hash, int tableNo, int OTP);
 
     String requestMyOrdersProducts(byte[] sessionId);
 

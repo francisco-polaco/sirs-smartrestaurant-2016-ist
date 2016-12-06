@@ -20,12 +20,12 @@ public class OrderServerImpl implements OrderServer {
     }
 
     @Override
-    public void registerNewUser(String username, byte[] hashedPassword, String firstName, String lastName, int nif) {
-        DomainFacade.getInstance().registerNewUser(username, hashedPassword, firstName, lastName, nif);
+    public void registerNewUser(String username, String password, String firstName, String lastName, int nif) {
+        DomainFacade.getInstance().registerNewUser(username, password, firstName, lastName, nif);
     }
 
     @Override
-    public byte[] login(String username, byte[] passwordSha2Hash, int tableNo) {
+    public byte[] login1(String username, byte[] passwordSha2Hash, int tableNo) {
 
         try {
             return DomainFacade.getInstance().login(username, passwordSha2Hash, tableNo);
@@ -41,9 +41,9 @@ public class OrderServerImpl implements OrderServer {
     }
 
     @Override
-    public byte[] login1(String username, byte[] passwordSha2Hash, int tableNo, int OTP) {
+    public byte[] login(String username, String password, int tableNo, int OTP) {
         try {
-            return DomainFacade.getInstance().login(username, passwordSha2Hash, tableNo, OTP);
+            return DomainFacade.getInstance().login(username, password, tableNo, OTP);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             throw new InsecureServerExceptionException();

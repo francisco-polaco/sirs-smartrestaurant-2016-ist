@@ -18,8 +18,8 @@ public class DomainFacade {
     }
 
     @Atomic
-    public void registerNewUser(String username, byte[] hashedPassword, String firstName, String lastName, int nif){
-        SmartRestaurantManager.getInstance().registerNewUser(username, hashedPassword, firstName, lastName, nif);
+    public void registerNewUser(String username, String password, String firstName, String lastName, int nif){
+        SmartRestaurantManager.getInstance().registerNewUser(username, password, firstName, lastName, nif);
     }
 
     @Atomic
@@ -28,8 +28,8 @@ public class DomainFacade {
     }
 
     @Atomic
-    public byte[] login(String username, byte[] hashedPassword, int tableNo, int OTP) throws NoSuchAlgorithmException {
-        return SmartRestaurantManager.getInstance().login(username, hashedPassword, tableNo, OTP);
+    public byte[] login(String username, String password, int tableNo, int OTP) throws NoSuchAlgorithmException {
+        return SmartRestaurantManager.getInstance().login(username, password, tableNo, OTP);
     }
 
     @Atomic

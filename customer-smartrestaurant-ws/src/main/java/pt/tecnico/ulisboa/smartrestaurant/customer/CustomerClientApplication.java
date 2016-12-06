@@ -72,10 +72,24 @@ public class CustomerClientApplication {
                     System.out.print("Introduza username:\n> ");
                     String username = scanner.nextLine();
                     String password = new String(console.readPassword("Introduza password:\n> "));
+                    int otp;
+                    while(true) {
+                        try {
+                            System.out.print("Qual o seu otp:\n> ");
+                            otp= scanner.nextInt();
+                            scanner.nextLine();
+
+                        } catch (InputMismatchException e) {
+                            scanner.nextLine();
+                            System.err.println("O nif que inseriu nao é um número");
+                            continue;
+                        }
+                        break;
+                    }
                     System.out.print("Leia o QR code da sua mesa:\n> ");
                     scanner.nextLine();
                     int tableNo = customer.readQRCode();
-                    System.out.println(customer.login(username, password, tableNo));
+                    System.out.println(customer.login(username, password, tableNo, otp));
                     break;
 
                 //List Products

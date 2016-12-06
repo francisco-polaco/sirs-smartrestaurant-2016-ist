@@ -71,32 +71,33 @@ public class Application {
             FenixFramework.shutdown();
         }
     }
-    private static void interaction() throws NoSuchAlgorithmException {
-        //Thread.sleep(2000);
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] password = digest.digest("initialize".getBytes(StandardCharsets.UTF_8));
-            String username = "francisco";
-            try {
-                DomainFacade.getInstance().registerNewUser(username, password, "Francisco", "Santos", 100);
-            } catch (UserAlreadyExistsException e) {
-                System.out.println(e.getMessage());
-            }
-            byte[] sessionId = DomainFacade.getInstance().login(username, password, 1);
-            try {
-                DomainFacade.getInstance().addProductToOrder(sessionId, "Bife da Vazia");
-            } catch (OrderAlreadyRequestedException e) {
-                System.out.println(e.getMessage());
-            }
-            String products = DomainFacade.getInstance().requestMyOrdersProducts(sessionId);
-            System.out.println(products);
-            DomainFacade.getInstance().orderProducts(sessionId, password);
-            System.out.println("You owe: " + DomainFacade.getInstance().getPaymentDetails(sessionId) + "€");
-            DomainFacade.getInstance().confirmPayment(sessionId, password, "ola");
-            byte[] sessionId2 = DomainFacade.getInstance().login(username, password, 1);
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-    }
+    // private static void interaction() throws NoSuchAlgorithmException {
+    //     //Thread.sleep(2000);
+    //     try {
+    //         MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    //         byte[] password = digest.digest("initialize".getBytes(StandardCharsets.UTF_8));
+    //         String password1 = "batata";
+    //         String username = "francisco";
+    //         try {
+    //             DomainFacade.getInstance().registerNewUser(username, password1, "Francisco", "Santos", 100);
+    //         } catch (UserAlreadyExistsException e) {
+    //             System.out.println(e.getMessage());
+    //         }
+    //         byte[] sessionId = DomainFacade.getInstance().login(username1, password, 1);
+    //         try {
+    //             DomainFacade.getInstance().addProductToOrder(sessionId, "Bife da Vazia");
+    //         } catch (OrderAlreadyRequestedException e) {
+    //             System.out.println(e.getMessage());
+    //         }
+    //         String products = DomainFacade.getInstance().requestMyOrdersProducts(sessionId);
+    //         System.out.println(products);
+    //         DomainFacade.getInstance().orderProducts(sessionId, password);
+    //         System.out.println("You owe: " + DomainFacade.getInstance().getPaymentDetails(sessionId) + "€");
+    //         DomainFacade.getInstance().confirmPayment(sessionId, password, "ola");
+    //         byte[] sessionId2 = DomainFacade.getInstance().login(username, password, 1);
+    //     }catch (Exception e){
+    //         System.out.println(e.getMessage());
+    //         e.printStackTrace();
+    //     }
+    // }
 }

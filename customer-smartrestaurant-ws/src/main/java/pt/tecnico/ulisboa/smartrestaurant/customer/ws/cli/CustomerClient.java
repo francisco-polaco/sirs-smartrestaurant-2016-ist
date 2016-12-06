@@ -46,9 +46,9 @@ public class CustomerClient {
         return _port.ping(pingMessage);
     }
 
-    public String login(String username, String password, int tableNo){
+    public String login(String username, String password, int tableNo, int otp){
         try {
-            _sessionId = _port.login(username, pw2sha2(password), tableNo);
+            _sessionId = _port.login(username, password, tableNo, otp);
         }catch (Exception e){
             System.err.println(e.getMessage());
             return "Falha no login!";
@@ -81,7 +81,7 @@ public class CustomerClient {
 
     public String registerNewUser(String username, String pw, String firstName, String lastName, int nif){
         try {
-            _port.registerNewUser(username, pw2sha2(pw), firstName, lastName, nif);
+            _port.registerNewUser(username, pw, firstName, lastName, nif);
         }catch (Exception e){
             System.err.println(e.getMessage());
             return "Falha no registo!";

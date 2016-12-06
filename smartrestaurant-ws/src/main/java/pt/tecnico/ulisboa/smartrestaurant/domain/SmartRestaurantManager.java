@@ -52,14 +52,14 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     // Package methods to ensure that "they" only access Facade.
     // Who's "they" you may ask, the Illuminati ofc
-    void registerNewUser(String username, byte[] hashedPassword, String firstName, String lastName, int nif)
+    void registerNewUser(String username, String password, String firstName, String lastName, int nif)
             throws UserAlreadyExistsException {
-        if(username == null || hashedPassword == null || firstName == null || lastName == null) throw new IllegalArgumentException();
+        if(username == null || password == null || firstName == null || lastName == null) throw new IllegalArgumentException();
 
         System.out.println(username + " is being registered.");
-
-        canICreateAnUser(username);
-        super.addUser(new User(username, hashedPassword, firstName, lastName, nif, this));
+        System.out.println(password);
+        // canICreateAnUser(username);
+        // super.addUser(new User(username, hashedPassword, firstName, lastName, nif, this));
     }
 
     @Deprecated
@@ -83,18 +83,19 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
         u.setSession(null);
     }
 
-    byte[] login(String username, byte[] hashedPassword, int tableNo, int OTP) throws NoSuchAlgorithmException {
+    byte[] login(String username, String hashedPassword, int tableNo, int OTP) throws NoSuchAlgorithmException {
         if(username == null || hashedPassword == null) throw new IllegalArgumentException();
         System.out.println(username + " is logging in...");
-        byte[] hashToken;
-        User user = getUserByUsername(username);
-        passwordChecker(user, hashedPassword);
-        otpChecker(OTP);
-        hashToken = generateToken();
-        Session s = new Session(hashToken, tableNo);
-        s.setUser(user);
-        user.setSession(s);
-        System.out.println(username + " is logged in.");
+        byte[] hashToken = null;
+        System.out.println(hashedPassword);
+        // User user = getUserByUsername(username);
+        // passwordChecker(user, hashedPassword);
+        // otpChecker(OTP);
+        // hashToken = generateToken();
+        // Session s = new Session(hashToken, tableNo);
+        // s.setUser(user);
+        // user.setSession(s);
+        // System.out.println(username + " is logged in.");
         return hashToken;
     }
 
