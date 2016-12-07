@@ -1,6 +1,6 @@
 #!/bin/bash
 
-vm=0
+vm=1
 
 cd ca-ws-cli
 if [ $vm -eq 1 ];then
