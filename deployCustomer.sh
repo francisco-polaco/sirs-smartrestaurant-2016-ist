@@ -3,7 +3,12 @@
 vm=0
 
 cd customer-smartrestaurant-ws
-mvn install
+if [ $vm -eq 1 ];then
+	mvn install -Pvm
+else
+	mvn install
+fi
+
 if [ $? -ne 0 ];then
 	echo -e "\e[0;31mcustomer-smartrestaurant-ws mvn unsuccessful\e[0m"
 	exit 1
