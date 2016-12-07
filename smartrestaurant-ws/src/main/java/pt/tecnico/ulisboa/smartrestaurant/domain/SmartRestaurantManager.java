@@ -204,7 +204,6 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     private void passwordChecker(User user, String password) throws NoSuchAlgorithmException {
         String salt = user.getSalt();
-        System.out.println(salt);
         String concat = salt + password;
         MessageDigest md = getMessageDigest();
         byte[] hashedPassword = md.digest(concat.getBytes(StandardCharsets.UTF_8));

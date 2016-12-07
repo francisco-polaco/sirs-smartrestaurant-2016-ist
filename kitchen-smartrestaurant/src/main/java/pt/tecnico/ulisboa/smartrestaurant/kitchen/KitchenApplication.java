@@ -92,6 +92,9 @@ public class KitchenApplication {
                     for(Long l : lista){
                         System.out.println(l);
                     }
+                    if(lista.size() == 0){
+                      System.out.println("No orders to prepare.");
+                    }
                     break;
 
                 default:
