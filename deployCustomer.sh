@@ -1,6 +1,6 @@
 #!/bin/bash
 
-vm=0
+vm=1
 
 cd customer-smartrestaurant-ws
 if [ $vm -eq 1 ];then
