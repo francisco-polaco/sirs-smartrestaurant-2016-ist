@@ -33,8 +33,8 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
                 "nós temos, este bacalhau irá dar-lhe a volta à cabeça", 10.99, this));
         addProduct(new Product("Cozido à Portuguesa", "O nome diz tudo!", 20.59, this));
         addProduct(new Product("Francesinha", "Prove um prato típico do Norte do País, carago!", 7.56, this)); //TODO change this
-        addProduct(new Product("Sopa de Peixe", "Porque a sopa faz bem a todos!", 7.56, this));
-        addProduct(new Product("Leite Creme", "Experimente este belo leite creme queimado na hora!", 7.56, this));
+        addProduct(new Product("Sopa de Peixe", "Porque a sopa faz bem a todos!", 3.56, this));
+        addProduct(new Product("Leite Creme", "Experimente este belo leite creme queimado na hora!", 1.56, this));
 
 
     }
