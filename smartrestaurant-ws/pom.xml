@@ -7,7 +7,7 @@
     <groupId>pt.tecnico.ulisboa</groupId>
     <artifactId>smartrestaurant-ws</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>${project.artifactId}</name>
 
@@ -82,6 +82,22 @@
                 <ws.urlW>http://192.168.1.1:8081/smartrestaurant-ws/endpoint</ws.urlW>
                 <ws.urlK>http://192.168.1.1:8082/smartrestaurant-ws/endpoint</ws.urlK>
                 <ws.urlWR>http://192.168.1.10:5050/waiter-ws/endpoint</ws.urlWR>
+            </properties>
+        </profile>
+        <profile>
+            <id>tomcat-vm</id>
+            <properties>
+                <ws.url>http://192.168.1.100:6060/kitchen-smartrestaurant-ws-server/endpoint</ws.url>
+                <ws.urlO>https://192.168.1.1:8080/smartrestaurant-ws/endpoint</ws.urlO>
+                <ws.urlW>http://192.168.1.1:8081/smartrestaurant-ws/endpoint</ws.urlW>
+                <ws.urlK>http://192.168.1.1:8082/smartrestaurant-ws/endpoint</ws.urlK>
+                <ws.urlWR>http://192.168.1.10:5050/waiter-ws/endpoint</ws.urlWR>
+            </properties>
+        </profile>
+        <profile>
+            <id>tomcat</id>
+            <properties>
+                <ws.urlO>https://localhost:8080/smartrestaurant-ws/endpoint</ws.urlO>
             </properties>
         </profile>
     </profiles>
