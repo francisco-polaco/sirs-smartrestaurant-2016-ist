@@ -29,7 +29,7 @@ public class WaiterApplication {
         System.out.println(args[1]);
         waiterS.publish(args[1]);
 
-        System.out.println("URL published: " + args[0]);
+        System.out.println("URL published: " + args[1]);
         System.out.println("Awaiting connections");
 
         WaiterRealClientPort port = new WaiterRealClientPort(args[0]);
