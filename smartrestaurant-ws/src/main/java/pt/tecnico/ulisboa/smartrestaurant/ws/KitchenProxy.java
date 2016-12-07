@@ -16,8 +16,9 @@ import static javax.xml.ws.BindingProvider.ENDPOINT_ADDRESS_PROPERTY;
 public class KitchenProxy {
 
     private KitchenClientServer _port;
+    public static String endpointAddress;
 
-    public KitchenProxy(String endpointAddress) {
+    public KitchenProxy() {
 
         System.out.println("Creating stub ...");
         KitchenClientServerImplService _service = new KitchenClientServerImplService();

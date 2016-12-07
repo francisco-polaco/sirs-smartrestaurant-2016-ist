@@ -66,11 +66,17 @@ public abstract class SmartRestaurantHandler implements SOAPHandler<SOAPMessageC
                System.out.print("Inbound SOAP message from: ");
                byte[] iv = setGetIVFromHeader(smc, null, false);
                cipherAndDecipherBodyHeader(smc, iv, false);
+               if(isAValidSenderName())
+                   System.out.println("Sender is valid");
+               else{
+                   System.out.println("Sender is not valid");
+                   throw new javax.xml.ws.WebServiceException();
+               }
                if(getHandlerConstants().SENDER_SERVICE_NAME.equals(getFieldrFromHeader(smc,getHandlerConstants().RECEIVER_ELEMENT_NAME)))
                    System.out.println("Receiver matches the receiver");
                else{
                    System.out.println("Receiver does not match the receiver");
-                   throw new RuntimeException();
+                   throw new javax.xml.ws.WebServiceException();
                }
 
                getHandlerConstants().RCPT_SERVICE_NAME = getFieldrFromHeader(smc, getHandlerConstants().SENDER_ELEMENT_NAME);
@@ -88,16 +94,9 @@ public abstract class SmartRestaurantHandler implements SOAPHandler<SOAPMessageC
                removeHeader(smc.getMessage());
         }
 
-        }catch(AuthenticationException | MissedFormedSOAPException | javax.xml.ws.WebServiceException | InvalidTimestampSOAPException e){
+        }catch(Exception e){
             System.out.println(e.getMessage());
-        }catch (Exception e) {
-            System.out.println("Caught exception in handleMessage: " + e.getMessage());
-            e.printStackTrace();
-            if(isAValidSenderName())
-                return false;
-            else{
-                throw new RuntimeException();
-            }
+            throw new javax.xml.ws.ProtocolException(e.getMessage());
         }
         return true;
     }
@@ -546,6 +545,7 @@ public abstract class SmartRestaurantHandler implements SOAPHandler<SOAPMessageC
 
     public boolean handleFault(SOAPMessageContext smc) {
 
+        System.out.println("There was an exception\n");
         return true;
     }
 
@@ -554,9 +554,11 @@ public abstract class SmartRestaurantHandler implements SOAPHandler<SOAPMessageC
     }
 
     private synchronized boolean checkIfOtherCertificateIsPresent(String entity){
-        if(!(new File(entity + getHandlerConstants().CERTIFICATE_EXTENSION)).exists() ||
+        File f = new File(entity + getHandlerConstants().CERTIFICATE_EXTENSION);
+        if(!f.exists() ||
                 numberMessagesReceive.get() >= MAX_MESSAGES_WITHOUT_GETTING_CERTIFICATE_AGAIN){
             System.out.printf("We need to refresh the %s certificate.\n", entity);
+            f.delete();
             return false;
         } else {
             System.out.printf("%s certificate is present. Times until renewal: %d\n", entity,

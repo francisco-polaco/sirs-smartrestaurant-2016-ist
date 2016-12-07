@@ -22,7 +22,6 @@ import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 public class SmartRestaurantManager extends SmartRestaurantManager_Base {
 
     private static final int TIMEOUT_SESSION_TIME = 1800000;     // half an hour
-    private static KitchenProxy _kp;
     private MessageDigest _md = null;
 
     private SmartRestaurantManager() {
@@ -44,13 +43,11 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
     public static SmartRestaurantManager getInstance(){
         SmartRestaurantManager mngr = FenixFramework.getDomainRoot().getSmartRestaurantManager();
         if (mngr != null) {
-            mngr._kp = new KitchenProxy("http://localhost:6060/kitchen-smartrestaurant-ws-server/endpoint");
             return mngr;
         }
         System.out.println("New Manager");
 
         mngr = new SmartRestaurantManager();
-        mngr._kp= new KitchenProxy("http://localhost:6060/kitchen-smartrestaurant-ws-server/endpoint");
         return mngr;
 
     }
@@ -147,7 +144,7 @@ public class SmartRestaurantManager extends SmartRestaurantManager_Base {
             if(toRequest != null && toRequest.getState() == 0) {
                 toRequest.setState(1); // set state meaning that the request is at the kitchen
                 //_port.addList(toRequest.getId());
-                _kp.addList(toRequest.getId());
+                new KitchenProxy().addList(toRequest.getId());
                 // send order to kitchen
             }else{
                 throw new AlreadyAskedRequestException();

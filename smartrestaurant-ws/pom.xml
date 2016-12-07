@@ -168,6 +168,7 @@
                         <argument>${ws.urlW}</argument>
                         <argument>${ws.urlK}</argument>
                         <argument>${ws.urlWR}</argument>
+                        <argument>${ws.url}</argument>
                     </arguments>
                     <killAfter>-1</killAfter>
                 </configuration>

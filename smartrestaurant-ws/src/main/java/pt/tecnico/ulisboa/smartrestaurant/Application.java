@@ -5,10 +5,7 @@ import pt.tecnico.ulisboa.smartrestaurant.domain.DomainFacade;
 import pt.tecnico.ulisboa.smartrestaurant.exception.OrderAlreadyRequestedException;
 import pt.tecnico.ulisboa.smartrestaurant.exception.UserAlreadyExistsException;
 import pt.tecnico.ulisboa.smartrestaurant.handler.SmartRestaurantOutboundHandler;
-import pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImpl;
-import pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImpl;
-import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterProxy;
-import pt.tecnico.ulisboa.smartrestaurant.ws.WaiterSoftServerImpl;
+import pt.tecnico.ulisboa.smartrestaurant.ws.*;
 
 import javax.xml.ws.Endpoint;
 import java.nio.charset.StandardCharsets;
@@ -22,7 +19,7 @@ import java.util.ArrayList;
 public class Application {
     public static void main(String[] args){
         // Check arguments
-        if (args.length != 4) {
+        if (args.length != 5) {
             System.err.println("Argument(s) missing!");
             System.err.printf("Usage: java %s wsOrderURL wsWaiterURL wsKitchenURL wsWaiterReal%n", Application.class.getName());
             return;
@@ -31,6 +28,7 @@ public class Application {
         String[] urls = { args[0], args[1], args[2]};
 
         WaiterProxy.endpointAddress = args[3];
+        KitchenProxy.endpointAddress = args[4];
 
         SmartRestaurantOutboundHandler.handlerConstants.SENDER_SERVICE_NAME = "OrderServer";
 
