@@ -16,7 +16,7 @@ public class WaiterProxy {
 
     private WaiterRealServer _port;
 
-    public static String endpointAddress;
+    public static String endpointAddress = null;
 
     public WaiterProxy() {
         System.out.println("Creating stub ...");
@@ -26,7 +26,8 @@ public class WaiterProxy {
         System.out.println("Setting endpoint address ...");
         BindingProvider bindingProvider = (BindingProvider) _port;
         Map<String, Object> requestContext = bindingProvider.getRequestContext();
-        requestContext.put(ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
+        if(endpointAddress == null) requestContext.put(ENDPOINT_ADDRESS_PROPERTY, "http://192.168.1.10:5050/waiter-ws/endpoint");
+        else requestContext.put(ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
     }
 
     public String ping(String msg){

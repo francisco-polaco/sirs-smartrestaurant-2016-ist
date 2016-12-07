@@ -27,7 +27,8 @@ public class KitchenProxy {
         System.out.println("Setting endpoint address ...");
         BindingProvider bindingProvider = (BindingProvider) _port;
         Map<String, Object> requestContext = bindingProvider.getRequestContext();
-        requestContext.put(ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
+        if(endpointAddress == null) requestContext.put(ENDPOINT_ADDRESS_PROPERTY, "http://192.168.1.100:6060/kitchen-smartrestaurant-ws-server/endpoint");
+        else requestContext.put(ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
 
     }
 
