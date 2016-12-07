@@ -35,6 +35,13 @@
                 <wsW.url>http://192.168.1.10:5050/waiter-ws/endpoint</wsW.url>
             </properties>
         </profile>
+        <profile>
+            <id>tomcat-vm</id>
+            <properties>
+                <wsO.url>http://192.168.1.1:80/smartrestaurant-ws-1.0-SNAPSHOT/waitersoftserver</wsO.url>
+                <wsW.url>http://192.168.1.10:5050/waiter-ws/endpoint</wsW.url>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
