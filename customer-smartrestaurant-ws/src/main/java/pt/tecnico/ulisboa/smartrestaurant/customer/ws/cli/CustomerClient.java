@@ -21,7 +21,7 @@ public class CustomerClient {
     private OrderServerImplService _service;
     private byte[] _sessionId = null;
     private DateTime _loginTime;
-    private static final int TIMEOUT_SESSION_TIME = 1800000/15;
+    private static final int TIMEOUT_SESSION_TIME = 1800000;
 
     public CustomerClient(String endpointAddress){
         if (endpointAddress ==null) {
