@@ -6,4 +6,12 @@
             name="OrderServer"
             implementation="pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImpl"
             url-pattern="/orderserver"/>
+    <endpoint
+	    name="KitchenServer"
+	    implementation="pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImpl"
+	    url-pattern="/kitchenserver"/>
+    <endpoint
+    name="WaiterSoftServer"
+	    implementation="pt.tecnico.ulisboa.smartrestaurant.ws.WaiterSoftServerImpl"
+	    url-pattern="/waitersoftserver"/>
 </endpoints>
