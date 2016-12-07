@@ -1,5 +1,6 @@
 package pt.tecnico.ulisboa.smartrestaurant.ws;
 
+import javax.jws.WebMethod;
 import javax.jws.WebService;
 
 /**
@@ -7,7 +8,7 @@ import javax.jws.WebService;
  */
 @WebService
 public interface KitchenServer {
-    String ping(String msg);
+    @WebMethod String ping(String msg);
 
-    void setOrderReadyToDeliver(long orderId);
+    @WebMethod void setOrderReadyToDeliver(long orderId);
 }

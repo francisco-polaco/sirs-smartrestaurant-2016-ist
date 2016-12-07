@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoints
+        xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime"
+        version="2.0">
+    <endpoint
+            name="OrderServer"
+            implementation="pt.tecnico.ulisboa.smartrestaurant.ws.OrderServerImpl"
+            url-pattern="/orderserver"/>
+    <endpoint
+	    name="KitchenServer"
+	    implementation="pt.tecnico.ulisboa.smartrestaurant.ws.KitchenServerImpl"
+	    url-pattern="/kitchenserver"/>
+    <endpoint
+    name="WaiterSoftServer"
+	    implementation="pt.tecnico.ulisboa.smartrestaurant.ws.WaiterSoftServerImpl"
+	    url-pattern="/waitersoftserver"/>
+</endpoints>

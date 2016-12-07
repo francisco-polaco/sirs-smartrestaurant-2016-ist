@@ -1,6 +1,6 @@
 #!/bin/bash
 
-vm=0
+vm=1
 
 
 cd ca-ws
@@ -49,7 +49,7 @@ echo -e "\e[0m"
 
 cd smartrestaurant-ws
 if [ $vm -eq 1 ];then
-	mvn install -Pvm
+	mvn install -Ptomcat-vm
 else
 	mvn install
 fi
