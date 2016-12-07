@@ -516,6 +516,7 @@ public abstract class SmartRestaurantHandler implements SOAPHandler<SOAPMessageC
         System.out.println("Key:");
         System.out.println(printHexBinary(key.getEncoded()));
         return key; */
+        System.out.println(new File("extras/aes_key_Waiter.jks").getAbsolutePath());
         if(getHandlerConstants().SENDER_SERVICE_NAME.equals("Waiter") || getHandlerConstants().RCPT_SERVICE_NAME.equals("Waiter")) {
             System.out.println("extras/aes_key_Waiter.jks");
             return readAESKey("extras/aes_key_Waiter.jks");
