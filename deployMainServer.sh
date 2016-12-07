@@ -4,6 +4,11 @@ vm=0
 
 
 cd ca-ws
+if [ $vm -eq 1 ];then
+	mvn install -Pvm
+else
+	mvn install
+fi
 if [ $? -ne 0 ];then
 	echo -e "\e[0;31mca-ws mvn unsuccessful\e[0m"
 	exit 1
@@ -17,7 +22,11 @@ cd ..
 sleep 3
 
 cd ca-ws-cli
-mvn install
+if [ $vm -eq 1 ];then
+	mvn install -Pvm
+else
+	mvn install
+fi
 if [ $? -ne 0 ];then
 	echo -e "\e[0;31mca-ws-cli mvn unsuccessful\e[0m"
 	echo -e "\e[0;31mProbably ca-ws is down\e[0m"
@@ -39,7 +48,11 @@ read -rsp $'Press any key to continue...\n' -n1 key
 echo -e "\e[0m"
 
 cd smartrestaurant-ws
-mvn install
+if [ $vm -eq 1 ];then
+	mvn install -Pvm
+else
+	mvn install
+fi
 if [ $? -ne 0 ];then
 	echo -e "\e[0;31msmart-restaurant mvn unsuccessful\e[0m"
 	echo -e "\e[0;31mProbably kitchen-smartrestaurant-ws-server or waiter-smartrestaurant-ws is down\e[0m"
