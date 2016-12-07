@@ -35,6 +35,13 @@
                 <wsKM.url>http://192.168.1.100:6060/kitchen-smartrestaurant-ws-server/endpoint</wsKM.url>
             </properties>
         </profile>
+        <profile>
+            <id>tomcat-vm</id>
+            <properties>
+                <wsK.url>http://192.168.1.1:80/smartrestaurant-ws-1.0-SNAPSHOT/kitchenserver</wsK.url>
+                <wsKM.url>http://192.168.1.100:6060/kitchen-smartrestaurant-ws-server/endpoint</wsKM.url>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
