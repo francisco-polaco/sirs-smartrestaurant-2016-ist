@@ -34,7 +34,7 @@
         <profile>
             <id>vm</id>
             <properties>
-                <ws.url>http://192.168.1.100:5050/waiter-ws/endpoint</ws.url>
+                <ws.url>http://192.168.1.10:5050/waiter-ws/endpoint</ws.url>
             </properties>
         </profile>
     </profiles>
