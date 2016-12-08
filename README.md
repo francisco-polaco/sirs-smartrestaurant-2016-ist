@@ -15,7 +15,7 @@ Using the VMs available, you will be able to effortless setup the project. There
 
 Username: sirs</br>
 Password: sirs</br>
-Each one of them is properly configured and ready to use, and were tested in VirtualBox.</br>
+Each one of them is properly configured and ready to use, and they were tested in VirtualBox.</br>
 [Download](https://www.dropbox.com/s/69962uwdw2xb8sw/sirs.ova?dl=0)
 ## Your own setup
 Using your own setup we provide a couple of scripts, however you need to consider the following
