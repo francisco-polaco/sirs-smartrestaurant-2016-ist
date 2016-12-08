@@ -25,7 +25,7 @@ Using your own setup we provide a couple of scripts, however you need to conside
 * Tomcat 
 * gnome-terminal (to use our scripts)
 
-Note that we try Windows 10 x64 and it worked, however we don't support it, use it at your own risk.
+Note that we tried Windows 10 x64 and it worked, however we don't support it, use it at your own risk.
 
 ### Scripts
 * Go to the extras/mysql directory and run both scripts, one will create an user and other will create a database. The tables will be automatically created by Fénix Framework.
@@ -47,8 +47,12 @@ The following scripts are located at the ```INSTALL``` folder.
 ### Using your machine (Linux):
 * Check if the scripts have the vm flag set to 0;
 * Run the scripts be the following order and follow the on-screen instructions:
-    1. Tiago1;
-    2. Tiago2;
+    1. run deployMainServer
+    2. wait until it asks for waiter/kitchen servers
+    3. run both deployWaiter and deployKitchen
+    4. continue i. when asked by deployWaiter/Kitchen
+    5. kill watier/kitchen servers and continue their respective scripts
+    6. run deployCustomer
     
 To ensure all security feature you need to setup Tomcat like the VM and launch the ```smartrestaurant-ws``` there.
     
