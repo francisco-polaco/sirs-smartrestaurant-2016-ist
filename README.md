@@ -13,6 +13,8 @@ Using the VMs available, you will be able to effortless setup the project. There
 * The Waiter
 * The Device
 
+Username: sirs</br>
+Password: sirs</br>
 Each one of them is properly configured and ready to use.</br>
 [Download](https://www.dropbox.com/s/69962uwdw2xb8sw/sirs.ova?dl=0)
 ## Your own setup
@@ -40,7 +42,7 @@ The following scripts are located at the ```INSTALL``` folder.
 ### Using our VMs:
 * Check if the corresponding script to the VM/Service has the vm flag set to 1;
 * If you are starting the main server service:
-    * Start Tomcat using the ```batat``` command;
+    * Start Tomcat using the ```sudo $CATALINA_HOME/bin/startup.sh``` command;
 * Else, run the corresponding script and follow the on-screen instructions.
 
 ```smartrestaurant-ws``` is running on Tomcat so you should not need to import any `````.war````` file or run any script.
