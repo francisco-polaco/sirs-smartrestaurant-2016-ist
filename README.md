@@ -26,14 +26,15 @@ Using your own setup we provide a couple of scripts, however you need to conside
 * gnome-terminal
 
 Note that we try Windows 10 x64 and it worked, however we don't support it, use it at your own risk.
+
 ### Scripts
 * Go to the extras/mysql directory and run both scripts, one will create an user and other will create a database. The tables will be automatically created by Fénix Framework.
 * Use ```keytool``` to generate certificates, after that copy .cer files to ca-ws/certs and .jks file to the folders of the modules. We already provide default certificates and keystores.
 * Use the class provided in the ```extras``` folder to generate two aes keys, copy the two to ```smartrestaurant-ws/extras``` and which key for the specific module, i.e, kitchen and waiter.
-* If you are using Windows, run the ```install.bat``` script located in the INSTALL folder. Follow the on-screen instructions. (It only supports running everything at the same machine)
-* If you are using Linux, run the specific script of what you want to do. Note that each script has a variable at the top, if it's 0 it will assume you will be running everything locally, if it's 1, it will assume that you will be using our VMs.
+
 ### Tomcat
-Tomcat is what ensures HTTPS connection, you can configure it using this [tutorial](https://www.mkyong.com/tomcat/how-to-configure-tomcat-to-support-ssl-or-https/)
+Tomcat is what ensures HTTPS connection, you can configure it using this [tutorial](https://www.mkyong.com/tomcat/how-to-configure-tomcat-to-support-ssl-or-https/).
+
 # Launch Project
 ### Using our VMs:
 * Check if the corresponding script to the VM/Service has the vm flag set to 1;
@@ -52,6 +53,8 @@ To ensure all security feature you need to setup Tomcat like the VM and launch t
     
 ### Using your machine (Windows) (Not supported):
 * Launch ```install.bat``` and follow on-screen instructions.
+
+Note that it only runs the project locally.
 
 # Support Files
 We provide well distributed support files examples, like keystores, AES keys and certificates. The project will work without the need of creating any of these. However, you are free to explore at your own will.
