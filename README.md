@@ -23,7 +23,7 @@ Using your own setup we provide a couple of scripts, however you need to conside
 * MySQL Community Server 5.7
 * Maven 3.3.3
 * Tomcat 
-* gnome-terminal
+* gnome-terminal (to use our scripts)
 
 Note that we try Windows 10 x64 and it worked, however we don't support it, use it at your own risk.
 
