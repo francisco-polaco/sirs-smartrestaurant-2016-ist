@@ -51,7 +51,7 @@ The following scripts are located at the ```INSTALL``` folder.
     2. wait until it asks for waiter/kitchen servers
     3. run both deployWaiter and deployKitchen
     4. continue i. when asked by deployWaiter/Kitchen
-    5. kill watier/kitchen servers and continue their respective scripts
+    5. kill waiter/kitchen servers and continue their respective scripts
     6. run deployCustomer
     
 To ensure all security feature you need to setup Tomcat like the VM and launch the ```smartrestaurant-ws``` there.
