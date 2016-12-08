@@ -36,6 +36,7 @@ Note that we try Windows 10 x64 and it worked, however we don't support it, use 
 Tomcat is what ensures HTTPS connection, you can configure it using this [tutorial](https://www.mkyong.com/tomcat/how-to-configure-tomcat-to-support-ssl-or-https/).
 
 # Launch Project
+The following scripts are located at the ```INSTALL``` folder.
 ### Using our VMs:
 * Check if the corresponding script to the VM/Service has the vm flag set to 1;
 * If you are starting the main server service:
