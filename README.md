@@ -26,6 +26,8 @@ Using your own setup we provide a couple of scripts, however you need to conside
 * Maven 3.3.3
 * Tomcat 
 * gnome-terminal (to use our scripts)
+* FwBuilder
+* Snort
 
 Note that we tried Windows 10 x64 and it worked, however we don't support it, use it at your own risk.
 
