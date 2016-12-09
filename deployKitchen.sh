@@ -1,6 +1,7 @@
 #!/bin/bash
 
-vm=1
+vm=0
+
 
 cd ca-ws-cli
 if [ $vm -eq 1 ];then
@@ -23,15 +24,14 @@ if [ $? -ne 0 ];then
 fi
 cd ..
 
-cd waiter-smartrestaurant-ws
+cd kitchen-smartrestaurant-ws-server
 if [ $vm -eq 1 ];then
 	mvn install -Pvm
 else
 	mvn install
 fi
-
 if [ $? -ne 0 ];then
-	echo -e "\e[0;31mwaiter-smartrestaurant-ws mvn unsuccessful\e[0m"
+	echo -e "\e[0;31mkitchen-smartrestaurant-ws-server mvn unsuccessful\e[0m"
 	exit 1
 fi
 if [ $vm -eq 1 ];then
@@ -43,11 +43,11 @@ cd ..
 sleep 3
 
 echo -e "\e[0;32mAfter \e[0;93msmartrestaurant-ws\e[0;32m is running"
-echo -e "\e[0;31mDon't forget to run \e[0;93mkitchen-smartrestaurant-ws-server\e[0;32m"
+echo -e "\e[0;31mDon't forget to run \e[0;93mwaiter-smartrestaurant-ws\e[0;32m"
 read -rsp $'Press any key to continue...\n' -n1 key
 echo -e "\e[0m"
 
-cd waiter-smartrestaurant-ws-cli
+cd kitchen-smartrestaurant-ws-cli
 if [ $vm -eq 1 ];then
 	mvn install -Pvm
 else
@@ -55,21 +55,20 @@ else
 fi
 
 if [ $? -ne 0 ];then
-	echo -e "\e[0;31mwaiter-smartrestaurant-ws-cli mvn unsuccessful\e[0m"
+	echo -e "\e[0;31mkitchen-smartrestaurant-ws-cli mvn unsuccessful\e[0m"
 	echo -e "\e[0;31mProbably smartrestaurant-ws is down\e[0m"
 	exit 1
 fi
 cd ..
 
-cd waiter-smartrestaurant
+cd kitchen-smartrestaurant
 if [ $vm -eq 1 ];then
 	mvn install -Pvm
 else
 	mvn install
 fi
-
 if [ $? -ne 0 ];then
-	echo -e "\e[0;31mwaiter-smartrestaurant mvn unsuccessful\e[0m"
+	echo -e "\e[0;31mkitchen-smartrestaurant mvn unsuccessful\e[0m"
 	echo -e "\e[0;31mProbably smartrestaurant-ws is down\e[0m"
 	exit 1
 fi

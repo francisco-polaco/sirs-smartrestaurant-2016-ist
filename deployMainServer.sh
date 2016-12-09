@@ -1,6 +1,6 @@
 #!/bin/bash
 
-vm=1
+vm=0
 
 
 cd ca-ws
