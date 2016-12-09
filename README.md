@@ -35,7 +35,7 @@ Note that we tried Windows 10 x64 and it worked, however we don't support it, us
 * Go to the extras/mysql directory and run both scripts, one will create an user and other will create a database. The tables will be automatically created by Fénix Framework.
 * Use ```keytool``` to generate certificates, after that copy .cer files to ca-ws/certs and .jks file to the folders of the modules. We already provide default certificates and keystores.
 * Use the class provided in the ```extras``` folder to generate two aes keys, copy the two to ```smartrestaurant-ws/extras``` and which key for the specific module, i.e, kitchen and waiter.
-* The scripts for deployment on vms are on the folder INSTALL
+* The scripts to run the project are in the main folder
 
 ### Tomcat
 Tomcat is what ensures HTTPS connection, you can configure it using this [tutorial](https://www.mkyong.com/tomcat/how-to-configure-tomcat-to-support-ssl-or-https/).
