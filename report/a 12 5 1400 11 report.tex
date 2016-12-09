@@ -79,8 +79,14 @@ In this case, we will need to make sure that, from the customer side, he cannot 
 \item Keep clients records with \textbf{ACID} properties.
 \end{enumerate}
 \subsection{Assumptions}
-The assumptions for the project are: QR Codes cannot be tampered with; smartphones will never be in promiscuous mode; the routing table in the gateway is static; Fénix Framework is safe and for simplicity, a client never cancels an order.
-\pagebreak
+\begin{itemize}
+\item QR Codes cannot be tampered with;
+\item Smartphones will never be in promiscuous mode; 
+\item The routing table in the gateway is static; 
+\item Fénix Framework is safe and for simplicity;
+\item The client never cancels an order;
+\item The client always pays.
+\end{itemize}
 \section{Solution}
 
 \includegraphics[trim=3.8cm 18cm 0 2cm]{Diagrama.pdf}
