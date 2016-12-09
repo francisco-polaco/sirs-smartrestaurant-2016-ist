@@ -41,7 +41,7 @@ Note that we tried Windows 10 x64 and it worked, however we don't support it, us
 Tomcat is what ensures HTTPS connection, you can configure it using this [tutorial](https://www.mkyong.com/tomcat/how-to-configure-tomcat-to-support-ssl-or-https/).
 
 # Launch Project
-The following scripts are located at the ```INSTALL``` folder.
+The following scripts are located at the ```main``` folder.
 ### Using our VMs:
 * Check if the corresponding script to the VM/Service has the vm flag set to 1;
 * If you are starting the main server service:
@@ -51,6 +51,7 @@ The following scripts are located at the ```INSTALL``` folder.
 ```smartrestaurant-ws``` is running on Tomcat so you should not need to import any `````.war````` file or run any script.
 ### Using your machine (Linux):
 * Check if the scripts have the vm flag set to 0;
+* Follow the instructions to install [dml2yuml](https://github.com/pedroreissantos/dml2yuml)
 * Run the scripts be the following order and follow the on-screen instructions:
     1. run deployMainServer
     2. wait until it asks for waiter/kitchen servers
