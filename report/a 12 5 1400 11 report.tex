@@ -85,7 +85,8 @@ In this case, we will need to make sure that, from the customer side, he cannot 
 \item The routing table in the gateway is static; 
 \item Fénix Framework is safe and for simplicity;
 \item The client never cancels an order;
-\item The client always pays.
+\item The client always pays;
+\item The interaction of the system begins with a user reading a QR code and inserting his credentials in order to login and create a session.
 \end{itemize}
 \section{Solution}
 
@@ -99,7 +100,7 @@ If the message is directed to the outside the firewall will filter it according 
 
 \subsection{Initial Proposal}
 \begin{itemize}
-\item[\ding{51}] Application, server and terminals with \textit{Https} connections and sanitization of inputs;
+\item[\ding{51}] Application, server and terminals with \textit{HTTPS} connections and sanitization of inputs;
 \item[\ding{51}] Notion of user accounts, including creation and payment operations;
 \item[\ding{51}] Using QR codes to choose the food and create a session between account-table;
 \item[\ding{51}] Database storage for the user accounts, using transactional and persistent domain model;
@@ -120,11 +121,29 @@ If the message is directed to the outside the firewall will filter it according 
 \end{itemize}
 
 \section{Results}
-
+\begin{itemize}
+\item The reading of a QR code to establish a session was simulated by a random number from 1-10.
+\item The reading of QR codes to request food from the menu is simulated by writing the name of the dishes when asked.
+\item Two-factor authentication is simulated with a static code (always 123456).
+\item The \textit{HTTPS} connections where established using [a].
+\item The main server was implemented using [b], a persistent domain model.
+\item The connection between MainServer-Kitchen and MainServer-Waiter was established using [c] to establish connection that guarantees all the requirements in [2.i]
+\item Implementation of salt for register and password verification on the server side [d].
+\item The IPS (snort) was not implemented due to …TODO DIOGO
+\end{itemize}
 \section{Evaluation}
+Our solution provides solutions to all the requirements although it has some flaws:
+\begin{itemize}
+\item A client can only request one of each dish;
+\item There’s a problem on making sure that the client pays for its order, so we assume that the client always pays. 
+\item Due to problems separating jax-ws handlers on the MainServer module we had to implement handlers on the communication MainServer-Waiter
+\end{itemize}
 \section{Conclusion}
+Our project presents a solution for a Smart Restaurant that focus on providing a secure implementation of the business model. Provides assurance that the servers won’t suffer outside attacks, assures that if the DB is leaked the passwords of users won’t be compromised and is secured against known web vulnerabilities (SQL injection, XSS, etc).
 \section{References}
 The tools that will be used are: \href{https://fenix-framework.github.io/}{Fénix Framework}, \href{https://www.snort.org/}{Snort}, \href{http://www.fwbuilder.org/}{Fwbuilder}, \href{https://jax-ws.java.net/}{JAX-WS}.
-
-
+[a] TOMCAT – Https connections that follow the requirements in [2.i] using certificates
+[b] fenix-framework – Persistent domain model 
+[c] jax-ws handlers – Implementation of the home made channels
+[d] crackstation – Correct way to implement salt. Used in association with theoric slides
 \end{document}
