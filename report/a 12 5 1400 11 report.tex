@@ -79,13 +79,13 @@ In this case, we will need to make sure that, from the customer side, he cannot 
 \item Keep clients records with \textbf{ACID} properties.
 \end{enumerate}
 \subsection{Assumptions}
-\textbf{We assume:} QR Codes cannot be tampered with, smartphones will never be in promiscuous mode, the routing table in the gateway is static, Fénix Framework and Tomcat are safe, the client never cancels an order, the client always pays, the interaction of the system begins with a user reading a QR code and inserting his credentials in order to login and create a session.
+\textbf{We assume:} QR Codes cannot be tampered with, smartphones will never be in promiscuous mode, the routing table in the gateway is static, Fénix Framework and Tomcat are safe, the client never cancels an order, the client always pays and the interaction of the system begins with a user reading a QR code and inserting his credentials in order to login and create a session.
 
 \section{Solution}
 
 \includegraphics[trim=3.1cm 18cm 0 2cm]{Diagrama.pdf}
 
-The interaction of the system begins with a logged in user reading a QR code, creating a session. The user can make requests using QR codes in the menu. When the user makes a request, it passes through the gateway \textbf{(ii)} where the routing mechanism and IDS come into place. The routing assures that the clients can connect to the server or the outside “world”. \textbf{(iv)} The IDS enforces good internal behavior of the network. \textbf{(iii)}
+The interaction of the system begins with a logged in user reading a QR code, creating a session. The user can make requests using QR codes in the menu. When the user makes a request, it passes through the gateway \textbf{(ii)} where the routing mechanism and IDS come into place. The routing assures that the clients can connect to the server or the outside “world”. \textbf{(iv)} The IDS enforces good internal behavior of the network. \textbf{(iii)} The CA destributes the public key certificates for the internal components except the user devices.
 
 Once the request from the client reaches the server, it processes the request checking its validity within the business model. The server will use the database to log payments and the amount owed, maintains the state of a request, checks the validity of a user account and on start-up gets the menu QR code translation. \textbf{(vi)} After, the server routes the request to the KitchenTerminal. When ready, it routes back to the server. On the server, it updates the DB setting the request to ready and notifies the WaiterTerminal. The payment is done after the meal is over, recurring to PayPal API.
 
@@ -117,12 +117,13 @@ If the message is directed to the outside the firewall will filter it according 
 \begin{itemize}
 \item The reading of a QR code to establish a session was simulated by a random number from 1-10, and to request food from the menu were simulated by writing the name of the dishes when asked;
 \item PayPal payment was simulated by just pressing enter;
+\item The shared keys are destributed \textbf{manually} and the certificates via \textbf{CA};
 \item \textbf{Two-factor authentication} is simulated with a static code (always 123456);
 \item The \textbf{HTTPS} connections where established using \textbf{[a]}, it assures \textbf{validation of the server};
 \item The main server was implemented using \textbf{[b]}, a persistent domain model, assures \textbf{(viii)} and \textbf{(vi)};
 \item The connection between MainServer-Kitchen and MainServer-Waiter was established using \textbf{[c]}, which guarantees all the requirements in \textbf{[2.i]};
 \item Implementation of \textbf{salt} for register and password verification on the server side \textbf{[d]};
-\item The \textbf{firewall} \textbf{[e]} in cojunction with the \textbf{gateway} allows us to meet the requirements \textbf{(iii)}, \textbf{(iv)} and contributes for \textbf{(ii)} since the client can only talk with the server - \textbf{static routing}.
+\item The \textbf{firewall} \textbf{[e]} in cojunction with the \textbf{gateway} allows us to meet the requirements \textbf{(iii)}, \textbf{(iv)} and contributes for \textbf{(ii)} since the client can only talk with the server - \textbf{static routing};
 \item The \textbf{IDS} \textbf{[f]} was not implemented due to bugs in the virtualization host-guest. It's a known bug, but we didn't know. It affected the performance of the overall system, because messages were getting duplicated resulting in a potential \textbf{DOS} of the client. Also, we discovered that to achieve the requirements \textbf{(ii)} and \textbf{(v)} we needed snort to run in \textbf{IPS} (Intrusion Prevention System) mode.
 \end{itemize}
 \section{Evaluation}
@@ -130,7 +131,7 @@ Our solution provides answers to all the requirements except for \textbf{(v)} si
 \begin{itemize}
 \item A client can only request one of each dish;
 \item There’s a problem on making sure that the client pays for its order, so we assume that the client always pays;
-\item Due to problems separating jax-ws handlers on the MainServer module we had to implement handlers on the communication MainServer-Waiter
+\item Due to problems separating jax-ws handlers on the MainServer module we had to implement handlers on the communication MainServer-Waiter.
 \end{itemize}
 \section{Conclusion}
 Our project presents a solution for a Smart Restaurant that focus on providing a secure implementation of the business model. Provides assurance that the servers won’t suffer outside attacks, assures that if the DB is leaked the passwords of users won’t be compromised and is secured against known web vulnerabilities (SQL injection, XSS, etc).
