@@ -396,7 +396,7 @@ public abstract class SmartRestaurantHandler implements SOAPHandler<SOAPMessageC
             }
             oldTimestamps.add(date + nonce);
         }else {
-            System.out.println("You should sync your clocks!");
+            throw new InvalidTimestampSOAPException("You should sync your clocks!");
         }
     }
 
