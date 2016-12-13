@@ -380,29 +380,24 @@ public abstract class SmartRestaurantHandler implements SOAPHandler<SOAPMessageC
     }
 
     private void verifyTimestampAndNonce(String date, String nonce) {
-        Timestamp stamp = actualTime();
+        Timestamp actualTime = actualTime();
+        Timestamp msgTime = Timestamp.valueOf(date);
 
+        final long minuteMs = 60 * 1000;
 
-        if (stamp.before(Timestamp.valueOf(date))) {
-            throw new InvalidTimestampSOAPException("Out of range");
-        }
+        long actualTimeMs = actualTime.getTime();
+        long msgTimeMs = msgTime.getTime();
 
-        if (stamp.getMinutes() >= 1) {
-            stamp.setMinutes(stamp.getMinutes() - 1);
-        }else
-            stamp.setSeconds(0);
-
-        if (stamp.after(Timestamp.valueOf(date))) {
-            throw new InvalidTimestampSOAPException("Out of range");
-        }
-
-        if (oldTimestamps.size() != 0) {
-            if (oldTimestamps.contains(date + nonce)) {
-                throw new InvalidTimestampSOAPException("Timestamp + nonce already used");
+        if(Math.abs(actualTimeMs - msgTimeMs) < minuteMs) {
+            if (oldTimestamps.size() != 0) {
+                if (oldTimestamps.contains(date + nonce)) {
+                    throw new InvalidTimestampSOAPException("Timestamp + nonce already used");
+                }
             }
+            oldTimestamps.add(date + nonce);
+        }else {
+            System.out.println("You should sync your clocks!");
         }
-        oldTimestamps.add(date + nonce);
-
     }
 
     private void checkSOAPElement(Iterator it) {
